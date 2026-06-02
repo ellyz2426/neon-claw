@@ -1,0 +1,348 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "STAGE COMPLETE!"
+        ],
+        "properties": {
+          "class": "cresult-title",
+          "id": "cr-title"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Stage 1"
+        ],
+        "properties": {
+          "class": "cresult-stage",
+          "id": "cr-stage"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "—"
+        ],
+        "properties": {
+          "class": "cresult-obj",
+          "id": "cr-obj-0"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "—"
+        ],
+        "properties": {
+          "class": "cresult-obj",
+          "id": "cr-obj-1"
+        },
+        "dataUid": "uid-5"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "—"
+        ],
+        "properties": {
+          "class": "cresult-obj",
+          "id": "cr-obj-2"
+        },
+        "dataUid": "uid-6"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "+0 Tickets"
+        ],
+        "properties": {
+          "class": "cresult-reward",
+          "id": "cr-reward"
+        },
+        "dataUid": "uid-7"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "class": "cresult-reward",
+          "id": "cr-bonus"
+        },
+        "dataUid": "uid-8"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "CONTINUE"
+        ],
+        "properties": {
+          "class": "cresult-btn",
+          "id": "btn-cr-continue",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-9"
+      }
+    ],
+    "properties": {
+      "class": "cresult-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "cresult-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "2",
+        "backgroundColor": "rgba(0, 0, 0, 0.92)",
+        "borderColor": "#00ff88",
+        "borderWidth": "0.15",
+        "borderRadius": 1,
+        "gap": "0.6"
+      }
+    },
+    "cresult-title": {
+      "content": {
+        "fontSize": "2.8",
+        "color": "#00ff88",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      }
+    },
+    "cresult-fail": {
+      "content": {
+        "fontSize": "2.8",
+        "color": "#ff4444",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      }
+    },
+    "cresult-stage": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#ffffff",
+        "textAlign": "center"
+      }
+    },
+    "cresult-obj": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#aaaaaa"
+      }
+    },
+    "cresult-obj-met": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#00ff88"
+      }
+    },
+    "cresult-reward": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#ffdd00",
+        "textAlign": "center",
+        "fontWeight": "bold"
+      }
+    },
+    "cresult-btn": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#000000",
+        "backgroundColor": "#00ff88",
+        "padding": "0.5",
+        "borderRadius": 0.3,
+        "cursor": "pointer",
+        "textAlign": "center",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "cresult-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 16
+      }
+    },
+    "cresult-title": {
+      "start": {
+        "line": 11,
+        "column": 2
+      },
+      "end": {
+        "line": 11,
+        "column": 16
+      }
+    },
+    "cresult-fail": {
+      "start": {
+        "line": 17,
+        "column": 2
+      },
+      "end": {
+        "line": 17,
+        "column": 15
+      }
+    },
+    "cresult-stage": {
+      "start": {
+        "line": 23,
+        "column": 2
+      },
+      "end": {
+        "line": 23,
+        "column": 16
+      }
+    },
+    "cresult-obj": {
+      "start": {
+        "line": 28,
+        "column": 2
+      },
+      "end": {
+        "line": 28,
+        "column": 14
+      }
+    },
+    "cresult-obj-met": {
+      "start": {
+        "line": 32,
+        "column": 2
+      },
+      "end": {
+        "line": 32,
+        "column": 18
+      }
+    },
+    "cresult-reward": {
+      "start": {
+        "line": 36,
+        "column": 2
+      },
+      "end": {
+        "line": 36,
+        "column": 17
+      }
+    },
+    "cresult-btn": {
+      "start": {
+        "line": 42,
+        "column": 2
+      },
+      "end": {
+        "line": 42,
+        "column": 14
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 53,
+        "column": 0
+      },
+      "end": {
+        "line": 65,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 54,
+        "column": 2
+      },
+      "end": {
+        "line": 54,
+        "column": 66
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 55,
+        "column": 2
+      },
+      "end": {
+        "line": 55,
+        "column": 58
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 57,
+        "column": 2
+      },
+      "end": {
+        "line": 57,
+        "column": 50
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 58,
+        "column": 2
+      },
+      "end": {
+        "line": 58,
+        "column": 50
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 59,
+        "column": 2
+      },
+      "end": {
+        "line": 59,
+        "column": 50
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 61,
+        "column": 2
+      },
+      "end": {
+        "line": 61,
+        "column": 63
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 62,
+        "column": 2
+      },
+      "end": {
+        "line": 62,
+        "column": 52
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 64,
+        "column": 2
+      },
+      "end": {
+        "line": 64,
+        "column": 81
+      }
+    }
+  }
+}

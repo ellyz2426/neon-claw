@@ -1,0 +1,608 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "⚔️ CAMPAIGN"
+        ],
+        "properties": {
+          "class": "campaign-title"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "0 / 12 Stages Complete"
+        ],
+        "properties": {
+          "class": "campaign-subtitle",
+          "id": "camp-progress"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Season 1"
+            ],
+            "properties": {
+              "class": "season-name",
+              "id": "s0-name"
+            },
+            "dataUid": "uid-5"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "—"
+            ],
+            "properties": {
+              "class": "season-desc",
+              "id": "s0-desc"
+            },
+            "dataUid": "uid-6"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "0 / 4"
+            ],
+            "properties": {
+              "class": "season-progress",
+              "id": "s0-progress"
+            },
+            "dataUid": "uid-7"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "ENTER"
+            ],
+            "properties": {
+              "class": "season-btn",
+              "id": "btn-season-0",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-8"
+          }
+        ],
+        "properties": {
+          "class": "season-row"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Season 2"
+            ],
+            "properties": {
+              "class": "season-name",
+              "id": "s1-name"
+            },
+            "dataUid": "uid-10"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "—"
+            ],
+            "properties": {
+              "class": "season-desc",
+              "id": "s1-desc"
+            },
+            "dataUid": "uid-11"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "LOCKED"
+            ],
+            "properties": {
+              "class": "season-progress",
+              "id": "s1-progress"
+            },
+            "dataUid": "uid-12"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "ENTER"
+            ],
+            "properties": {
+              "class": "season-btn",
+              "id": "btn-season-1",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-13"
+          }
+        ],
+        "properties": {
+          "class": "season-row"
+        },
+        "dataUid": "uid-9"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Season 3"
+            ],
+            "properties": {
+              "class": "season-name",
+              "id": "s2-name"
+            },
+            "dataUid": "uid-15"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "—"
+            ],
+            "properties": {
+              "class": "season-desc",
+              "id": "s2-desc"
+            },
+            "dataUid": "uid-16"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "LOCKED"
+            ],
+            "properties": {
+              "class": "season-progress",
+              "id": "s2-progress"
+            },
+            "dataUid": "uid-17"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "ENTER"
+            ],
+            "properties": {
+              "class": "season-btn",
+              "id": "btn-season-2",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-18"
+          }
+        ],
+        "properties": {
+          "class": "season-row"
+        },
+        "dataUid": "uid-14"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "← BACK"
+        ],
+        "properties": {
+          "class": "btn-back",
+          "id": "btn-back-campaign",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-19"
+      }
+    ],
+    "properties": {
+      "class": "campaign-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "campaign-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "2",
+        "backgroundColor": "rgba(0, 0, 0, 0.92)",
+        "borderColor": "#00ffff",
+        "borderWidth": "0.15",
+        "borderRadius": 1,
+        "gap": "1"
+      }
+    },
+    "campaign-title": {
+      "content": {
+        "fontSize": "3",
+        "color": "#00ffff",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      }
+    },
+    "campaign-subtitle": {
+      "content": {
+        "fontSize": "1.4",
+        "color": "#888888",
+        "textAlign": "center"
+      }
+    },
+    "season-row": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "1",
+        "backgroundColor": "rgba(0, 255, 255, 0.06)",
+        "borderColor": "rgba(0, 255, 255, 0.2)",
+        "borderWidth": "0.05",
+        "borderRadius": 0.5,
+        "gap": "0.3"
+      }
+    },
+    "season-name": {
+      "content": {
+        "fontSize": "2",
+        "color": "#ffffff",
+        "fontWeight": "bold"
+      }
+    },
+    "season-desc": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#aaaaaa"
+      }
+    },
+    "season-progress": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#00ff88"
+      }
+    },
+    "season-locked": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#666666"
+      }
+    },
+    "season-btn": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#000000",
+        "backgroundColor": "#00ffff",
+        "padding": "0.5",
+        "borderRadius": 0.3,
+        "cursor": "pointer",
+        "textAlign": "center",
+        "fontWeight": "bold"
+      }
+    },
+    "btn-back": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#00ffff",
+        "backgroundColor": "rgba(0, 255, 255, 0.1)",
+        "padding": "0.5",
+        "borderRadius": 0.3,
+        "borderColor": "#00ffff",
+        "borderWidth": "0.05",
+        "cursor": "pointer",
+        "textAlign": "center"
+      }
+    }
+  },
+  "ranges": {
+    "campaign-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 17
+      }
+    },
+    "campaign-title": {
+      "start": {
+        "line": 11,
+        "column": 2
+      },
+      "end": {
+        "line": 11,
+        "column": 17
+      }
+    },
+    "campaign-subtitle": {
+      "start": {
+        "line": 17,
+        "column": 2
+      },
+      "end": {
+        "line": 17,
+        "column": 20
+      }
+    },
+    "season-row": {
+      "start": {
+        "line": 22,
+        "column": 2
+      },
+      "end": {
+        "line": 22,
+        "column": 13
+      }
+    },
+    "season-name": {
+      "start": {
+        "line": 32,
+        "column": 2
+      },
+      "end": {
+        "line": 32,
+        "column": 14
+      }
+    },
+    "season-desc": {
+      "start": {
+        "line": 37,
+        "column": 2
+      },
+      "end": {
+        "line": 37,
+        "column": 14
+      }
+    },
+    "season-progress": {
+      "start": {
+        "line": 41,
+        "column": 2
+      },
+      "end": {
+        "line": 41,
+        "column": 18
+      }
+    },
+    "season-locked": {
+      "start": {
+        "line": 45,
+        "column": 2
+      },
+      "end": {
+        "line": 45,
+        "column": 16
+      }
+    },
+    "season-btn": {
+      "start": {
+        "line": 49,
+        "column": 2
+      },
+      "end": {
+        "line": 49,
+        "column": 13
+      }
+    },
+    "btn-back": {
+      "start": {
+        "line": 59,
+        "column": 2
+      },
+      "end": {
+        "line": 59,
+        "column": 11
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 71,
+        "column": 0
+      },
+      "end": {
+        "line": 97,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 72,
+        "column": 2
+      },
+      "end": {
+        "line": 72,
+        "column": 49
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 73,
+        "column": 2
+      },
+      "end": {
+        "line": 73,
+        "column": 82
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 75,
+        "column": 2
+      },
+      "end": {
+        "line": 80,
+        "column": 8
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 76,
+        "column": 4
+      },
+      "end": {
+        "line": 76,
+        "column": 58
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 77,
+        "column": 4
+      },
+      "end": {
+        "line": 77,
+        "column": 51
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 78,
+        "column": 4
+      },
+      "end": {
+        "line": 78,
+        "column": 63
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 79,
+        "column": 4
+      },
+      "end": {
+        "line": 79,
+        "column": 76
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 82,
+        "column": 2
+      },
+      "end": {
+        "line": 87,
+        "column": 8
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 83,
+        "column": 4
+      },
+      "end": {
+        "line": 83,
+        "column": 58
+      }
+    },
+    "uid-11": {
+      "start": {
+        "line": 84,
+        "column": 4
+      },
+      "end": {
+        "line": 84,
+        "column": 51
+      }
+    },
+    "uid-12": {
+      "start": {
+        "line": 85,
+        "column": 4
+      },
+      "end": {
+        "line": 85,
+        "column": 64
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 86,
+        "column": 4
+      },
+      "end": {
+        "line": 86,
+        "column": 76
+      }
+    },
+    "uid-14": {
+      "start": {
+        "line": 89,
+        "column": 2
+      },
+      "end": {
+        "line": 94,
+        "column": 8
+      }
+    },
+    "uid-15": {
+      "start": {
+        "line": 90,
+        "column": 4
+      },
+      "end": {
+        "line": 90,
+        "column": 58
+      }
+    },
+    "uid-16": {
+      "start": {
+        "line": 91,
+        "column": 4
+      },
+      "end": {
+        "line": 91,
+        "column": 51
+      }
+    },
+    "uid-17": {
+      "start": {
+        "line": 92,
+        "column": 4
+      },
+      "end": {
+        "line": 92,
+        "column": 64
+      }
+    },
+    "uid-18": {
+      "start": {
+        "line": 93,
+        "column": 4
+      },
+      "end": {
+        "line": 93,
+        "column": 76
+      }
+    },
+    "uid-19": {
+      "start": {
+        "line": 96,
+        "column": 2
+      },
+      "end": {
+        "line": 96,
+        "column": 78
+      }
+    }
+  }
+}

@@ -1,0 +1,648 @@
+{
+  "element": {
+    "sourceTag": "panel",
+    "type": "custom",
+    "children": [
+      {
+        "sourceTag": "container",
+        "type": "custom",
+        "children": [
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "✨ PRESTIGE"
+            ],
+            "properties": {
+              "fontsize": "{22}",
+              "fontweight": "bold",
+              "color": "#ffaa00"
+            },
+            "dataUid": "uid-3"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "No Prestige"
+            ],
+            "properties": {
+              "id": "pres-current",
+              "fontsize": "{16}",
+              "color": "#ffffff"
+            },
+            "dataUid": "uid-4"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [],
+            "properties": {
+              "id": "pres-star",
+              "fontsize": "{24}",
+              "color": "#ffdd00"
+            },
+            "dataUid": "uid-5"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "Reach Level 50 to prestige"
+            ],
+            "properties": {
+              "id": "pres-level-req",
+              "fontsize": "{12}",
+              "color": "#aaaacc"
+            },
+            "dataUid": "uid-6"
+          },
+          {
+            "sourceTag": "container",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Current Bonuses:"
+                ],
+                "properties": {
+                  "fontsize": "{14}",
+                  "fontweight": "bold",
+                  "color": "#00ffff"
+                },
+                "dataUid": "uid-8"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Grab Bonus: +0%"
+                ],
+                "properties": {
+                  "id": "pres-grab",
+                  "fontsize": "{12}",
+                  "color": "#00ff88"
+                },
+                "dataUid": "uid-9"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "XP Bonus: +0%"
+                ],
+                "properties": {
+                  "id": "pres-xp",
+                  "fontsize": "{12}",
+                  "color": "#88ff00"
+                },
+                "dataUid": "uid-10"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Ticket Bonus: +0%"
+                ],
+                "properties": {
+                  "id": "pres-ticket",
+                  "fontsize": "{12}",
+                  "color": "#ffdd00"
+                },
+                "dataUid": "uid-11"
+              }
+            ],
+            "properties": {
+              "flexdirection": "column",
+              "gap": "{4}",
+              "width": "100%",
+              "margintop": "{8}"
+            },
+            "dataUid": "uid-7"
+          },
+          {
+            "sourceTag": "container",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Next Prestige:"
+                ],
+                "properties": {
+                  "fontsize": "{14}",
+                  "fontweight": "bold",
+                  "color": "#ff8800"
+                },
+                "dataUid": "uid-13"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Bronze Star"
+                ],
+                "properties": {
+                  "id": "pres-next-name",
+                  "fontsize": "{13}",
+                  "color": "#ff8800"
+                },
+                "dataUid": "uid-14"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "+5% grab, +10% XP, +5% tickets"
+                ],
+                "properties": {
+                  "id": "pres-next-bonus",
+                  "fontsize": "{11}",
+                  "color": "#ccddff"
+                },
+                "dataUid": "uid-15"
+              }
+            ],
+            "properties": {
+              "flexdirection": "column",
+              "gap": "{4}",
+              "width": "100%",
+              "margintop": "{8}"
+            },
+            "dataUid": "uid-12"
+          },
+          {
+            "sourceTag": "container",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "⚠️ Prestige Reset:"
+                ],
+                "properties": {
+                  "fontsize": "{12}",
+                  "fontweight": "bold",
+                  "color": "#ff4444"
+                },
+                "dataUid": "uid-17"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• Level resets to 1"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#ff8888"
+                },
+                "dataUid": "uid-18"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• XP resets to 0"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#ff8888"
+                },
+                "dataUid": "uid-19"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• Skins re-lock (earn again)"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#ff8888"
+                },
+                "dataUid": "uid-20"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• Keep: tickets, collection, achievements"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#00ff88"
+                },
+                "dataUid": "uid-21"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• Keep: shop boosts, wheel stats"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#00ff88"
+                },
+                "dataUid": "uid-22"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "• Gain: permanent prestige bonuses"
+                ],
+                "properties": {
+                  "fontsize": "{11}",
+                  "color": "#ffdd00"
+                },
+                "dataUid": "uid-23"
+              }
+            ],
+            "properties": {
+              "flexdirection": "column",
+              "gap": "{3}",
+              "width": "100%",
+              "margintop": "{8}",
+              "padding": "{6}",
+              "backgroundcolor": "#111122",
+              "borderradius": "{6}"
+            },
+            "dataUid": "uid-16"
+          },
+          {
+            "sourceTag": "container",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "⭐ PRESTIGE (Requires Lv.50)"
+                ],
+                "properties": {
+                  "id": "pres-btn-label",
+                  "fontsize": "{14}",
+                  "fontweight": "bold",
+                  "color": "#ffaa00"
+                },
+                "dataUid": "uid-25"
+              }
+            ],
+            "properties": {
+              "id": "btn-prestige",
+              "padding": "{10}",
+              "backgroundcolor": "#663300",
+              "borderradius": "{10}",
+              "cursor": "pointer",
+              "margintop": "{8}"
+            },
+            "dataUid": "uid-24"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "Total Prestiges: 0 | Highest Level: 0"
+            ],
+            "properties": {
+              "id": "pres-stats",
+              "fontsize": "{11}",
+              "color": "#666688",
+              "margintop": "{4}"
+            },
+            "dataUid": "uid-26"
+          },
+          {
+            "sourceTag": "container",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "← Back"
+                ],
+                "properties": {
+                  "fontsize": "{14}",
+                  "color": "#aaccff"
+                },
+                "dataUid": "uid-28"
+              }
+            ],
+            "properties": {
+              "id": "btn-back-prestige",
+              "padding": "{8}",
+              "backgroundcolor": "#333355",
+              "borderradius": "{8}",
+              "cursor": "pointer",
+              "margintop": "{8}"
+            },
+            "dataUid": "uid-27"
+          }
+        ],
+        "properties": {
+          "flexdirection": "column",
+          "alignitems": "center",
+          "padding": "{16}",
+          "gap": "{8}",
+          "backgroundcolor": "#0a0a1a",
+          "bordercolor": "#ffaa00",
+          "borderwidth": "{2}",
+          "borderradius": "{12}"
+        },
+        "dataUid": "uid-2"
+      }
+    ],
+    "properties": {},
+    "dataUid": "uid-1"
+  },
+  "classes": {},
+  "ranges": {
+    "uid-1": {
+      "start": {
+        "line": 0,
+        "column": 0
+      },
+      "end": {
+        "line": 50,
+        "column": 8
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 49,
+        "column": 14
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 11,
+        "column": 4
+      },
+      "end": {
+        "line": 11,
+        "column": 75
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 13,
+        "column": 4
+      },
+      "end": {
+        "line": 13,
+        "column": 76
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 14,
+        "column": 4
+      },
+      "end": {
+        "line": 14,
+        "column": 62
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 15,
+        "column": 4
+      },
+      "end": {
+        "line": 15,
+        "column": 93
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 17,
+        "column": 4
+      },
+      "end": {
+        "line": 22,
+        "column": 16
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 18,
+        "column": 6
+      },
+      "end": {
+        "line": 18,
+        "column": 83
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 19,
+        "column": 6
+      },
+      "end": {
+        "line": 19,
+        "column": 79
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 20,
+        "column": 6
+      },
+      "end": {
+        "line": 20,
+        "column": 75
+      }
+    },
+    "uid-11": {
+      "start": {
+        "line": 21,
+        "column": 6
+      },
+      "end": {
+        "line": 21,
+        "column": 83
+      }
+    },
+    "uid-12": {
+      "start": {
+        "line": 24,
+        "column": 4
+      },
+      "end": {
+        "line": 28,
+        "column": 16
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 25,
+        "column": 6
+      },
+      "end": {
+        "line": 25,
+        "column": 81
+      }
+    },
+    "uid-14": {
+      "start": {
+        "line": 26,
+        "column": 6
+      },
+      "end": {
+        "line": 26,
+        "column": 80
+      }
+    },
+    "uid-15": {
+      "start": {
+        "line": 27,
+        "column": 6
+      },
+      "end": {
+        "line": 27,
+        "column": 100
+      }
+    },
+    "uid-16": {
+      "start": {
+        "line": 30,
+        "column": 4
+      },
+      "end": {
+        "line": 38,
+        "column": 16
+      }
+    },
+    "uid-17": {
+      "start": {
+        "line": 31,
+        "column": 6
+      },
+      "end": {
+        "line": 31,
+        "column": 85
+      }
+    },
+    "uid-18": {
+      "start": {
+        "line": 32,
+        "column": 6
+      },
+      "end": {
+        "line": 32,
+        "column": 68
+      }
+    },
+    "uid-19": {
+      "start": {
+        "line": 33,
+        "column": 6
+      },
+      "end": {
+        "line": 33,
+        "column": 65
+      }
+    },
+    "uid-20": {
+      "start": {
+        "line": 34,
+        "column": 6
+      },
+      "end": {
+        "line": 34,
+        "column": 77
+      }
+    },
+    "uid-21": {
+      "start": {
+        "line": 35,
+        "column": 6
+      },
+      "end": {
+        "line": 35,
+        "column": 90
+      }
+    },
+    "uid-22": {
+      "start": {
+        "line": 36,
+        "column": 6
+      },
+      "end": {
+        "line": 36,
+        "column": 81
+      }
+    },
+    "uid-23": {
+      "start": {
+        "line": 37,
+        "column": 6
+      },
+      "end": {
+        "line": 37,
+        "column": 83
+      }
+    },
+    "uid-24": {
+      "start": {
+        "line": 40,
+        "column": 4
+      },
+      "end": {
+        "line": 42,
+        "column": 16
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 41,
+        "column": 6
+      },
+      "end": {
+        "line": 41,
+        "column": 114
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 44,
+        "column": 4
+      },
+      "end": {
+        "line": 44,
+        "column": 114
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 46,
+        "column": 4
+      },
+      "end": {
+        "line": 48,
+        "column": 16
+      }
+    },
+    "uid-28": {
+      "start": {
+        "line": 47,
+        "column": 6
+      },
+      "end": {
+        "line": 47,
+        "column": 55
+      }
+    }
+  }
+}

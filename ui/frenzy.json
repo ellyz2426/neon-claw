@@ -1,0 +1,345 @@
+{
+  "element": {
+    "sourceTag": "panel",
+    "type": "custom",
+    "children": [
+      {
+        "sourceTag": "view",
+        "type": "custom",
+        "children": [
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "⚡ CLAW FRENZY! ⚡"
+            ],
+            "properties": {
+              "id": "frenzy-title",
+              "fontsize": "22",
+              "fontweight": "bold",
+              "color": "#ff4444"
+            },
+            "dataUid": "uid-3"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "Grab everything you can!"
+            ],
+            "properties": {
+              "id": "frenzy-subtitle",
+              "fontsize": "11",
+              "color": "#ffaa44",
+              "margintop": "4"
+            },
+            "dataUid": "uid-4"
+          },
+          {
+            "sourceTag": "view",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "view",
+                "type": "custom",
+                "children": [
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "TIME"
+                    ],
+                    "properties": {
+                      "fontsize": "9",
+                      "color": "#888888"
+                    },
+                    "dataUid": "uid-7"
+                  },
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "12"
+                    ],
+                    "properties": {
+                      "id": "frenzy-time",
+                      "fontsize": "20",
+                      "fontweight": "bold",
+                      "color": "#ff4444"
+                    },
+                    "dataUid": "uid-8"
+                  }
+                ],
+                "properties": {
+                  "flexdirection": "column",
+                  "alignitems": "center"
+                },
+                "dataUid": "uid-6"
+              },
+              {
+                "sourceTag": "view",
+                "type": "custom",
+                "children": [
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "GRABS"
+                    ],
+                    "properties": {
+                      "fontsize": "9",
+                      "color": "#888888"
+                    },
+                    "dataUid": "uid-10"
+                  },
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "0"
+                    ],
+                    "properties": {
+                      "id": "frenzy-grabs",
+                      "fontsize": "20",
+                      "fontweight": "bold",
+                      "color": "#00ff88"
+                    },
+                    "dataUid": "uid-11"
+                  }
+                ],
+                "properties": {
+                  "flexdirection": "column",
+                  "alignitems": "center"
+                },
+                "dataUid": "uid-9"
+              },
+              {
+                "sourceTag": "view",
+                "type": "custom",
+                "children": [
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "TICKETS"
+                    ],
+                    "properties": {
+                      "fontsize": "9",
+                      "color": "#888888"
+                    },
+                    "dataUid": "uid-13"
+                  },
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "0"
+                    ],
+                    "properties": {
+                      "id": "frenzy-tickets",
+                      "fontsize": "20",
+                      "fontweight": "bold",
+                      "color": "#ffdd00"
+                    },
+                    "dataUid": "uid-14"
+                  }
+                ],
+                "properties": {
+                  "flexdirection": "column",
+                  "alignitems": "center"
+                },
+                "dataUid": "uid-12"
+              }
+            ],
+            "properties": {
+              "flexdirection": "row",
+              "justifycontent": "space-around",
+              "width": "100%",
+              "margintop": "8"
+            },
+            "dataUid": "uid-5"
+          },
+          {
+            "sourceTag": "text",
+            "type": "custom",
+            "children": [
+              "3x TICKETS • 1.6x GRIP"
+            ],
+            "properties": {
+              "id": "frenzy-boost",
+              "fontsize": "9",
+              "color": "#ff88ff",
+              "margintop": "4"
+            },
+            "dataUid": "uid-15"
+          }
+        ],
+        "properties": {
+          "flexdirection": "column",
+          "alignitems": "center",
+          "padding": "12",
+          "backgroundcolor": "#1a0022cc",
+          "borderradius": "12",
+          "borderwidth": "1",
+          "bordercolor": "#ff4444"
+        },
+        "dataUid": "uid-2"
+      }
+    ],
+    "properties": {},
+    "dataUid": "uid-1"
+  },
+  "classes": {},
+  "ranges": {
+    "uid-1": {
+      "start": {
+        "line": 0,
+        "column": 0
+      },
+      "end": {
+        "line": 20,
+        "column": 8
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 19,
+        "column": 9
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 2,
+        "column": 4
+      },
+      "end": {
+        "line": 2,
+        "column": 99
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 3,
+        "column": 4
+      },
+      "end": {
+        "line": 3,
+        "column": 106
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 4,
+        "column": 4
+      },
+      "end": {
+        "line": 17,
+        "column": 11
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 5,
+        "column": 6
+      },
+      "end": {
+        "line": 8,
+        "column": 13
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 6,
+        "column": 8
+      },
+      "end": {
+        "line": 6,
+        "column": 54
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 7,
+        "column": 8
+      },
+      "end": {
+        "line": 7,
+        "column": 88
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 9,
+        "column": 6
+      },
+      "end": {
+        "line": 12,
+        "column": 13
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 10,
+        "column": 8
+      },
+      "end": {
+        "line": 10,
+        "column": 55
+      }
+    },
+    "uid-11": {
+      "start": {
+        "line": 11,
+        "column": 8
+      },
+      "end": {
+        "line": 11,
+        "column": 88
+      }
+    },
+    "uid-12": {
+      "start": {
+        "line": 13,
+        "column": 6
+      },
+      "end": {
+        "line": 16,
+        "column": 13
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 14,
+        "column": 8
+      },
+      "end": {
+        "line": 14,
+        "column": 57
+      }
+    },
+    "uid-14": {
+      "start": {
+        "line": 15,
+        "column": 8
+      },
+      "end": {
+        "line": 15,
+        "column": 90
+      }
+    },
+    "uid-15": {
+      "start": {
+        "line": 18,
+        "column": 4
+      },
+      "end": {
+        "line": 18,
+        "column": 100
+      }
+    }
+  }
+}
