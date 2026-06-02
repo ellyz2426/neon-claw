@@ -1,0 +1,41 @@
+<ui>
+  <panel background-color="#111133ee" border-radius="12" padding="16">
+    <vertical gap="8" alignment="center">
+      <text id="tourn-title" font-size="22" color="#ffdd00" alignment="center">🏆 TOURNAMENT</text>
+      <text id="tourn-status" font-size="12" color="#aaaaaa" alignment="center">Choose a bracket to compete in</text>
+
+      <vertical gap="6" padding="8">
+        <text id="tb-0-name" font-size="16" color="#00ffcc" alignment="center">Rookie Cup</text>
+        <text id="tb-0-desc" font-size="10" color="#888888" alignment="center">Description</text>
+        <text id="tb-0-status" font-size="11" color="#ffdd00" alignment="center">Status</text>
+        <button id="btn-tb-0" background-color="#00443366" border-radius="6" padding="4">
+          <text font-size="12" color="#00ffcc" alignment="center">▶ ENTER</text>
+        </button>
+      </vertical>
+
+      <vertical gap="6" padding="8">
+        <text id="tb-1-name" font-size="16" color="#ff8844" alignment="center">Pro Circuit</text>
+        <text id="tb-1-desc" font-size="10" color="#888888" alignment="center">Description</text>
+        <text id="tb-1-status" font-size="11" color="#ffdd00" alignment="center">Status</text>
+        <button id="btn-tb-1" background-color="#44220066" border-radius="6" padding="4">
+          <text font-size="12" color="#ff8844" alignment="center">▶ ENTER</text>
+        </button>
+      </vertical>
+
+      <vertical gap="6" padding="8">
+        <text id="tb-2-name" font-size="16" color="#ff44ff" alignment="center">Legend's Gauntlet</text>
+        <text id="tb-2-desc" font-size="10" color="#888888" alignment="center">Description</text>
+        <text id="tb-2-status" font-size="11" color="#ffdd00" alignment="center">Status</text>
+        <button id="btn-tb-2" background-color="#44004466" border-radius="6" padding="4">
+          <text font-size="12" color="#ff44ff" alignment="center">▶ ENTER</text>
+        </button>
+      </vertical>
+
+      <text id="tourn-wins" font-size="11" color="#888888" alignment="center">Tournament Wins: 0</text>
+
+      <button id="btn-tourn-back" background-color="#33333366" border-radius="6" padding="6">
+        <text font-size="13" color="#aaaaaa" alignment="center">← Back</text>
+      </button>
+    </vertical>
+  </panel>
+</ui>

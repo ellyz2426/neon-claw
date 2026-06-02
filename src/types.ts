@@ -5,7 +5,8 @@ export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'gra
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
   'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result' |
   'profile' | 'clawskins' | 'modifiers' | 'levelup' | 'shop' | 'wheel' | 'prestige' |
-  'frenzy' | 'frenzy_result' | 'machineskins' | 'detailedstats';
+  'frenzy' | 'frenzy_result' | 'machineskins' | 'detailedstats' |
+  'tournament' | 'tournament_round' | 'tournament_result' | 'customchallenge';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -227,6 +228,17 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'grabs_500', name: 'Claw Legend', desc: 'Grab 500 prizes total', unlocked: false },
     { id: 'tickets_5k', name: 'Ticket Magnate', desc: 'Earn 5,000 tickets total', unlocked: false },
     { id: 'perfect_3', name: 'Triple Perfect', desc: 'Get 3 perfect (no miss) games', unlocked: false },
+    // Round 7 achievements — Tournament + Custom Challenges
+    { id: 'first_tournament', name: 'Contender', desc: 'Enter your first tournament', unlocked: false },
+    { id: 'rookie_champ', name: 'Rookie Champion', desc: 'Win the Rookie Cup', unlocked: false },
+    { id: 'pro_champ', name: 'Pro Champion', desc: 'Win the Pro Circuit', unlocked: false },
+    { id: 'legend_champ', name: 'Legendary Champion', desc: 'Win the Legend\'s Gauntlet', unlocked: false },
+    { id: 'tournament_3', name: 'Tournament Veteran', desc: 'Win 3 tournaments', unlocked: false },
+    { id: 'tournament_sweep', name: 'Clean Sweep', desc: 'Win all 3 tournament brackets', unlocked: false },
+    { id: 'first_custom', name: 'Challenger', desc: 'Complete a custom challenge', unlocked: false },
+    { id: 'custom_creator', name: 'Challenge Creator', desc: 'Create a custom challenge', unlocked: false },
+    { id: 'custom_5', name: 'Custom Conqueror', desc: 'Win 5 custom challenges', unlocked: false },
+    { id: 'preset_all', name: 'Preset Master', desc: 'Complete all 4 preset challenges', unlocked: false },
   ];
 }
 

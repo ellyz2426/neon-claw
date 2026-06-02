@@ -1,0 +1,62 @@
+<ui>
+  <panel background-color="#111133ee" border-radius="12" padding="16">
+    <vertical gap="8" alignment="center">
+      <text id="cc-title" font-size="22" color="#ff44ff" alignment="center">⚙️ CUSTOM CHALLENGES</text>
+
+      <vertical gap="6" padding="6">
+        <text font-size="14" color="#ffdd00" alignment="center">— Presets —</text>
+        <button id="btn-cc-preset-0" background-color="#33115566" border-radius="6" padding="4">
+          <text id="cc-pre-0" font-size="11" color="#ff8844" alignment="center">Speed Demon</text>
+        </button>
+        <button id="btn-cc-preset-1" background-color="#33115566" border-radius="6" padding="4">
+          <text id="cc-pre-1" font-size="11" color="#ff8844" alignment="center">Impossible Grab</text>
+        </button>
+        <button id="btn-cc-preset-2" background-color="#33115566" border-radius="6" padding="4">
+          <text id="cc-pre-2" font-size="11" color="#ff8844" alignment="center">Legendary Hunt</text>
+        </button>
+        <button id="btn-cc-preset-3" background-color="#33115566" border-radius="6" padding="4">
+          <text id="cc-pre-3" font-size="11" color="#ff8844" alignment="center">Tower Rush</text>
+        </button>
+      </vertical>
+
+      <vertical gap="4" padding="6">
+        <text font-size="14" color="#ffdd00" alignment="center">— Create Your Own —</text>
+        <horizontal gap="6" alignment="center">
+          <text font-size="11" color="#aaaaaa">Machine:</text>
+          <button id="btn-cc-mach-prev" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">◀</text></button>
+          <text id="cc-machine" font-size="11" color="#00ffcc">Starter</text>
+          <button id="btn-cc-mach-next" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">▶</text></button>
+        </horizontal>
+        <horizontal gap="6" alignment="center">
+          <text font-size="11" color="#aaaaaa">Mode:</text>
+          <button id="btn-cc-mode-prev" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">◀</text></button>
+          <text id="cc-mode" font-size="11" color="#00ffcc">Classic</text>
+          <button id="btn-cc-mode-next" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">▶</text></button>
+        </horizontal>
+        <horizontal gap="6" alignment="center">
+          <text font-size="11" color="#aaaaaa">Diff:</text>
+          <button id="btn-cc-diff-prev" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">◀</text></button>
+          <text id="cc-diff" font-size="11" color="#00ffcc">Medium</text>
+          <button id="btn-cc-diff-next" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">▶</text></button>
+        </horizontal>
+        <horizontal gap="6" alignment="center">
+          <text font-size="11" color="#aaaaaa">Target:</text>
+          <button id="btn-cc-target-down" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">◀</text></button>
+          <text id="cc-target" font-size="11" color="#ffdd00">1000</text>
+          <button id="btn-cc-target-up" background-color="#33333366" border-radius="4" padding="2"><text font-size="10" color="#ffffff">▶</text></button>
+        </horizontal>
+        <text id="cc-code" font-size="14" color="#ffffff" alignment="center">Code: --------</text>
+      </vertical>
+
+      <button id="btn-cc-create" background-color="#88004466" border-radius="6" padding="6">
+        <text font-size="14" color="#ff44ff" alignment="center">🎮 PLAY CUSTOM</text>
+      </button>
+
+      <text id="cc-stats" font-size="10" color="#888888" alignment="center">Games: 0 | Wins: 0</text>
+
+      <button id="btn-cc-back" background-color="#33333366" border-radius="6" padding="6">
+        <text font-size="13" color="#aaaaaa" alignment="center">← Back</text>
+      </button>
+    </vertical>
+  </panel>
+</ui>

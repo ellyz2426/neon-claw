@@ -26,6 +26,8 @@ import { PrestigeManager, PRESTIGE_STARS } from './prestige';
 import { FrenzyManager, FRENZY_CONFIG } from './frenzy';
 import { MachineSkinManager, MACHINE_SKINS } from './machineskins';
 import { ModeStatsManager } from './modestats';
+import { TournamentManager, TOURNAMENT_BRACKETS } from './tournament';
+import { CustomChallengeManager, PRESET_CHALLENGES } from './customchallenge';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -42,6 +44,8 @@ const prestige = new PrestigeManager();
 const frenzy = new FrenzyManager();
 const machineSkins = new MachineSkinManager();
 const modeStats = new ModeStatsManager();
+const tournament = new TournamentManager();
+const customChallenge = new CustomChallengeManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -73,6 +77,8 @@ let inCampaignGame = false;
 let legendaryGrabCelebration = 0; // timer for legendary celebration VFX
 const confettiParticles: { mesh: Mesh; vel: Vector3; life: number; spin: number }[] = [];
 let frenzyPending = false; // true when a frenzy was triggered and will start after gameover
+let inTournamentGame = false; // true during tournament rounds
+let inCustomGame = false; // true during custom challenge games
 
 // UI entity references
 const panels: Record<string, any> = {};
@@ -174,6 +180,11 @@ function initPanels(): void {
   setupPanel('frenzyresult', '/ui/frenzyresult.json', { maxWidth: 0.7, maxHeight: 0.5, pos: [0, menuY, menuZ] });
   setupPanel('machineskins', '/ui/machineskins.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
   setupPanel('detailedstats', '/ui/detailedstats.json', { maxWidth: 1.1, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  // Round 7 panels
+  setupPanel('tournament', '/ui/tournament.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  setupPanel('tournamentround', '/ui/tournamentround.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  setupPanel('tournamentresult', '/ui/tournamentresult.json', { maxWidth: 0.8, maxHeight: 0.7, pos: [0, menuY, menuZ] });
+  setupPanel('customchallenge', '/ui/customchallenge.json', { maxWidth: 1.0, maxHeight: 1.4, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -185,7 +196,8 @@ function showState(state: GameState): void {
     'campaign', 'campaignstage', 'fusion', 'campaignresult',
     'profile', 'clawskins', 'modifiers', 'levelup',
     'shop', 'wheel', 'prestige',
-    'frenzy', 'frenzyresult', 'machineskins', 'detailedstats'];
+    'frenzy', 'frenzyresult', 'machineskins', 'detailedstats',
+    'tournament', 'tournamentround', 'tournamentresult', 'customchallenge'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -220,6 +232,10 @@ function showState(state: GameState): void {
     frenzy_result: ['frenzyresult'],
     machineskins: ['machineskins'],
     detailedstats: ['detailedstats'],
+    tournament: ['tournament'],
+    tournament_round: ['tournamentround'],
+    tournament_result: ['tournamentresult'],
+    customchallenge: ['customchallenge'],
   };
 
   const visible = stateMap[state] || [];
@@ -454,6 +470,8 @@ function wireButtons(): void {
       'btn-prestige': () => { audio.buttonClick(); updatePrestigePanel(); showState('prestige'); },
       'btn-machskins': () => { audio.buttonClick(); updateMachineSkinsPanel(); showState('machineskins'); },
       'btn-detailedstats': () => { audio.buttonClick(); updateDetailedStatsPanel(); showState('detailedstats'); },
+      'btn-tournament': () => { audio.buttonClick(); updateTournamentPanel(); showState('tournament'); },
+      'btn-custom': () => { audio.buttonClick(); updateCustomChallengePanel(); showState('customchallenge'); },
     });
 
     wirePanel('modeselect', {
@@ -631,6 +649,41 @@ function wireButtons(): void {
 
     wirePanel('detailedstats', {
       'btn-ds-back': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    // Round 7 panel wiring
+    wirePanel('tournament', {
+      'btn-tb-0': () => startTournamentBracket(0),
+      'btn-tb-1': () => startTournamentBracket(1),
+      'btn-tb-2': () => startTournamentBracket(2),
+      'btn-tourn-back': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('tournamentround', {
+      'btn-tr-play': () => playTournamentRound(),
+      'btn-tr-abandon': () => { audio.buttonClick(); tournament.abandonTournament(); showToast('Tournament abandoned'); updateTournamentPanel(); showState('tournament'); },
+      'btn-tr-back': () => { audio.buttonClick(); updateTournamentPanel(); showState('tournament'); },
+    });
+
+    wirePanel('tournamentresult', {
+      'btn-tres-continue': () => handleTournamentResultContinue(),
+    });
+
+    wirePanel('customchallenge', {
+      'btn-cc-preset-0': () => startPresetChallenge(0),
+      'btn-cc-preset-1': () => startPresetChallenge(1),
+      'btn-cc-preset-2': () => startPresetChallenge(2),
+      'btn-cc-preset-3': () => startPresetChallenge(3),
+      'btn-cc-mach-prev': () => { audio.buttonClick(); customChallenge.builderMachineIdx = (customChallenge.builderMachineIdx - 1 + MACHINES.length) % MACHINES.length; updateCustomChallengePanel(); },
+      'btn-cc-mach-next': () => { audio.buttonClick(); customChallenge.builderMachineIdx = (customChallenge.builderMachineIdx + 1) % MACHINES.length; updateCustomChallengePanel(); },
+      'btn-cc-mode-prev': () => { audio.buttonClick(); customChallenge.builderModeIdx = (customChallenge.builderModeIdx - 1 + customChallenge.getModes().length) % customChallenge.getModes().length; updateCustomChallengePanel(); },
+      'btn-cc-mode-next': () => { audio.buttonClick(); customChallenge.builderModeIdx = (customChallenge.builderModeIdx + 1) % customChallenge.getModes().length; updateCustomChallengePanel(); },
+      'btn-cc-diff-prev': () => { audio.buttonClick(); customChallenge.builderDiffIdx = (customChallenge.builderDiffIdx - 1 + 3) % 3; updateCustomChallengePanel(); },
+      'btn-cc-diff-next': () => { audio.buttonClick(); customChallenge.builderDiffIdx = (customChallenge.builderDiffIdx + 1) % 3; updateCustomChallengePanel(); },
+      'btn-cc-target-down': () => { audio.buttonClick(); customChallenge.builderTargetScore = Math.max(0, customChallenge.builderTargetScore - 500); updateCustomChallengePanel(); },
+      'btn-cc-target-up': () => { audio.buttonClick(); customChallenge.builderTargetScore = Math.min(10000, customChallenge.builderTargetScore + 500); updateCustomChallengePanel(); },
+      'btn-cc-create': () => startBuiltCustomChallenge(),
+      'btn-cc-back': () => { audio.buttonClick(); showState('title'); },
     });
   }, 1500);
 }
@@ -1271,6 +1324,19 @@ function endGame(): void {
     showCampaignResult();
     showState('campaign_result');
     return;
+  }
+
+  // Tournament game end
+  if (inTournamentGame) {
+    inTournamentGame = false;
+    showTournamentResult(gsm.score);
+    return;
+  }
+
+  // Custom challenge game end
+  if (inCustomGame) {
+    endCustomChallenge(gsm.score);
+    // Fall through to normal gameover screen
   }
 
   // Check for level-up display
@@ -2089,6 +2155,295 @@ function updateDetailedStatsPanel(): void {
     } else {
       setText(doc, `ds-h${i}`, '—');
     }
+  }
+}
+
+// ─── Round 7: Tournament Functions ───────────────────────
+function updateTournamentPanel(): void {
+  const doc = getDoc('tournament');
+  if (!doc) return;
+
+  const active = tournament.getActiveBracket();
+  if (active) {
+    setText(doc, 'tourn-status', 'Active: ' + active.icon + ' ' + active.name + ' — Round ' + (tournament.progress.currentRound + 1));
+  } else {
+    setText(doc, 'tourn-status', 'Choose a bracket to compete in');
+  }
+
+  for (let i = 0; i < TOURNAMENT_BRACKETS.length; i++) {
+    const b = TOURNAMENT_BRACKETS[i];
+    const unlocked = tournament.isBracketUnlocked(b.id);
+    const completed = tournament.isBracketCompleted(b.id);
+    setText(doc, `tb-${i}-name`, b.icon + ' ' + b.name);
+    setText(doc, `tb-${i}-desc`, b.description);
+    if (completed) {
+      setText(doc, `tb-${i}-status`, '✅ COMPLETED — Replay?');
+    } else if (unlocked) {
+      setText(doc, `tb-${i}-status`, '▶ AVAILABLE — ' + b.rounds.length + ' rounds, ' + b.grandPrizeTickets + ' 🎫 grand prize');
+    } else {
+      setText(doc, `tb-${i}-status`, '🔒 Complete previous bracket first');
+    }
+  }
+
+  setText(doc, 'tourn-wins', 'Tournament Wins: ' + tournament.progress.totalTournamentWins);
+}
+
+function startTournamentBracket(index: number): void {
+  const bracket = TOURNAMENT_BRACKETS[index];
+  if (!bracket) return;
+
+  if (!tournament.isBracketUnlocked(bracket.id)) {
+    showToast('Complete the previous bracket first!');
+    return;
+  }
+
+  // If there's already an active tournament, check if it's the same one
+  if (tournament.progress.activeBracketId && tournament.progress.activeBracketId !== bracket.id) {
+    showToast('Abandon current tournament first');
+    return;
+  }
+
+  audio.buttonClick();
+
+  if (!tournament.progress.activeBracketId) {
+    tournament.startBracket(bracket.id);
+    checkAchievement('first_tournament', true);
+  }
+
+  updateTournamentRoundPanel();
+  showState('tournament_round');
+}
+
+function updateTournamentRoundPanel(): void {
+  const doc = getDoc('tournamentround');
+  if (!doc) return;
+
+  const bracket = tournament.getActiveBracket();
+  const round = tournament.getCurrentRound();
+  if (!bracket || !round) return;
+
+  setText(doc, 'tr-bracket', bracket.icon + ' ' + bracket.name);
+  setText(doc, 'tr-round', 'Round ' + (tournament.progress.currentRound + 1) + ' / ' + bracket.rounds.length);
+  setText(doc, 'tr-name', round.name);
+
+  const machine = MACHINES.find(m => m.id === round.machineId);
+  setText(doc, 'tr-machine', 'Machine: ' + (machine?.name || round.machineId));
+  setText(doc, 'tr-mode', 'Mode: ' + round.mode.toUpperCase() + ' | ' + round.difficulty.toUpperCase());
+  setText(doc, 'tr-target', '🎯 Target: ' + round.targetScore + ' pts');
+  setText(doc, 'tr-mods', round.modifiers.length > 0 ? '⚠️ Modifiers: ' + round.modifiers.join(', ') : 'No forced modifiers');
+  setText(doc, 'tr-reward', 'Reward: ' + round.bonusTickets + ' 🎫');
+
+  // Bracket visualization
+  for (let i = 0; i < bracket.rounds.length; i++) {
+    const r = bracket.rounds[i];
+    let status = '';
+    if (i < tournament.progress.currentRound) {
+      const passed = tournament.progress.roundPassed[i];
+      const score = tournament.progress.roundScores[i];
+      status = passed ? '✅ ' + score + ' pts' : '❌ ' + score + ' pts';
+    } else if (i === tournament.progress.currentRound) {
+      status = '▶ CURRENT';
+    } else {
+      status = '○ Upcoming';
+    }
+    setText(doc, `tr-r${i}`, r.name + ': ' + status);
+  }
+}
+
+function playTournamentRound(): void {
+  const round = tournament.getCurrentRound();
+  if (!round) return;
+
+  audio.buttonClick();
+  inTournamentGame = true;
+
+  // Set machine, theme, mode, difficulty from tournament round
+  const machineIdx = MACHINES.findIndex(m => m.id === round.machineId);
+  if (machineIdx >= 0) gsm.machineIndex = machineIdx;
+  const themeIdx = THEMES.findIndex(t => t.id === round.themeId);
+  if (themeIdx >= 0) {
+    gsm.themeIndex = themeIdx;
+    rebuildTheme();
+  }
+  gsm.mode = round.mode;
+  gsm.difficulty = round.difficulty;
+
+  // Apply forced modifiers
+  progression.activeModifiers.clear();
+  for (const mod of round.modifiers) {
+    progression.activeModifiers.add(mod);
+  }
+
+  startGame();
+}
+
+function showTournamentResult(score: number): void {
+  const result = tournament.recordRoundResult(score);
+  const round = tournament.progress.activeBracketId
+    ? TOURNAMENT_BRACKETS.find(b => b.id === tournament.progress.activeBracketId)?.rounds[tournament.progress.currentRound - 1]
+    : null;
+
+  const doc = getDoc('tournamentresult');
+  if (!doc) return;
+
+  setText(doc, 'tres-score', 'Score: ' + score);
+
+  if (result.tournamentComplete) {
+    setText(doc, 'tres-title', '👑 TOURNAMENT WON!');
+    setText(doc, 'tres-round', tournament.getActiveBracket()?.name || 'Tournament');
+    setText(doc, 'tres-target', 'All rounds cleared!');
+    setText(doc, 'tres-verdict', '🏆 CHAMPION!');
+    setText(doc, 'tres-tickets', '+' + result.ticketsEarned + ' 🎫 (includes grand prize!)');
+    setText(doc, 'tres-next', 'Congratulations!');
+    spawnConfetti(new Vector3(0, machineBaseY + 0.6, -1.8), 40);
+    shake.trigger(0.04, 0.6);
+    audio.achievementUnlock();
+
+    // Tournament completion achievements
+    const bracket = TOURNAMENT_BRACKETS.find(b => tournament.progress.completedBrackets.includes(b.id) && b.id === tournament.progress.bestBracketId);
+    if (bracket) {
+      checkAchievement('rookie_champ', bracket.id === 'rookie' || tournament.progress.completedBrackets.includes('rookie'));
+      checkAchievement('pro_champ', bracket.id === 'pro' || tournament.progress.completedBrackets.includes('pro'));
+      checkAchievement('legend_champ', bracket.id === 'legend' || tournament.progress.completedBrackets.includes('legend'));
+    }
+    checkAchievement('tournament_3', tournament.progress.totalTournamentWins >= 3);
+    checkAchievement('tournament_sweep', tournament.progress.completedBrackets.length >= 3);
+  } else if (result.eliminated) {
+    const lastRound = TOURNAMENT_BRACKETS.find(b =>
+      b.rounds.some(r => r === round)
+    )?.rounds[tournament.progress.roundScores.length - 1];
+    setText(doc, 'tres-title', '❌ ELIMINATED');
+    setText(doc, 'tres-round', lastRound?.name || 'Round');
+    setText(doc, 'tres-target', 'Target: ' + (lastRound?.targetScore || '???'));
+    setText(doc, 'tres-verdict', 'ELIMINATED');
+    setText(doc, 'tres-tickets', 'Total earned: ' + result.ticketsEarned + ' 🎫');
+    setText(doc, 'tres-next', 'Better luck next time!');
+    shake.trigger(0.02, 0.3);
+  } else {
+    setText(doc, 'tres-title', '✅ ROUND CLEARED!');
+    const prevRound = TOURNAMENT_BRACKETS.find(b => b.id === tournament.progress.activeBracketId)?.rounds[tournament.progress.currentRound - 1];
+    setText(doc, 'tres-round', prevRound?.name || 'Round');
+    setText(doc, 'tres-target', 'Target: ' + (prevRound?.targetScore || '???'));
+    setText(doc, 'tres-verdict', 'PASSED!');
+    setText(doc, 'tres-tickets', '+' + result.ticketsEarned + ' 🎫');
+    const nextRound = tournament.getCurrentRound();
+    setText(doc, 'tres-next', nextRound ? 'Next: ' + nextRound.name : '');
+    particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), '#00ffcc', 20, 1.5);
+    shake.trigger(0.015, 0.3);
+  }
+
+  gsm.totalTickets += result.ticketsEarned;
+  gsm.save();
+  showState('tournament_result');
+}
+
+function handleTournamentResultContinue(): void {
+  audio.buttonClick();
+  if (tournament.progress.activeBracketId) {
+    // Continue to next round
+    updateTournamentRoundPanel();
+    showState('tournament_round');
+  } else {
+    // Tournament over (won or eliminated)
+    updateTournamentPanel();
+    showState('tournament');
+  }
+}
+
+// ─── Round 7: Custom Challenge Functions ─────────────────
+function updateCustomChallengePanel(): void {
+  const doc = getDoc('customchallenge');
+  if (!doc) return;
+
+  // Update presets
+  for (let i = 0; i < PRESET_CHALLENGES.length; i++) {
+    const p = PRESET_CHALLENGES[i];
+    const completed = customChallenge.history.completedCodes.includes(p.code);
+    setText(doc, `cc-pre-${i}`, (completed ? '✅ ' : '') + p.name + ' — ' + p.description);
+  }
+
+  // Update builder
+  const modes = customChallenge.getModes();
+  const diffs = customChallenge.getDiffs();
+  const machine = MACHINES[customChallenge.builderMachineIdx % MACHINES.length];
+  setText(doc, 'cc-machine', machine.name);
+  setText(doc, 'cc-mode', modes[customChallenge.builderModeIdx % modes.length].toUpperCase());
+  setText(doc, 'cc-diff', diffs[customChallenge.builderDiffIdx % diffs.length].toUpperCase());
+  setText(doc, 'cc-target', String(customChallenge.builderTargetScore));
+
+  // Generate code preview
+  const preview = customChallenge.buildChallenge();
+  setText(doc, 'cc-code', 'Code: ' + preview.code);
+
+  setText(doc, 'cc-stats', 'Games: ' + customChallenge.history.totalCustomGames + ' | Wins: ' + customChallenge.history.totalCustomWins);
+}
+
+function startPresetChallenge(index: number): void {
+  const challenge = customChallenge.startPreset(index);
+  if (!challenge) return;
+  audio.buttonClick();
+  launchCustomChallenge(challenge);
+}
+
+function startBuiltCustomChallenge(): void {
+  audio.buttonClick();
+  const challenge = customChallenge.startBuiltChallenge();
+  checkAchievement('custom_creator', true);
+  launchCustomChallenge(challenge);
+}
+
+function launchCustomChallenge(challenge: import('./customchallenge').CustomChallenge): void {
+  inCustomGame = true;
+
+  // Set up game from challenge config
+  const machineIdx = MACHINES.findIndex(m => m.id === challenge.machineId);
+  if (machineIdx >= 0) gsm.machineIndex = machineIdx;
+  const themeIdx = THEMES.findIndex(t => t.id === challenge.themeId);
+  if (themeIdx >= 0) {
+    gsm.themeIndex = themeIdx;
+    rebuildTheme();
+  }
+  gsm.mode = challenge.mode;
+  gsm.difficulty = challenge.difficulty;
+
+  // Apply forced modifiers
+  progression.activeModifiers.clear();
+  for (const mod of challenge.modifiers) {
+    progression.activeModifiers.add(mod);
+  }
+
+  // Override attempts if specified
+  if (challenge.attempts > 0) {
+    gsm.maxAttempts = challenge.attempts;
+  }
+
+  // Override time limit if specified
+  if (challenge.timeLimit > 0 && challenge.mode === 'timeattack') {
+    gsm.timeRemaining = challenge.timeLimit;
+  }
+
+  startGame();
+
+  // Show challenge info toast
+  showToast('Challenge: ' + challenge.name);
+}
+
+function endCustomChallenge(score: number): void {
+  const result = customChallenge.recordResult(score);
+  inCustomGame = false;
+
+  if (result.won) {
+    showToast('✅ Challenge Complete! Target met!');
+    checkAchievement('first_custom', true);
+    checkAchievement('custom_5', customChallenge.history.totalCustomWins >= 5);
+    // Check if all presets are done
+    const allPresetsComplete = PRESET_CHALLENGES.every(p =>
+      customChallenge.history.completedCodes.includes(p.code)
+    );
+    checkAchievement('preset_all', allPresetsComplete);
+    particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), '#ff44ff', 20, 1.5);
+  } else {
+    showToast('❌ Challenge target not met');
   }
 }
 

@@ -1,0 +1,301 @@
+{
+  "element": {
+    "sourceTag": "ui",
+    "type": "custom",
+    "children": [
+      {
+        "sourceTag": "panel",
+        "type": "custom",
+        "children": [
+          {
+            "sourceTag": "vertical",
+            "type": "custom",
+            "children": [
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "TOURNAMENT RESULT"
+                ],
+                "properties": {
+                  "id": "tres-title",
+                  "fontSize": "22",
+                  "color": "#ffdd00",
+                  "alignment": "center"
+                },
+                "dataUid": "uid-4"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Round Name"
+                ],
+                "properties": {
+                  "id": "tres-round",
+                  "fontSize": "14",
+                  "color": "#00ffcc",
+                  "alignment": "center"
+                },
+                "dataUid": "uid-5"
+              },
+              {
+                "sourceTag": "vertical",
+                "type": "custom",
+                "children": [
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "Score: 0"
+                    ],
+                    "properties": {
+                      "id": "tres-score",
+                      "fontSize": "20",
+                      "color": "#ffffff",
+                      "alignment": "center"
+                    },
+                    "dataUid": "uid-7"
+                  },
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "Target: 500"
+                    ],
+                    "properties": {
+                      "id": "tres-target",
+                      "fontSize": "14",
+                      "color": "#aaaaaa",
+                      "alignment": "center"
+                    },
+                    "dataUid": "uid-8"
+                  },
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "PASSED!"
+                    ],
+                    "properties": {
+                      "id": "tres-verdict",
+                      "fontSize": "18",
+                      "color": "#00ff88",
+                      "alignment": "center"
+                    },
+                    "dataUid": "uid-9"
+                  }
+                ],
+                "properties": {
+                  "gap": "4",
+                  "padding": "8"
+                },
+                "dataUid": "uid-6"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "+50 🎫"
+                ],
+                "properties": {
+                  "id": "tres-tickets",
+                  "fontSize": "14",
+                  "color": "#ffdd00",
+                  "alignment": "center"
+                },
+                "dataUid": "uid-10"
+              },
+              {
+                "sourceTag": "text",
+                "type": "custom",
+                "children": [
+                  "Next round info"
+                ],
+                "properties": {
+                  "id": "tres-next",
+                  "fontSize": "12",
+                  "color": "#aaaaaa",
+                  "alignment": "center"
+                },
+                "dataUid": "uid-11"
+              },
+              {
+                "sourceTag": "button",
+                "type": "custom",
+                "children": [
+                  {
+                    "sourceTag": "text",
+                    "type": "custom",
+                    "children": [
+                      "Continue"
+                    ],
+                    "properties": {
+                      "fontSize": "14",
+                      "color": "#00ffcc",
+                      "alignment": "center"
+                    },
+                    "dataUid": "uid-13"
+                  }
+                ],
+                "properties": {
+                  "id": "btn-tres-continue",
+                  "backgroundColor": "#00884466",
+                  "borderRadius": "6",
+                  "padding": "8"
+                },
+                "dataUid": "uid-12"
+              }
+            ],
+            "properties": {
+              "gap": "8",
+              "alignment": "center"
+            },
+            "dataUid": "uid-3"
+          }
+        ],
+        "properties": {
+          "backgroundColor": "#111133ee",
+          "borderRadius": "12",
+          "padding": "16"
+        },
+        "dataUid": "uid-2"
+      }
+    ],
+    "properties": {},
+    "dataUid": "uid-1"
+  },
+  "classes": {},
+  "ranges": {
+    "uid-1": {
+      "start": {
+        "line": 0,
+        "column": 0
+      },
+      "end": {
+        "line": 20,
+        "column": 5
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 19,
+        "column": 10
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 2,
+        "column": 4
+      },
+      "end": {
+        "line": 18,
+        "column": 15
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 3,
+        "column": 6
+      },
+      "end": {
+        "line": 3,
+        "column": 102
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 4,
+        "column": 6
+      },
+      "end": {
+        "line": 4,
+        "column": 95
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 6,
+        "column": 6
+      },
+      "end": {
+        "line": 10,
+        "column": 17
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 7,
+        "column": 8
+      },
+      "end": {
+        "line": 7,
+        "column": 95
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 8,
+        "column": 8
+      },
+      "end": {
+        "line": 8,
+        "column": 99
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 9,
+        "column": 8
+      },
+      "end": {
+        "line": 9,
+        "column": 96
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 12,
+        "column": 6
+      },
+      "end": {
+        "line": 12,
+        "column": 93
+      }
+    },
+    "uid-11": {
+      "start": {
+        "line": 13,
+        "column": 6
+      },
+      "end": {
+        "line": 13,
+        "column": 99
+      }
+    },
+    "uid-12": {
+      "start": {
+        "line": 15,
+        "column": 6
+      },
+      "end": {
+        "line": 17,
+        "column": 15
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 16,
+        "column": 8
+      },
+      "end": {
+        "line": 16,
+        "column": 79
+      }
+    }
+  }
+}

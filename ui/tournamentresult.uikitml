@@ -1,0 +1,21 @@
+<ui>
+  <panel background-color="#111133ee" border-radius="12" padding="16">
+    <vertical gap="8" alignment="center">
+      <text id="tres-title" font-size="22" color="#ffdd00" alignment="center">TOURNAMENT RESULT</text>
+      <text id="tres-round" font-size="14" color="#00ffcc" alignment="center">Round Name</text>
+
+      <vertical gap="4" padding="8">
+        <text id="tres-score" font-size="20" color="#ffffff" alignment="center">Score: 0</text>
+        <text id="tres-target" font-size="14" color="#aaaaaa" alignment="center">Target: 500</text>
+        <text id="tres-verdict" font-size="18" color="#00ff88" alignment="center">PASSED!</text>
+      </vertical>
+
+      <text id="tres-tickets" font-size="14" color="#ffdd00" alignment="center">+50 🎫</text>
+      <text id="tres-next" font-size="12" color="#aaaaaa" alignment="center">Next round info</text>
+
+      <button id="btn-tres-continue" background-color="#00884466" border-radius="6" padding="8">
+        <text font-size="14" color="#00ffcc" alignment="center">Continue</text>
+      </button>
+    </vertical>
+  </panel>
+</ui>
