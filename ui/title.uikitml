@@ -103,6 +103,7 @@
   <div id="btn-custom" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">⚙ CUSTOM CHALLENGES</span></div>
   <div id="btn-machines" class="menu-btn"><span class="menu-btn-text">MACHINES</span></div>
   <div id="btn-collection" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">COLLECTION</span></div>
+  <div id="btn-codex" class="menu-btn menu-btn-gold"><span class="menu-btn-text gold-text">📖 PRIZE CODEX</span></div>
   <div id="btn-fusion" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">⚗ FUSION LAB</span></div>
   <div id="btn-profile" class="menu-btn menu-btn-green"><span class="menu-btn-text green-text">⚡ PROFILE</span></div>
   <div id="btn-skins" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">🎨 CLAW SKINS</span></div>

@@ -1,0 +1,35 @@
+<ui>
+  <panel background-color="#111133ee" border-radius="12" padding="16">
+    <vertical gap="6" alignment="center">
+      <text id="codex-title" font-size="22" color="#ffdd00" alignment="center">📖 PRIZE CODEX</text>
+      <text id="codex-progress" font-size="11" color="#aaaaaa" alignment="center">0 / 20 Entries Read</text>
+
+      <vertical gap="4" padding="4">
+        <text id="codex-prize-name" font-size="18" color="#00ffcc" alignment="center">Select a Prize</text>
+        <text id="codex-prize-rarity" font-size="12" color="#aaaaaa" alignment="center">Rarity</text>
+        <text id="codex-lore" font-size="11" color="#cccccc" alignment="center">Lore text will appear here...</text>
+        <text id="codex-origin" font-size="10" color="#888888" alignment="center">Origin: ???</text>
+        <text id="codex-fact" font-size="10" color="#ff8844" alignment="center">Fun Fact: ???</text>
+        <text id="codex-stats" font-size="10" color="#666666" alignment="center">Points | Tickets | Weight</text>
+      </vertical>
+
+      <horizontal gap="4" alignment="center">
+        <button id="btn-codex-prev" background-color="#33333366" border-radius="6" padding="4">
+          <text font-size="14" color="#ffffff">◀</text>
+        </button>
+        <text id="codex-page" font-size="12" color="#ffffff" alignment="center">1 / 20</text>
+        <button id="btn-codex-next" background-color="#33333366" border-radius="6" padding="4">
+          <text font-size="14" color="#ffffff">▶</text>
+        </button>
+      </horizontal>
+
+      <button id="btn-codex-fav" background-color="#44220066" border-radius="6" padding="4">
+        <text id="codex-fav-label" font-size="11" color="#ffdd00" alignment="center">⭐ Set as Favorite</text>
+      </button>
+
+      <button id="btn-codex-back" background-color="#33333366" border-radius="6" padding="6">
+        <text font-size="13" color="#aaaaaa" alignment="center">← Back</text>
+      </button>
+    </vertical>
+  </panel>
+</ui>

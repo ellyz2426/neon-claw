@@ -1,110 +1,98 @@
-# Neon Claw VR
+# 🕹️ Neon Claw VR
 
-A holodeck-styled VR crane/claw machine arcade built with [IWSDK](https://iwsdk.dev) 0.4.1. Position a neon claw over glowing prizes, drop it, and grab! Physics-based grip mechanics make every grab a thrilling gamble.
+A feature-rich VR claw machine arcade built with [IWSDK](https://iwsdk.dev) 0.4.1. Grab prizes, unlock skins, compete in tournaments, and build your collection in a neon holodeck environment.
 
-**[Play Now](https://ellyz2426.github.io/neon-claw/)** | [Repository](https://github.com/ellyz2426/neon-claw)
+**[▶ Play Now](https://ellyz2426.github.io/neon-claw/)**
 
-## Features
+## 🎮 Features
 
 ### Core Gameplay
-- **3D claw positioning** — move the claw on X/Z axes, drop to grab prizes
-- **Physics-based grip** — claw strength vs prize weight determines success
-- **Prize rarity system** — 14 prize types across 5 rarity tiers (Common to Legendary)
-- **Combo/streak scoring** — consecutive grabs build multiplier (up to x5)
-- **Ticket reward system** — earn tickets from each grab, multiplied by combo
+- **Physics-based claw grip** — grip strength vs prize weight determines success
+- **6 machine types** — Neon Starter, Deluxe Grabber, Premium Vault, Quantum Chamber, Neon Tower, Void Arena
+- **20 prize types** across 5 rarity tiers (Common → Legendary)
+- **8 game modes** — Classic, Time Attack, Target, Progressive, Daily Challenge, Marathon, Precision, Practice
+- **3 difficulty levels** — Easy, Medium, Hard
+- **Dual-runtime** — Full VR (Quest/headset) + browser (WASD + mouse)
 
-### Machines
-- **Neon Starter** — 12 prizes, 70% grip strength, beginner-friendly
-- **Deluxe Grabber** — 18 prizes, 60% grip, more variety
-- **Premium Vault** — 24 prizes, 50% grip, rare prizes available
-- **Quantum Chamber** — 30 prizes, 40% grip, legendary prizes possible
+### Meta-Game Systems
+- **Campaign Mode** — 3 seasons (Neon Origins, Crimson Gauntlet, Quantum Ascent) with 12 stages and progressive objectives
+- **Tournament Mode** — 3 bracket tiers (Rookie Cup, Pro Circuit, Legend's Gauntlet) with 4-round escalating brackets
+- **Custom Challenge Creator** — Design your own challenges with shareable 8-character codes
+- **Prize Fusion Lab** — Combine 3 same-rarity prizes into a higher rarity
+- **XP & Level Progression** — 50 levels with milestone rewards
+- **Prestige System** — 10 tiers with permanent bonus multipliers
+- **Ticket Shop** — 8 items across consumables, boosts, and utilities
+- **Lucky Wheel** — Gacha spinner with 9 prize segments
+- **Claw Frenzy** — Bonus round triggered by good performance (12s rapid-fire)
 
-### Game Modes
-| Mode | Description |
-|------|-------------|
-| **Classic** | Limited drops (3-7 based on difficulty), maximize score |
-| **Time Attack** | Race against 45-90 second clock |
-| **Target** | Grab specific highlighted prizes for bonus points |
-| **Progressive** | Machine gets harder each round |
-| **Daily Challenge** | Same seeded layout for everyone each day |
-| **Marathon** | Keep grabbing until 3 misses |
-| **Precision** | Only 3 drops — make them count |
-| **Practice** | No pressure, unlimited plays |
+### Cosmetics & Collection
+- **8 claw skins** — Level-unlocked visual customization
+- **6 machine skins** — Ticket-purchasable machine cosmetics
+- **5 arena themes** — Neon Holodeck, Crimson Arcade, Toxic Neon, Ultra Violet, Solar Blaze
+- **Prize Codex** — Lore entries for all 20 prizes with origin stories
+- **Prize Showcase Gallery** — Detailed view of discovered prizes
 
-### Prize Collection
-- 14 unique prize types with distinct shapes and colors
-- 5 rarity tiers: Common, Uncommon, Rare, Epic, Legendary
-- Collection album tracks discovered prizes
-- Heavier/rarer prizes are harder to grab but worth more
+### Progression & Stats
+- **102 achievements** spanning gameplay, collection, campaigns, tournaments, custom challenges
+- **Per-mode statistics** — Games played, best scores, accuracy per mode
+- **Session history** — Last 20 games with full stats
+- **Career stats** — Lifetime grabs, scores, tickets, collection progress
+- **Daily rewards** — 7-day login streak system
+- **5 challenge modifiers** — Turbo Speed, Weak Grip, Double Points, No Power-ups, Mirror Controls
 
-### UI & Polish
-- 16 PanelUI `.uikitml` spatial templates — **zero HTML DOM**
-- Head-following HUD (score, grabs, attempts, combo, timer)
-- World-space menus (title, modes, machines, settings, etc.)
-- Toast notifications for grabs, misses, achievements
-- 3-2-1 countdown before each game
-- 5 arena themes (Neon Holodeck, Crimson Arcade, Toxic Neon, Ultra Violet, Solar Blaze)
+### Audio & Visual Polish
+- **Procedural synthwave music** — Bass, pad, arpeggiator, hi-hat layers
+- **15+ sound effects** — Claw mechanics, prizes, UI, achievements
+- **Claw trail effects** — Theme-colored trail particles
+- **Score popups** — Rarity-colored burst effects
+- **Prize wobble physics** — Nearby prizes react to grabs
+- **Legendary celebration VFX** — Confetti burst with rainbow particles
+- **Screen shake** — Intensity scaled by rarity
+- **Instant Replay** — Auto-plays after legendary grabs
 
-### Audio
-- 15+ procedural SFX (claw move, drop, close, grab, miss, collect, combo, etc.)
-- Ambient drone (55Hz sine + triangle pad + LFO)
-- Master/SFX/Music volume controls
+### VR/XR Features
+- **XR controller input** — Right thumbstick to move, trigger to drop, B to pause
+- **PanelUI spatial interface** — All 41 UI templates use IWSDK's native spatial UI system
+- **Follower HUDs** — Head-locked panels for score, power-ups, power bar
+- **Zero HTML DOM** — All UI is XR-compatible
 
-### Achievements
-- 30 achievements tracking grabs, streaks, combos, scores, collection, modes, and more
+## 🎯 Controls
 
-## Controls
+| Action | Browser | VR Controller |
+|--------|---------|--------------|
+| Move claw | WASD / Arrow keys | Right thumbstick |
+| Drop claw | Space | Right trigger |
+| Pause | Escape | B button |
 
-### Browser
-| Key | Action |
-|-----|--------|
-| WASD / Arrows | Move claw |
-| Space | Drop claw |
-| Escape | Pause |
+## 🛠️ Tech Stack
 
-### VR
-| Input | Action |
-|-------|--------|
-| Right Thumbstick | Move claw |
-| Right Trigger | Drop claw |
-| B Button | Pause |
-| Laser Pointer | Menu interaction |
-
-## Tech Stack
-
-- **IWSDK 0.4.1** — WebXR development framework
-- **Dual runtime** — VR + browser-first (`xr: { offer: 'once' }`)
-- **PanelUI** — `.uikitml` compiled spatial UI via `@iwsdk/vite-plugin-uikitml`
-- **Web Audio API** — Procedural sound synthesis
-- **Vite** — Build tooling
+- **IWSDK 0.4.1** — Meta's WebXR development framework
+- **Three.js** (via IWSDK) — 3D rendering
+- **PanelUI** — IWSDK's spatial UI system (`.uikitml` templates)
+- **Web Audio API** — Procedural audio synthesis
 - **TypeScript** — Full type safety
+- **Vite** — Build tooling
 
-## Project Structure
+## 📊 Build Stats
 
-```
-neon-claw/
-  src/
-    index.ts        — Main entry, game loop, UI wiring, input handling
-    types.ts        — Types, prizes, machines, themes, achievements, state
-    audio.ts        — Procedural Web Audio manager
-    machine.ts      — Machine geometry, claw, prizes, rails
-    environment.ts  — Holodeck environment, lighting, particles
-    effects.ts      — Particle system, claw shadow, screen shake
-  ui/               — 16 .uikitml spatial UI templates
-  dist/             — Production build output
-```
+| Metric | Count |
+|--------|-------|
+| Source files | 60+ |
+| Lines of code | 9,000+ |
+| PanelUI templates | 41 |
+| Achievements | 102 |
+| Game modes | 8 |
+| Build rounds | 8 |
+| Total build time | ~360 minutes |
 
-## Build & Deploy
+## 📦 Development
 
 ```bash
 npm install
-npm run build
-# Deploy dist/ to any static host
+npm run dev    # Start dev server
+npm run build  # Production build
 ```
 
-## Stats
+## 📄 License
 
-- **6 source files**, ~2,100 lines of TypeScript
-- **16 `.uikitml` templates**, zero HTML DOM
-- **14 prize types**, 4 machines, 5 themes, 8 modes, 30 achievements
-- IWSDK 0.4.1, dual-runtime VR + browser
+Built with IWSDK. See [iwsdk.dev](https://iwsdk.dev) for framework details.

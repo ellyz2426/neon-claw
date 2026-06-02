@@ -6,7 +6,7 @@ export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'gra
   'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result' |
   'profile' | 'clawskins' | 'modifiers' | 'levelup' | 'shop' | 'wheel' | 'prestige' |
   'frenzy' | 'frenzy_result' | 'machineskins' | 'detailedstats' |
-  'tournament' | 'tournament_round' | 'tournament_result' | 'customchallenge';
+  'tournament' | 'tournament_round' | 'tournament_result' | 'customchallenge' | 'codex';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -239,6 +239,9 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'custom_creator', name: 'Challenge Creator', desc: 'Create a custom challenge', unlocked: false },
     { id: 'custom_5', name: 'Custom Conqueror', desc: 'Win 5 custom challenges', unlocked: false },
     { id: 'preset_all', name: 'Preset Master', desc: 'Complete all 4 preset challenges', unlocked: false },
+    // Round 8 achievements — Codex + Replay
+    { id: 'codex_full', name: 'Lorekeeper', desc: 'Read all prize codex entries', unlocked: false },
+    { id: 'replay_watch', name: 'Action Replay', desc: 'Watch an instant replay', unlocked: false },
   ];
 }
 

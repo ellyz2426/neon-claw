@@ -28,6 +28,8 @@ import { MachineSkinManager, MACHINE_SKINS } from './machineskins';
 import { ModeStatsManager } from './modestats';
 import { TournamentManager, TOURNAMENT_BRACKETS } from './tournament';
 import { CustomChallengeManager, PRESET_CHALLENGES } from './customchallenge';
+import { ReplayManager } from './replay';
+import { CodexManager, CODEX_ENTRIES } from './codex';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -46,6 +48,8 @@ const machineSkins = new MachineSkinManager();
 const modeStats = new ModeStatsManager();
 const tournament = new TournamentManager();
 const customChallenge = new CustomChallengeManager();
+const replay = new ReplayManager();
+const codex = new CodexManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -79,6 +83,7 @@ const confettiParticles: { mesh: Mesh; vel: Vector3; life: number; spin: number 
 let frenzyPending = false; // true when a frenzy was triggered and will start after gameover
 let inTournamentGame = false; // true during tournament rounds
 let inCustomGame = false; // true during custom challenge games
+let codexPage = 0; // current page in prize codex
 
 // UI entity references
 const panels: Record<string, any> = {};
@@ -185,6 +190,9 @@ function initPanels(): void {
   setupPanel('tournamentround', '/ui/tournamentround.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
   setupPanel('tournamentresult', '/ui/tournamentresult.json', { maxWidth: 0.8, maxHeight: 0.7, pos: [0, menuY, menuZ] });
   setupPanel('customchallenge', '/ui/customchallenge.json', { maxWidth: 1.0, maxHeight: 1.4, pos: [0, menuY, menuZ] });
+  // Round 8 panels
+  setupPanel('replay', '/ui/replay.json', { maxWidth: 0.35, maxHeight: 0.18, follower: true, followOffset: [0, 0.15, -0.5] });
+  setupPanel('codex', '/ui/codex.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -197,7 +205,8 @@ function showState(state: GameState): void {
     'profile', 'clawskins', 'modifiers', 'levelup',
     'shop', 'wheel', 'prestige',
     'frenzy', 'frenzyresult', 'machineskins', 'detailedstats',
-    'tournament', 'tournamentround', 'tournamentresult', 'customchallenge'];
+    'tournament', 'tournamentround', 'tournamentresult', 'customchallenge',
+    'replay', 'codex'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -236,6 +245,7 @@ function showState(state: GameState): void {
     tournament_round: ['tournamentround'],
     tournament_result: ['tournamentresult'],
     customchallenge: ['customchallenge'],
+    codex: ['codex'],
   };
 
   const visible = stateMap[state] || [];
@@ -472,6 +482,7 @@ function wireButtons(): void {
       'btn-detailedstats': () => { audio.buttonClick(); updateDetailedStatsPanel(); showState('detailedstats'); },
       'btn-tournament': () => { audio.buttonClick(); updateTournamentPanel(); showState('tournament'); },
       'btn-custom': () => { audio.buttonClick(); updateCustomChallengePanel(); showState('customchallenge'); },
+      'btn-codex': () => { audio.buttonClick(); codexPage = 0; updateCodexPanel(); showState('codex'); },
     });
 
     wirePanel('modeselect', {
@@ -685,6 +696,14 @@ function wireButtons(): void {
       'btn-cc-create': () => startBuiltCustomChallenge(),
       'btn-cc-back': () => { audio.buttonClick(); showState('title'); },
     });
+
+    // Round 8 panel wiring
+    wirePanel('codex', {
+      'btn-codex-prev': () => { audio.buttonClick(); codexPage = (codexPage - 1 + PRIZE_TYPES.length) % PRIZE_TYPES.length; updateCodexPanel(); },
+      'btn-codex-next': () => { audio.buttonClick(); codexPage = (codexPage + 1) % PRIZE_TYPES.length; updateCodexPanel(); },
+      'btn-codex-fav': () => { audio.buttonClick(); codex.setFavorite(PRIZE_TYPES[codexPage].id); showToast('⭐ Favorite set!'); updateCodexPanel(); },
+      'btn-codex-back': () => { audio.buttonClick(); showState('title'); },
+    });
   }, 1500);
 }
 
@@ -813,8 +832,7 @@ function dropClaw(): void {
   gsm.clawTargetY = -gsm.machine.pitHeight / 2 + 0.08;
   gsm.grabStartTime = performance.now();
   audio.clawDrop();
-
-  // Slow-mo power-up: reduce drop speed (handled in physics)
+  replay.startRecording(); // Begin recording for instant replay
 }
 
 function updateClawPhysics(dt: number): void {
@@ -1098,6 +1116,8 @@ function releasePrize(): void {
   gsm.collection.add(prizeData.id);
   // Add to fusion inventory
   fusion.addPrize(prizeData.id);
+  // Track codex discovery
+  codex.recordDiscovery(prizeData.id);
 
   const grabTime = (performance.now() - gsm.grabStartTime) / 1000;
   checkAchievement('speed_grab', grabTime < 3);
@@ -1190,6 +1210,13 @@ function releasePrize(): void {
   gsm.grabbedPrize = null;
   gsm.attempts++;
   audio.prizeRelease();
+  
+  // Finish replay recording for this grab
+  replay.finishClip(prizeData.id, prizeData.name, prizeData.rarity, points, true);
+  // Auto-play replay for legendary grabs
+  if (prizeData.rarity === 'legendary') {
+    replay.autoPlayTimer = 1.5; // delay before auto-replay
+  }
 
   updateHUD();
 }
@@ -1215,6 +1242,7 @@ function completeMiss(): void {
   audio.clawMiss();
   showToast('Miss!');
   shake.trigger(0.005, 0.15);
+  replay.finishClip('', '', '', 0, false); // Record miss
   checkGameEnd();
   updateHUD();
 }
@@ -2616,6 +2644,27 @@ function gameLoop(dt: number, time: number): void {
   // Claw physics
   if (gsm.state === 'playing' || gsm.state === 'grabbing' || gsm.state === 'dropping' || gsm.state === ('frenzy' as any)) {
     updateClawPhysics(dt);
+    // Record replay frame
+    replay.recordFrame(time, gsm.clawX, gsm.clawZ, gsm.clawY, gsm.clawPhase, gsm.clawGripping);
+  }
+
+  // Replay auto-play timer
+  if (replay.autoPlayTimer > 0) {
+    replay.autoPlayTimer -= dt;
+    if (replay.autoPlayTimer <= 0 && replay.hasClips()) {
+      replay.playReplay();
+      updateReplayHUD();
+      setVisible('replay', true);
+    }
+  }
+
+  // Replay playback
+  if (replay.isPlaying) {
+    const finished = replay.advancePlayback(dt);
+    updateReplayHUD();
+    if (finished) {
+      setVisible('replay', false);
+    }
   }
 
   // Time attack timer
@@ -2781,6 +2830,68 @@ function gameLoop(dt: number, time: number): void {
   if (legendaryGrabCelebration > 0) {
     legendaryGrabCelebration -= dt;
   }
+}
+
+// ─── Round 8: Codex Functions ────────────────────────────
+function updateCodexPanel(): void {
+  const doc = getDoc('codex');
+  if (!doc) return;
+
+  const prize = PRIZE_TYPES[codexPage];
+  const entry = codex.getEntry(prize.id);
+  const owned = gsm.collection.has(prize.id);
+
+  setText(doc, 'codex-progress', codex.getViewedCount() + ' / ' + codex.getTotalEntries() + ' Entries Read');
+  setText(doc, 'codex-page', (codexPage + 1) + ' / ' + PRIZE_TYPES.length);
+
+  if (owned) {
+    setText(doc, 'codex-prize-name', prize.name);
+    setText(doc, 'codex-prize-rarity', prize.rarity.toUpperCase() + ' | ' + prize.points + ' pts | ' + prize.tickets + ' tix');
+    if (entry) {
+      setText(doc, 'codex-lore', entry.lore);
+      setText(doc, 'codex-origin', 'Origin: ' + entry.origin);
+      setText(doc, 'codex-fact', '💡 ' + entry.funFact);
+      codex.markViewed(prize.id);
+    } else {
+      setText(doc, 'codex-lore', 'No lore available.');
+      setText(doc, 'codex-origin', '');
+      setText(doc, 'codex-fact', '');
+    }
+    setText(doc, 'codex-stats', 'Weight: ' + Math.round(prize.weight * 100) + '% | Size: ' + prize.size + 'x | Shape: ' + prize.shape);
+    const isFav = codex.progress.favoritePrizeId === prize.id;
+    setText(doc, 'codex-fav-label', isFav ? '⭐ FAVORITE' : '☆ Set as Favorite');
+  } else {
+    setText(doc, 'codex-prize-name', '??? ' + prize.rarity.toUpperCase() + ' ???');
+    setText(doc, 'codex-prize-rarity', 'UNDISCOVERED');
+    setText(doc, 'codex-lore', 'Grab this prize to unlock its codex entry!');
+    setText(doc, 'codex-origin', '');
+    setText(doc, 'codex-fact', '');
+    setText(doc, 'codex-stats', '');
+    setText(doc, 'codex-fav-label', '☆ Set as Favorite');
+  }
+
+  // Achievement check
+  checkAchievement('codex_full', codex.isFullyRead());
+}
+
+// ─── Round 8: Replay HUD Update ─────────────────────────
+function updateReplayHUD(): void {
+  const doc = getDoc('replay');
+  if (!doc) return;
+
+  const clip = replay.playbackClip;
+  if (!clip) return;
+
+  setText(doc, 'replay-prize', clip.wasGrab ? clip.prizeName : 'Miss');
+  setText(doc, 'replay-score', clip.wasGrab ? '+' + clip.score + ' pts' : '');
+  setText(doc, 'replay-speed', replay.playbackSpeed + 'x Speed');
+
+  const progress = replay.isPlaying
+    ? Math.round((replay.playbackFrame / (clip.frames.length || 1)) * 100)
+    : 100;
+  const barLen = 10;
+  const filled = Math.round(barLen * progress / 100);
+  setText(doc, 'replay-progress', '[' + '█'.repeat(filled) + '░'.repeat(barLen - filled) + '] ' + progress + '%');
 }
 
 // ─── Init ────────────────────────────────────────────────
