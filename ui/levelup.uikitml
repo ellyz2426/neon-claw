@@ -1,0 +1,12 @@
+<panel>
+  <panel layout="column" align="center" padding="30" background="#111122ee">
+    <text id="lvl-title" size="32" color="#ffdd00" weight="bold">⭐ LEVEL UP! ⭐</text>
+    <text id="lvl-number" size="40" color="#00ffff" weight="bold" margin-top="10">Level 2</text>
+    <text id="lvl-reward-1" size="18" color="#00ff88" margin-top="12">---</text>
+    <text id="lvl-reward-2" size="18" color="#aa44ff">---</text>
+    <text id="lvl-reward-3" size="16" color="#88aacc">---</text>
+    <button id="btn-lvl-ok" margin-top="16">
+      <text size="18" color="#00ffff" weight="bold">CONTINUE</text>
+    </button>
+  </panel>
+</panel>

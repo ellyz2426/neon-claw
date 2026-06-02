@@ -1,4 +1,4 @@
-// index.ts — Main entry point for Neon Claw VR (Round 3: Campaign, Fusion, New Machines, VFX)
+// index.ts — Main entry point for Neon Claw VR (Round 4: Progression, Skins, Modifiers, Daily Rewards)
 import {
   World, PanelUI, PanelDocument, Follower, FollowBehavior, ScreenSpace,
   Vector3, Color, Group, Mesh, SphereGeometry, MeshBasicMaterial, AdditiveBlending,
@@ -16,6 +16,10 @@ import { PowerUpManager, POWERUP_DEFS, createPowerUpOrb, PowerUpOrb } from './po
 import { SynthwaveMusic } from './music';
 import { CampaignManager, SEASONS } from './campaign';
 import { FusionManager, FUSION_RECIPES } from './fusion';
+import {
+  ProgressionManager, CLAW_SKINS, CHALLENGE_MODIFIERS, RARITY_XP,
+  getLevelRewards, DAILY_REWARDS,
+} from './progression';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -25,6 +29,7 @@ const powerups = new PowerUpManager();
 const music = new SynthwaveMusic();
 const campaign = new CampaignManager();
 const fusion = new FusionManager();
+const progression = new ProgressionManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -142,6 +147,11 @@ function initPanels(): void {
   setupPanel('campaignstage', '/ui/campaignstage.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
   setupPanel('fusion', '/ui/fusion.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
   setupPanel('campaignresult', '/ui/campaignresult.json', { maxWidth: 0.8, maxHeight: 0.7, pos: [0, menuY, menuZ] });
+  // Round 4 panels
+  setupPanel('profile', '/ui/profile.json', { maxWidth: 0.9, maxHeight: 0.9, pos: [0, menuY, menuZ] });
+  setupPanel('clawskins', '/ui/clawskins.json', { maxWidth: 0.9, maxHeight: 1.1, pos: [0, menuY, menuZ] });
+  setupPanel('modifiers', '/ui/modifiers.json', { maxWidth: 0.9, maxHeight: 0.9, pos: [0, menuY, menuZ] });
+  setupPanel('levelup', '/ui/levelup.json', { maxWidth: 0.7, maxHeight: 0.5, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -150,7 +160,8 @@ function showState(state: GameState): void {
   const allPanels = ['title', 'modeselect', 'difficulty', 'machines', 'hud', 'pause',
     'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'collection', 'stats',
     'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase',
-    'campaign', 'campaignstage', 'fusion', 'campaignresult'];
+    'campaign', 'campaignstage', 'fusion', 'campaignresult',
+    'profile', 'clawskins', 'modifiers', 'levelup'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -174,6 +185,10 @@ function showState(state: GameState): void {
     campaign_stage: ['campaignstage'],
     fusion: ['fusion'],
     campaign_result: ['campaignresult'],
+    profile: ['profile'],
+    clawskins: ['clawskins'],
+    modifiers: ['modifiers'],
+    levelup: ['levelup'],
   };
 
   const visible = stateMap[state] || [];
@@ -400,6 +415,9 @@ function wireButtons(): void {
       'btn-stats': () => { audio.buttonClick(); updateStats(); showState('stats'); },
       'btn-settings': () => { audio.buttonClick(); updateSettings(); showState('settings'); },
       'btn-help': () => { audio.buttonClick(); showState('help'); },
+      'btn-profile': () => { audio.buttonClick(); updateProfilePanel(); showState('profile'); },
+      'btn-skins': () => { audio.buttonClick(); updateClawSkinsPanel(); showState('clawskins'); },
+      'btn-modifiers': () => { audio.buttonClick(); updateModifiersPanel(); showState('modifiers'); },
     });
 
     wirePanel('modeselect', {
@@ -505,6 +523,37 @@ function wireButtons(): void {
     wirePanel('campaignresult', {
       'btn-cr-continue': () => { audio.buttonClick(); updateCampaignStagePanel(); showState('campaign_stage'); },
     });
+
+    // Round 4 panel wiring
+    wirePanel('profile', {
+      'btn-daily-claim': () => claimDailyReward(),
+      'btn-back-profile': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('clawskins', {
+      'btn-skin-0': () => selectClawSkin(0),
+      'btn-skin-1': () => selectClawSkin(1),
+      'btn-skin-2': () => selectClawSkin(2),
+      'btn-skin-3': () => selectClawSkin(3),
+      'btn-skin-4': () => selectClawSkin(4),
+      'btn-skin-5': () => selectClawSkin(5),
+      'btn-skin-6': () => selectClawSkin(6),
+      'btn-skin-7': () => selectClawSkin(7),
+      'btn-back-skins': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('modifiers', {
+      'btn-mod-0': () => toggleModifier(0),
+      'btn-mod-1': () => toggleModifier(1),
+      'btn-mod-2': () => toggleModifier(2),
+      'btn-mod-3': () => toggleModifier(3),
+      'btn-mod-4': () => toggleModifier(4),
+      'btn-back-mods': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('levelup', {
+      'btn-lvl-ok': () => { audio.buttonClick(); showState('gameover'); },
+    });
   }, 1500);
 }
 
@@ -582,12 +631,23 @@ function moveClaw(dx: number, dz: number, dt: number): void {
   if (gsm.clawPhase !== 'idle' && gsm.clawPhase !== 'positioning') return;
   gsm.clawPhase = 'positioning';
   const config = gsm.machine;
-  const speed = config.clawSpeed * 0.8 * dt;
+  let speed = config.clawSpeed * 0.8 * dt;
+
+  // Turbo modifier: 50% faster movement
+  if (progression.hasModifier('turbo')) speed *= 1.5;
+
+  // Mirror modifier: invert controls
+  let mdx = dx, mdz = dz;
+  if (progression.hasModifier('mirror')) {
+    mdx = -dx;
+    mdz = -dz;
+  }
+
   const halfW = config.pitWidth * 0.4;
   const halfD = config.pitDepth * 0.4;
 
-  gsm.clawX = Math.max(-halfW, Math.min(halfW, gsm.clawX + dx * speed));
-  gsm.clawZ = Math.max(-halfD, Math.min(halfD, gsm.clawZ + dz * speed));
+  gsm.clawX = Math.max(-halfW, Math.min(halfW, gsm.clawX + mdx * speed));
+  gsm.clawZ = Math.max(-halfD, Math.min(halfD, gsm.clawZ + mdz * speed));
 }
 
 function dropClaw(): void {
@@ -603,8 +663,13 @@ function dropClaw(): void {
 function updateClawPhysics(dt: number): void {
   const config = gsm.machine;
   let dropSpeed = config.dropSpeed * 0.6;
-  const liftSpeed = 0.4;
-  const returnSpeed = 0.5;
+  const liftSpeed = progression.hasModifier('turbo') ? 0.6 : 0.4;
+  const returnSpeed = progression.hasModifier('turbo') ? 0.75 : 0.5;
+
+  // Turbo modifier: 50% faster drop
+  if (progression.hasModifier('turbo')) {
+    dropSpeed *= 1.5;
+  }
   const topY = config.pitHeight / 2 + 0.1;
 
   // Slow-mo power-up halves drop speed
@@ -709,6 +774,10 @@ function getGripStrength(): number {
   }
   if (gsm.mode === 'progressive') {
     grip *= Math.max(0.3, 1 - gsm.progressiveRound * 0.08);
+  }
+  // Weak Grip modifier: reduce by 40%
+  if (progression.hasModifier('weak_grip')) {
+    grip *= 0.6;
   }
   // Strong Grip power-up
   if (powerups.has('strong_grip')) {
@@ -820,6 +889,12 @@ function releasePrize(): void {
 
   let ticketMult = gsm.combo;
   if (powerups.has('double_tickets')) ticketMult *= 2;
+  // Apply modifier ticket multiplier
+  ticketMult *= progression.getTicketMultiplier();
+  // Double points modifier: 2x points
+  if (progression.hasModifier('double_pts')) {
+    points *= 2;
+  }
   gsm.ticketsEarned += prizeData.tickets * ticketMult;
 
   gsm.comboTimer = 5;
@@ -898,6 +973,24 @@ function releasePrize(): void {
   // New machine achievements
   checkAchievement('tower_clear', gsm.machine.id === 'tower' && gsm.grabs >= 5);
   checkAchievement('void_grab', gsm.machine.id === 'void');
+
+  // Round 4: XP + progression achievements
+  const xpEarned = progression.addXp(RARITY_XP[prizeData.rarity] || 10);
+  checkAchievement('xp_1k', progression.totalXp >= 1000);
+  checkAchievement('xp_10k', progression.totalXp >= 10000);
+  checkAchievement('level_5', progression.level >= 5);
+  checkAchievement('level_10', progression.level >= 10);
+  checkAchievement('level_25', progression.level >= 25);
+  checkAchievement('level_50', progression.level >= 50);
+  checkAchievement('first_skin', progression.unlockedSkins.size > 1);
+  checkAchievement('all_skins', progression.unlockedSkins.size >= CLAW_SKINS.length);
+  // Modifier achievements
+  if (progression.activeModifiers.size > 0) {
+    checkAchievement('modifier_1', true);
+    checkAchievement('turbo_grab', progression.hasModifier('turbo'));
+    checkAchievement('mirror_grab', progression.hasModifier('mirror'));
+    checkAchievement('weak_legendary', progression.hasModifier('weak_grip') && prizeData.rarity === 'legendary');
+  }
 
   gsm.grabbedPrize = null;
   gsm.attempts++;
@@ -987,6 +1080,15 @@ function endGame(): void {
   checkAchievement('games_50', gsm.totalGames >= 50);
   checkAchievement('marathon_master', gsm.mode === 'marathon' && gsm.grabs >= 25);
   checkAchievement('precision_ace', gsm.mode === 'precision' && gsm.misses === 0 && gsm.grabs === 3);
+  // Round 4 achievement checks
+  checkAchievement('modifier_3', progression.activeModifiers.size >= 3 && gsm.grabs > 0);
+  checkAchievement('modifier_all', progression.activeModifiers.size >= 5 && gsm.grabs > 0);
+  checkAchievement('tickets_2k', gsm.totalTickets >= 2000);
+  checkAchievement('games_100', gsm.totalGames >= 100);
+  checkAchievement('score_50k', gsm.score >= 50000);
+  checkAchievement('total_score_100k', gsm.totalScore >= 100000);
+  checkAchievement('daily_3', progression.dailyStreak >= 3);
+  checkAchievement('daily_7', progression.dailyStreak >= 7);
 
   const accuracy = gsm.attempts > 0 ? Math.round((gsm.grabs / gsm.attempts) * 100) : 0;
   gsm.addToLeaderboard({
@@ -1006,6 +1108,13 @@ function endGame(): void {
     inCampaignGame = false;
     showCampaignResult();
     showState('campaign_result');
+    return;
+  }
+
+  // Check for level-up display
+  if (progression.pendingLevelUp) {
+    showLevelUpPanel();
+    showState('levelup');
     return;
   }
 
@@ -1304,6 +1413,132 @@ function performFusion(recipeIndex: number): void {
   }
 }
 
+// ─── Round 4 UI Update Methods ───────────────────────────
+function updateProfilePanel(): void {
+  const doc = getDoc('profile');
+  if (!doc) return;
+  const prog = progression.getXpProgress();
+  setText(doc, 'profile-level', '⚡ Level ' + progression.level);
+  setText(doc, 'profile-xp', 'XP: ' + prog.current + ' / ' + prog.needed);
+  const barLen = 10;
+  const filled = Math.round(barLen * prog.percent / 100);
+  setText(doc, 'profile-bar', '[' + '█'.repeat(filled) + '░'.repeat(barLen - filled) + '] ' + prog.percent + '%');
+  setText(doc, 'profile-total-xp', 'Total XP: ' + progression.totalXp);
+  const skin = progression.getSkin();
+  setText(doc, 'profile-skin', '🎨 Claw: ' + skin.name);
+  setText(doc, 'profile-streak', '🔥 Daily Streak: ' + progression.dailyStreak + '/7');
+  const modCount = progression.activeModifiers.size;
+  setText(doc, 'profile-mods', modCount > 0 ? 'Active Modifiers: ' + modCount : 'No Modifiers Active');
+  // Next reward
+  const rewards = getLevelRewards();
+  const next = rewards.find(r => r.level > progression.level);
+  setText(doc, 'profile-next', next ? 'Next: Lv.' + next.level + ' — ' + next.description : 'MAX LEVEL');
+}
+
+function updateClawSkinsPanel(): void {
+  const doc = getDoc('clawskins');
+  if (!doc) return;
+  const currentSkin = progression.getSkin();
+  setText(doc, 'skins-current', 'Equipped: ' + currentSkin.name);
+  for (let i = 0; i < CLAW_SKINS.length; i++) {
+    const skin = CLAW_SKINS[i];
+    const unlocked = progression.isSkinUnlocked(skin.id);
+    const equipped = progression.selectedSkin === skin.id;
+    setText(doc, `skin-name-${i}`, skin.name);
+    if (equipped) {
+      setText(doc, `skin-status-${i}`, '✅ EQUIPPED');
+    } else if (unlocked) {
+      setText(doc, `skin-status-${i}`, '▶ SELECT');
+    } else {
+      setText(doc, `skin-status-${i}`, '🔒 Level ' + skin.unlockLevel);
+    }
+  }
+}
+
+function selectClawSkin(index: number): void {
+  const skin = CLAW_SKINS[index];
+  if (!skin) return;
+  if (progression.selectSkin(skin.id)) {
+    audio.buttonClick();
+    showToast('Equipped: ' + skin.name);
+    updateClawSkinsPanel();
+    // Rebuild claw with new skin colors
+    buildMachine();
+  } else {
+    showToast('Unlock at Level ' + skin.unlockLevel);
+  }
+}
+
+function updateModifiersPanel(): void {
+  const doc = getDoc('modifiers');
+  if (!doc) return;
+  for (let i = 0; i < CHALLENGE_MODIFIERS.length; i++) {
+    const mod = CHALLENGE_MODIFIERS[i];
+    const active = progression.hasModifier(mod.id);
+    setText(doc, `mod-label-${i}`, mod.icon + ' ' + mod.name + ' — ' + mod.ticketMultiplier + 'x tickets');
+    setText(doc, `mod-status-${i}`, active ? '✅ ON' : '○ OFF');
+  }
+  const totalMult = progression.getTicketMultiplier();
+  setText(doc, 'mods-total', 'Total Ticket Multiplier: ' + totalMult.toFixed(1) + 'x');
+}
+
+function toggleModifier(index: number): void {
+  const mod = CHALLENGE_MODIFIERS[index];
+  if (!mod) return;
+  audio.buttonClick();
+  const now = progression.toggleModifier(mod.id);
+  showToast(mod.name + ': ' + (now ? 'ON' : 'OFF'));
+  updateModifiersPanel();
+}
+
+function showLevelUpPanel(): void {
+  const doc = getDoc('levelup');
+  if (!doc) return;
+  setText(doc, 'lvl-number', 'Level ' + progression.level);
+  const rewards = progression.pendingLevelRewards;
+  for (let i = 0; i < 3; i++) {
+    if (i < rewards.length) {
+      setText(doc, `lvl-reward-${i + 1}`, rewards[i].description);
+      // Grant ticket rewards
+      if (rewards[i].type === 'tickets') {
+        gsm.totalTickets += rewards[i].value as number;
+        gsm.save();
+      }
+    } else {
+      setText(doc, `lvl-reward-${i + 1}`, '');
+    }
+  }
+  if (rewards.length === 0) {
+    setText(doc, 'lvl-reward-1', 'Keep climbing!');
+  }
+  progression.pendingLevelUp = false;
+  progression.pendingLevelRewards = [];
+  progression.save();
+
+  // Celebration VFX
+  spawnConfetti(new Vector3(0, machineBaseY + 0.6, -1.8), 25);
+  shake.trigger(0.02, 0.4);
+  audio.achievementUnlock();
+}
+
+function claimDailyReward(): void {
+  const reward = progression.claimDailyReward();
+  if (!reward) {
+    showToast('Already claimed today!');
+    return;
+  }
+  audio.achievementUnlock();
+  gsm.totalTickets += reward.tickets;
+  if (reward.xpBonus > 0) {
+    progression.addXp(reward.xpBonus);
+  }
+  gsm.save();
+  particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), '#ffdd00', 15, 1.5);
+  shake.trigger(0.01, 0.2);
+  showToast(reward.description);
+  updateProfilePanel();
+}
+
 // ─── Legendary Celebration VFX ───────────────────────────
 function spawnConfetti(pos: Vector3, count: number): void {
   const colors = ['#ff4444', '#ffdd00', '#00ff88', '#4488ff', '#ff00ff', '#00ffff', '#ffaa00'];
@@ -1547,7 +1782,7 @@ function gameLoop(dt: number, time: number): void {
     checkPowerUpCollection();
 
     // Spawn new power-up orbs periodically
-    if (powerups.shouldSpawn() && gsm.clawPhase === 'idle') {
+    if (!progression.hasModifier('no_powerups') && powerups.shouldSpawn() && gsm.clawPhase === 'idle') {
       spawnPowerUpOrb();
     }
   }

@@ -1,0 +1,22 @@
+<panel>
+  <panel layout="column" align="center" padding="20" background="#111122ee">
+    <text id="mods-title" size="28" color="#ff8800" weight="bold">⚔️ CHALLENGE MODIFIERS</text>
+    <text id="mods-desc" size="14" color="#88aacc" margin-top="4">Toggle modifiers for bonus rewards!</text>
+    <panel layout="column" align="center" padding="8" margin-top="10">
+      <button id="btn-mod-0"><text id="mod-label-0" size="15" color="#aabbcc">⚡ Turbo Speed — 1.5x tickets</text></button>
+      <text id="mod-status-0" size="12" color="#666688">OFF</text>
+      <button id="btn-mod-1"><text id="mod-label-1" size="15" color="#aabbcc">🤏 Weak Grip — 1.5x tickets</text></button>
+      <text id="mod-status-1" size="12" color="#666688">OFF</text>
+      <button id="btn-mod-2"><text id="mod-label-2" size="15" color="#aabbcc">✖️ Double Points — 2x tickets</text></button>
+      <text id="mod-status-2" size="12" color="#666688">OFF</text>
+      <button id="btn-mod-3"><text id="mod-label-3" size="15" color="#aabbcc">🚫 No Power-ups — 1.3x tickets</text></button>
+      <text id="mod-status-3" size="12" color="#666688">OFF</text>
+      <button id="btn-mod-4"><text id="mod-label-4" size="15" color="#aabbcc">🪞 Mirror Controls — 1.8x tickets</text></button>
+      <text id="mod-status-4" size="12" color="#666688">OFF</text>
+    </panel>
+    <text id="mods-total" size="16" color="#ffdd00" margin-top="8">Total Multiplier: 1.0x</text>
+    <button id="btn-back-mods" margin-top="12">
+      <text size="16" color="#aaaaaa">← BACK</text>
+    </button>
+  </panel>
+</panel>

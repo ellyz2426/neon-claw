@@ -1,0 +1,27 @@
+<panel>
+  <panel layout="column" align="center" padding="20" background="#111122ee">
+    <text id="skins-title" size="28" color="#aa44ff" weight="bold">🎨 CLAW SKINS</text>
+    <text id="skins-current" size="16" color="#88aacc" margin-top="6">Current: Standard</text>
+    <panel layout="column" align="center" padding="6" margin-top="10">
+      <button id="btn-skin-0"><text id="skin-name-0" size="15" color="#00ffff">Standard</text></button>
+      <text id="skin-status-0" size="12" color="#00ff88">EQUIPPED</text>
+      <button id="btn-skin-1"><text id="skin-name-1" size="15" color="#ff2244">Crimson Claw</text></button>
+      <text id="skin-status-1" size="12" color="#666688">Lv.3</text>
+      <button id="btn-skin-2"><text id="skin-name-2" size="15" color="#00ff44">Toxic Grip</text></button>
+      <text id="skin-status-2" size="12" color="#666688">Lv.7</text>
+      <button id="btn-skin-3"><text id="skin-name-3" size="15" color="#aa44ff">Royal Purple</text></button>
+      <text id="skin-status-3" size="12" color="#666688">Lv.12</text>
+      <button id="btn-skin-4"><text id="skin-name-4" size="15" color="#ff8800">Solar Flare</text></button>
+      <text id="skin-status-4" size="12" color="#666688">Lv.18</text>
+      <button id="btn-skin-5"><text id="skin-name-5" size="15" color="#ffffff">Phantom</text></button>
+      <text id="skin-status-5" size="12" color="#666688">Lv.25</text>
+      <button id="btn-skin-6"><text id="skin-name-6" size="15" color="#6644ff">Void Claw</text></button>
+      <text id="skin-status-6" size="12" color="#666688">Lv.35</text>
+      <button id="btn-skin-7"><text id="skin-name-7" size="15" color="#ff44ff">Prismatic</text></button>
+      <text id="skin-status-7" size="12" color="#666688">Lv.50</text>
+    </panel>
+    <button id="btn-back-skins" margin-top="12">
+      <text size="16" color="#aaaaaa">← BACK</text>
+    </button>
+  </panel>
+</panel>

@@ -1,0 +1,25 @@
+<panel>
+  <panel layout="column" align="center" padding="20" background="#111122ee">
+    <text id="profile-title" size="28" color="#00ffff" weight="bold">⚡ PLAYER PROFILE</text>
+    <panel layout="column" align="center" padding="10" margin-top="10">
+      <text id="profile-level" size="22" color="#ffdd00" weight="bold">Level 1</text>
+      <text id="profile-xp" size="16" color="#aabbcc">XP: 0 / 100</text>
+      <text id="profile-bar" size="14" color="#00ff88">[----------]</text>
+      <text id="profile-total-xp" size="14" color="#8899aa">Total XP: 0</text>
+    </panel>
+    <panel layout="column" align="center" padding="8" margin-top="8">
+      <text id="profile-skin" size="16" color="#aa44ff">Claw: Standard</text>
+      <text id="profile-streak" size="16" color="#ff8800">🔥 Daily Streak: 0</text>
+      <text id="profile-mods" size="14" color="#88aacc">Active Modifiers: None</text>
+    </panel>
+    <panel layout="column" align="center" padding="8" margin-top="8">
+      <text id="profile-next" size="14" color="#666688">Next Reward: ---</text>
+    </panel>
+    <button id="btn-daily-claim" margin-top="8">
+      <text size="16" color="#00ff88" weight="bold">🎁 CLAIM DAILY REWARD</text>
+    </button>
+    <button id="btn-back-profile" margin-top="12">
+      <text size="16" color="#aaaaaa">← BACK</text>
+    </button>
+  </panel>
+</panel>

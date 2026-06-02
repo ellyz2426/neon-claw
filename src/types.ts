@@ -3,7 +3,8 @@
 // ─── Game States ─────────────────────────────────────────
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'grabbing' | 'dropping' |
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
-  'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result';
+  'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result' |
+  'profile' | 'clawskins' | 'modifiers' | 'levelup';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -183,6 +184,27 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'collection_20', name: 'Grand Curator', desc: 'Collect all 20 prize types', unlocked: false },
     { id: 'tower_clear', name: 'Tower Climber', desc: 'Clear Neon Tower machine', unlocked: false },
     { id: 'void_grab', name: 'Void Walker', desc: 'Grab a prize from Void Arena', unlocked: false },
+    // Round 4 achievements — Progression
+    { id: 'level_5', name: 'Rising Star', desc: 'Reach Level 5', unlocked: false },
+    { id: 'level_10', name: 'Seasoned Pro', desc: 'Reach Level 10', unlocked: false },
+    { id: 'level_25', name: 'Elite Operator', desc: 'Reach Level 25', unlocked: false },
+    { id: 'level_50', name: 'Grandmaster', desc: 'Reach Level 50', unlocked: false },
+    { id: 'first_skin', name: 'Fashion Forward', desc: 'Unlock your first claw skin', unlocked: false },
+    { id: 'all_skins', name: 'Skin Collector', desc: 'Unlock all claw skins', unlocked: false },
+    { id: 'xp_1k', name: 'XP Hunter', desc: 'Earn 1,000 total XP', unlocked: false },
+    { id: 'xp_10k', name: 'XP Legend', desc: 'Earn 10,000 total XP', unlocked: false },
+    { id: 'daily_3', name: 'Hat Trick', desc: '3-day login streak', unlocked: false },
+    { id: 'daily_7', name: 'Weekly Warrior', desc: '7-day login streak', unlocked: false },
+    { id: 'modifier_1', name: 'Challenger', desc: 'Complete a game with a modifier active', unlocked: false },
+    { id: 'modifier_3', name: 'Daredevil', desc: 'Complete a game with 3+ modifiers active', unlocked: false },
+    { id: 'modifier_all', name: 'Masochist', desc: 'Complete a game with all 5 modifiers active', unlocked: false },
+    { id: 'turbo_grab', name: 'Lightning Grab', desc: 'Grab a prize with Turbo Speed active', unlocked: false },
+    { id: 'mirror_grab', name: 'Mirror Master', desc: 'Grab a prize with Mirror Controls active', unlocked: false },
+    { id: 'weak_legendary', name: 'Against All Odds', desc: 'Grab a legendary prize with Weak Grip active', unlocked: false },
+    { id: 'tickets_2k', name: 'Ticket Tycoon', desc: 'Earn 2,000 tickets total', unlocked: false },
+    { id: 'games_100', name: 'Arcade Veteran', desc: 'Play 100 games', unlocked: false },
+    { id: 'score_50k', name: 'Score Titan', desc: 'Score 50,000+ in a single game', unlocked: false },
+    { id: 'total_score_100k', name: 'Lifetime Legend', desc: 'Earn 100,000 total score', unlocked: false },
   ];
 }
 
