@@ -1,0 +1,51 @@
+<panel>
+  <container
+    flexDirection="column"
+    alignItems="center"
+    padding={16}
+    gap={8}
+    backgroundColor="#0a0a1a"
+    borderColor="#ffaa00"
+    borderWidth={2}
+    borderRadius={12}
+  >
+    <text fontSize={22} fontWeight="bold" color="#ffaa00">✨ PRESTIGE</text>
+
+    <text id="pres-current" fontSize={16} color="#ffffff">No Prestige</text>
+    <text id="pres-star" fontSize={24} color="#ffdd00"></text>
+    <text id="pres-level-req" fontSize={12} color="#aaaacc">Reach Level 50 to prestige</text>
+
+    <container flexDirection="column" gap={4} width="100%" marginTop={8}>
+      <text fontSize={14} fontWeight="bold" color="#00ffff">Current Bonuses:</text>
+      <text id="pres-grab" fontSize={12} color="#00ff88">Grab Bonus: +0%</text>
+      <text id="pres-xp" fontSize={12} color="#88ff00">XP Bonus: +0%</text>
+      <text id="pres-ticket" fontSize={12} color="#ffdd00">Ticket Bonus: +0%</text>
+    </container>
+
+    <container flexDirection="column" gap={4} width="100%" marginTop={8}>
+      <text fontSize={14} fontWeight="bold" color="#ff8800">Next Prestige:</text>
+      <text id="pres-next-name" fontSize={13} color="#ff8800">Bronze Star</text>
+      <text id="pres-next-bonus" fontSize={11} color="#ccddff">+5% grab, +10% XP, +5% tickets</text>
+    </container>
+
+    <container flexDirection="column" gap={3} width="100%" marginTop={8} padding={6} backgroundColor="#111122" borderRadius={6}>
+      <text fontSize={12} fontWeight="bold" color="#ff4444">⚠️ Prestige Reset:</text>
+      <text fontSize={11} color="#ff8888">• Level resets to 1</text>
+      <text fontSize={11} color="#ff8888">• XP resets to 0</text>
+      <text fontSize={11} color="#ff8888">• Skins re-lock (earn again)</text>
+      <text fontSize={11} color="#00ff88">• Keep: tickets, collection, achievements</text>
+      <text fontSize={11} color="#00ff88">• Keep: shop boosts, wheel stats</text>
+      <text fontSize={11} color="#ffdd00">• Gain: permanent prestige bonuses</text>
+    </container>
+
+    <container id="btn-prestige" padding={10} backgroundColor="#663300" borderRadius={10} cursor="pointer" marginTop={8}>
+      <text id="pres-btn-label" fontSize={14} fontWeight="bold" color="#ffaa00">⭐ PRESTIGE (Requires Lv.50)</text>
+    </container>
+
+    <text id="pres-stats" fontSize={11} color="#666688" marginTop={4}>Total Prestiges: 0 | Highest Level: 0</text>
+
+    <container id="btn-back-prestige" padding={8} backgroundColor="#333355" borderRadius={8} cursor="pointer" marginTop={8}>
+      <text fontSize={14} color="#aaccff">← Back</text>
+    </container>
+  </container>
+</panel>

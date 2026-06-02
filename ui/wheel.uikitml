@@ -1,0 +1,46 @@
+<panel>
+  <container
+    flexDirection="column"
+    alignItems="center"
+    padding={16}
+    gap={8}
+    backgroundColor="#0a0a1a"
+    borderColor="#ff8800"
+    borderWidth={2}
+    borderRadius={12}
+  >
+    <text fontSize={22} fontWeight="bold" color="#ff8800">🎰 LUCKY WHEEL</text>
+    <text id="wheel-tickets" fontSize={14} color="#ffdd00">🎫 Tickets: 0</text>
+    <text fontSize={12} color="#aaaacc">Cost: 10 tickets per spin</text>
+
+    <container flexDirection="column" gap={3} width="100%" marginTop={8}>
+      <text fontSize={14} fontWeight="bold" color="#00ffff">Prize Table:</text>
+      <text id="wh-seg-0" fontSize={11} color="#4488ff">🎫 5 Tickets (25%)</text>
+      <text id="wh-seg-1" fontSize={11} color="#00ff88">⚡ 50 XP (20%)</text>
+      <text id="wh-seg-2" fontSize={11} color="#00ffff">🎫 15 Tickets (15%)</text>
+      <text id="wh-seg-3" fontSize={11} color="#aa44ff">💎 Power Token (12%)</text>
+      <text id="wh-seg-4" fontSize={11} color="#88ff00">⚡ 150 XP (10%)</text>
+      <text id="wh-seg-5" fontSize={11} color="#ff8800">🎫 30 Tickets (8%)</text>
+      <text id="wh-seg-6" fontSize={11} color="#ffdd00">🏆 Rare Prize (5%)</text>
+      <text id="wh-seg-7" fontSize={11} color="#ff4444">💰 JACKPOT 100 (3%)</text>
+      <text id="wh-seg-8" fontSize={11} color="#ff44ff">🌟 500 XP (2%)</text>
+    </container>
+
+    <container id="btn-spin" padding={10} backgroundColor="#ff6600" borderRadius={10} cursor="pointer" marginTop={10}>
+      <text id="spin-label" fontSize={16} fontWeight="bold" color="#ffffff">🎰 SPIN! (10 🎫)</text>
+    </container>
+
+    <text id="wheel-result" fontSize={16} fontWeight="bold" color="#00ff88" marginTop={8}></text>
+    <text id="wheel-result-desc" fontSize={12} color="#ccddff"></text>
+
+    <container flexDirection="row" gap={16} marginTop={8}>
+      <text id="wheel-spins" fontSize={11} color="#888899">Spins: 0</text>
+      <text id="wheel-won" fontSize={11} color="#888899">Won: 0 🎫</text>
+      <text id="wheel-jackpots" fontSize={11} color="#888899">Jackpots: 0</text>
+    </container>
+
+    <container id="btn-back-wheel" padding={8} backgroundColor="#333355" borderRadius={8} cursor="pointer" marginTop={8}>
+      <text fontSize={14} color="#aaccff">← Back</text>
+    </container>
+  </container>
+</panel>

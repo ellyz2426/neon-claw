@@ -4,7 +4,7 @@
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'grabbing' | 'dropping' |
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
   'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result' |
-  'profile' | 'clawskins' | 'modifiers' | 'levelup';
+  'profile' | 'clawskins' | 'modifiers' | 'levelup' | 'shop' | 'wheel' | 'prestige';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -205,6 +205,15 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'games_100', name: 'Arcade Veteran', desc: 'Play 100 games', unlocked: false },
     { id: 'score_50k', name: 'Score Titan', desc: 'Score 50,000+ in a single game', unlocked: false },
     { id: 'total_score_100k', name: 'Lifetime Legend', desc: 'Earn 100,000 total score', unlocked: false },
+    // Round 5 achievements — Shop, Wheel, Prestige
+    { id: 'first_purchase', name: 'Shopkeeper', desc: 'Buy your first shop item', unlocked: false },
+    { id: 'shop_5', name: 'Big Spender', desc: 'Make 5 shop purchases', unlocked: false },
+    { id: 'first_spin', name: 'Lucky Spinner', desc: 'Spin the Lucky Wheel', unlocked: false },
+    { id: 'spin_10', name: 'Wheel Addict', desc: 'Spin the wheel 10 times', unlocked: false },
+    { id: 'jackpot_hit', name: 'Jackpot!', desc: 'Hit the Lucky Wheel jackpot', unlocked: false },
+    { id: 'first_prestige', name: 'Ascended', desc: 'Prestige for the first time', unlocked: false },
+    { id: 'prestige_5', name: 'Diamond Ascension', desc: 'Reach Prestige 5', unlocked: false },
+    { id: 'prestige_max', name: 'Cosmic Ascension', desc: 'Reach maximum Prestige', unlocked: false },
   ];
 }
 

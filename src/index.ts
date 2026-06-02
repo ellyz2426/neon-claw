@@ -20,6 +20,9 @@ import {
   ProgressionManager, CLAW_SKINS, CHALLENGE_MODIFIERS, RARITY_XP,
   getLevelRewards, DAILY_REWARDS,
 } from './progression';
+import { ShopManager, SHOP_ITEMS } from './shop';
+import { WheelManager, WHEEL_SEGMENTS, WHEEL_COST } from './wheel';
+import { PrestigeManager, PRESTIGE_STARS } from './prestige';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -30,6 +33,9 @@ const music = new SynthwaveMusic();
 const campaign = new CampaignManager();
 const fusion = new FusionManager();
 const progression = new ProgressionManager();
+const shop = new ShopManager();
+const wheel = new WheelManager();
+const prestige = new PrestigeManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -152,6 +158,10 @@ function initPanels(): void {
   setupPanel('clawskins', '/ui/clawskins.json', { maxWidth: 0.9, maxHeight: 1.1, pos: [0, menuY, menuZ] });
   setupPanel('modifiers', '/ui/modifiers.json', { maxWidth: 0.9, maxHeight: 0.9, pos: [0, menuY, menuZ] });
   setupPanel('levelup', '/ui/levelup.json', { maxWidth: 0.7, maxHeight: 0.5, pos: [0, menuY, menuZ] });
+  // Round 5 panels
+  setupPanel('shop', '/ui/shop.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  setupPanel('wheel', '/ui/wheel.json', { maxWidth: 0.9, maxHeight: 1.1, pos: [0, menuY, menuZ] });
+  setupPanel('prestige', '/ui/prestige.json', { maxWidth: 0.9, maxHeight: 1.2, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -161,7 +171,8 @@ function showState(state: GameState): void {
     'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'collection', 'stats',
     'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase',
     'campaign', 'campaignstage', 'fusion', 'campaignresult',
-    'profile', 'clawskins', 'modifiers', 'levelup'];
+    'profile', 'clawskins', 'modifiers', 'levelup',
+    'shop', 'wheel', 'prestige'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -189,6 +200,9 @@ function showState(state: GameState): void {
     clawskins: ['clawskins'],
     modifiers: ['modifiers'],
     levelup: ['levelup'],
+    shop: ['shop'],
+    wheel: ['wheel'],
+    prestige: ['prestige'],
   };
 
   const visible = stateMap[state] || [];
@@ -418,6 +432,9 @@ function wireButtons(): void {
       'btn-profile': () => { audio.buttonClick(); updateProfilePanel(); showState('profile'); },
       'btn-skins': () => { audio.buttonClick(); updateClawSkinsPanel(); showState('clawskins'); },
       'btn-modifiers': () => { audio.buttonClick(); updateModifiersPanel(); showState('modifiers'); },
+      'btn-shop': () => { audio.buttonClick(); updateShopPanel(); showState('shop'); },
+      'btn-wheel': () => { audio.buttonClick(); updateWheelPanel(); showState('wheel'); },
+      'btn-prestige': () => { audio.buttonClick(); updatePrestigePanel(); showState('prestige'); },
     });
 
     wirePanel('modeselect', {
@@ -554,6 +571,29 @@ function wireButtons(): void {
     wirePanel('levelup', {
       'btn-lvl-ok': () => { audio.buttonClick(); showState('gameover'); },
     });
+
+    // Round 5 panel wiring
+    wirePanel('shop', {
+      'btn-shop-0': () => buyShopItem(0),
+      'btn-shop-1': () => buyShopItem(1),
+      'btn-shop-2': () => buyShopItem(2),
+      'btn-shop-3': () => buyShopItem(3),
+      'btn-shop-4': () => buyShopItem(4),
+      'btn-shop-5': () => buyShopItem(5),
+      'btn-shop-6': () => buyShopItem(6),
+      'btn-shop-7': () => buyShopItem(7),
+      'btn-back-shop': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('wheel', {
+      'btn-spin': () => spinWheel(),
+      'btn-back-wheel': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('prestige', {
+      'btn-prestige': () => performPrestige(),
+      'btn-back-prestige': () => { audio.buttonClick(); showState('title'); },
+    });
   }, 1500);
 }
 
@@ -589,6 +629,8 @@ function startGame(): void {
   gsm.machinesUsed.add(gsm.machine.id);
   gsm.themesUsed.add(gsm.theme.id);
   powerups.reset();
+  (gsm as any)._luckyCharmActive = false;
+  (gsm as any)._xpBoostActive = false;
 
   switch (gsm.mode) {
     case 'classic': gsm.maxAttempts = gsm.difficulty === 'easy' ? 7 : gsm.difficulty === 'medium' ? 5 : 3; break;
@@ -601,10 +643,34 @@ function startGame(): void {
     case 'practice': gsm.maxAttempts = 999; break;
   }
 
+  // Apply shop consumables
+  if (shop.useConsumable('extra_attempt')) {
+    gsm.maxAttempts += 1;
+    showToast('🎟️ Extra Attempt activated!');
+  }
+  if (shop.useConsumable('lucky_charm')) {
+    (gsm as any)._luckyCharmActive = true;
+    showToast('🍀 Lucky Charm active!');
+  }
+  if (shop.useConsumable('xp_boost')) {
+    (gsm as any)._xpBoostActive = true;
+    showToast('⚡ 2x XP Boost active!');
+  }
+
   buildMachine();
   audio.init();
   audio.gameStart();
   gameStarted = true;
+
+  // Apply starter power-up consumables
+  if (shop.useConsumable('starter_grip')) {
+    const gripDef = POWERUP_DEFS.find(d => d.id === 'strong_grip');
+    if (gripDef) { powerups.activate(gripDef); showToast('💪 Starter Grip+ active!'); }
+  }
+  if (shop.useConsumable('starter_magnet')) {
+    const magnetDef = POWERUP_DEFS.find(d => d.id === 'magnet');
+    if (magnetDef) { powerups.activate(magnetDef); showToast('🧲 Starter Magnet active!'); }
+  }
 
   // Start synthwave music
   if (!musicStarted) {
@@ -783,6 +849,16 @@ function getGripStrength(): number {
   if (powerups.has('strong_grip')) {
     grip = 1.0;
   }
+  // Lucky Charm consumable: +15% grip
+  if ((gsm as any)._luckyCharmActive) {
+    grip *= 1.15;
+  }
+  // Prestige grab bonus
+  grip += prestige.getGrabBonus();
+  // Prize Scanner boost: slight bonus from better targeting
+  if (shop.hasBoost('prize_scanner')) {
+    grip *= 1.05;
+  }
   return Math.min(1, grip);
 }
 
@@ -895,6 +971,10 @@ function releasePrize(): void {
   if (progression.hasModifier('double_pts')) {
     points *= 2;
   }
+  // Prestige ticket bonus
+  ticketMult *= (1 + prestige.getTicketBonus());
+  // Shop ticket magnet bonus
+  ticketMult *= (1 + shop.getTicketBonusPercent() / 100);
   gsm.ticketsEarned += prizeData.tickets * ticketMult;
 
   gsm.comboTimer = 5;
@@ -975,7 +1055,12 @@ function releasePrize(): void {
   checkAchievement('void_grab', gsm.machine.id === 'void');
 
   // Round 4: XP + progression achievements
-  const xpEarned = progression.addXp(RARITY_XP[prizeData.rarity] || 10);
+  let xpAmount = RARITY_XP[prizeData.rarity] || 10;
+  // Prestige XP bonus
+  xpAmount = Math.floor(xpAmount * (1 + prestige.getXpBonus()));
+  // XP Boost consumable: 2x
+  if ((gsm as any)._xpBoostActive) xpAmount *= 2;
+  const xpEarned = progression.addXp(xpAmount);
   checkAchievement('xp_1k', progression.totalXp >= 1000);
   checkAchievement('xp_10k', progression.totalXp >= 10000);
   checkAchievement('level_5', progression.level >= 5);
@@ -1539,6 +1624,208 @@ function claimDailyReward(): void {
   updateProfilePanel();
 }
 
+// ─── Round 5: Shop Functions ─────────────────────────────
+function updateShopPanel(): void {
+  const doc = getDoc('shop');
+  if (!doc) return;
+  setText(doc, 'shop-tickets', '🎫 Tickets: ' + gsm.totalTickets);
+  for (let i = 0; i < SHOP_ITEMS.length; i++) {
+    const item = SHOP_ITEMS[i];
+    const count = shop.getCount(item.id);
+    const canBuy = shop.canBuy(item, gsm.totalTickets);
+    const label = item.icon + ' ' + item.name + (item.stackable ? ' (' + count + '/' + item.maxStack + ')' : (count > 0 ? ' ✅' : ''));
+    setText(doc, `shop-item-${i}`, label);
+    setText(doc, `shop-cost-${i}`, canBuy ? item.cost + ' 🎫' : (count >= item.maxStack ? 'MAX' : '---'));
+  }
+  setText(doc, 'shop-result', '');
+}
+
+function buyShopItem(index: number): void {
+  const item = SHOP_ITEMS[index];
+  if (!item) return;
+  if (!shop.canBuy(item, gsm.totalTickets)) {
+    if ((shop.getCount(item.id) || 0) >= item.maxStack) {
+      showToast('Already at max!');
+    } else {
+      showToast('Not enough tickets!');
+    }
+    return;
+  }
+  gsm.totalTickets -= item.cost;
+  shop.buy(item);
+  gsm.save();
+  audio.buttonClick();
+  particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), '#ffdd00', 10, 1);
+  showToast('Purchased: ' + item.name);
+  updateShopPanel();
+  // Shop achievements
+  checkAchievement('first_purchase', true);
+  checkAchievement('shop_5', shop.totalPurchases >= 5);
+}
+
+// ─── Round 5: Lucky Wheel Functions ──────────────────────
+function updateWheelPanel(): void {
+  const doc = getDoc('wheel');
+  if (!doc) return;
+  setText(doc, 'wheel-tickets', '🎫 Tickets: ' + gsm.totalTickets);
+  setText(doc, 'spin-label', wheel.canSpin(gsm.totalTickets) ? '🎰 SPIN! (10 🎫)' : '🎰 Need 10 🎫');
+  setText(doc, 'wheel-spins', 'Spins: ' + wheel.state.totalSpins);
+  setText(doc, 'wheel-won', 'Won: ' + wheel.state.totalTicketsWon + ' 🎫');
+  setText(doc, 'wheel-jackpots', 'Jackpots: ' + wheel.state.jackpotCount);
+  if (wheel.state.lastSpinResult && !wheel.isSpinning) {
+    setText(doc, 'wheel-result', wheel.state.lastSpinResult);
+  } else {
+    setText(doc, 'wheel-result', '');
+  }
+  setText(doc, 'wheel-result-desc', '');
+}
+
+function spinWheel(): void {
+  if (!wheel.canSpin(gsm.totalTickets)) {
+    showToast('Need ' + WHEEL_COST + ' tickets!');
+    return;
+  }
+  gsm.totalTickets -= WHEEL_COST;
+  gsm.save();
+  audio.buttonClick();
+
+  const result = wheel.startSpin();
+  setText(getDoc('wheel'), 'spin-label', '🎰 Spinning...');
+  setText(getDoc('wheel'), 'wheel-result', '');
+  setText(getDoc('wheel'), 'wheel-result-desc', '');
+
+  // Simulate spin result after a brief delay
+  setTimeout(() => {
+    wheel.isSpinning = false;
+    wheel.applyReward(result.reward);
+
+    // Apply rewards
+    switch (result.reward.type) {
+      case 'tickets':
+      case 'jackpot':
+        gsm.totalTickets += result.reward.amount || 0;
+        break;
+      case 'xp':
+        progression.addXp(result.reward.amount || 0);
+        break;
+      case 'prize': {
+        // Random rare+ prize
+        const rarePrizes = PRIZE_TYPES.filter(p => p.rarity === 'rare' || p.rarity === 'epic');
+        const won = rarePrizes[Math.floor(Math.random() * rarePrizes.length)];
+        if (won) {
+          gsm.collection.add(won.id);
+          fusion.addPrize(won.id);
+        }
+        break;
+      }
+      case 'powerup_token':
+        // Give a free consumable power-up token
+        shop.inventory.owned['starter_grip'] = (shop.inventory.owned['starter_grip'] || 0) + 1;
+        shop.save();
+        break;
+    }
+    gsm.save();
+
+    // VFX
+    if (result.reward.type === 'jackpot') {
+      spawnConfetti(new Vector3(0, machineBaseY + 0.6, -1.8), 30);
+      shake.trigger(0.03, 0.5);
+      audio.achievementUnlock();
+    } else {
+      particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), result.color, 15, 1.2);
+      shake.trigger(0.01, 0.2);
+    }
+
+    const doc = getDoc('wheel');
+    setText(doc, 'wheel-result', result.icon + ' ' + result.label);
+    setText(doc, 'wheel-result-desc', result.reward.description);
+    setText(doc, 'spin-label', wheel.canSpin(gsm.totalTickets) ? '🎰 SPIN! (10 🎫)' : '🎰 Need 10 🎫');
+    setText(doc, 'wheel-tickets', '🎫 Tickets: ' + gsm.totalTickets);
+    setText(doc, 'wheel-spins', 'Spins: ' + wheel.state.totalSpins);
+    setText(doc, 'wheel-won', 'Won: ' + wheel.state.totalTicketsWon + ' 🎫');
+    setText(doc, 'wheel-jackpots', 'Jackpots: ' + wheel.state.jackpotCount);
+
+    // Wheel achievements
+    checkAchievement('first_spin', true);
+    checkAchievement('spin_10', wheel.state.totalSpins >= 10);
+    checkAchievement('jackpot_hit', wheel.state.jackpotCount > 0);
+  }, 1500);
+}
+
+// ─── Round 5: Prestige Functions ─────────────────────────
+function updatePrestigePanel(): void {
+  const doc = getDoc('prestige');
+  if (!doc) return;
+  const star = prestige.getStar();
+  const nextStar = prestige.getNextStar();
+
+  if (star) {
+    setText(doc, 'pres-current', star.icon + ' ' + star.name + ' (Prestige ' + prestige.state.level + ')');
+    setText(doc, 'pres-star', star.icon);
+  } else {
+    setText(doc, 'pres-current', 'No Prestige Yet');
+    setText(doc, 'pres-star', '');
+  }
+
+  setText(doc, 'pres-grab', 'Grab Bonus: +' + Math.round(prestige.getGrabBonus() * 100) + '%');
+  setText(doc, 'pres-xp', 'XP Bonus: +' + Math.round(prestige.getXpBonus() * 100) + '%');
+  setText(doc, 'pres-ticket', 'Ticket Bonus: +' + Math.round(prestige.getTicketBonus() * 100) + '%');
+
+  if (nextStar) {
+    setText(doc, 'pres-next-name', nextStar.icon + ' ' + nextStar.name);
+    setText(doc, 'pres-next-bonus', '+' + Math.round(nextStar.grabBonus * 100) + '% grab, +' + Math.round(nextStar.xpBonus * 100) + '% XP, +' + Math.round(nextStar.ticketBonus * 100) + '% tickets');
+  } else {
+    setText(doc, 'pres-next-name', 'MAX PRESTIGE REACHED');
+    setText(doc, 'pres-next-bonus', '');
+  }
+
+  const canDo = prestige.canPrestige(progression.level);
+  if (canDo) {
+    setText(doc, 'pres-btn-label', '⭐ PRESTIGE NOW!');
+    setText(doc, 'pres-level-req', 'Level 50 reached — ready to prestige!');
+  } else if (prestige.state.level >= 10) {
+    setText(doc, 'pres-btn-label', '✨ MAX PRESTIGE');
+    setText(doc, 'pres-level-req', 'Maximum prestige achieved!');
+  } else {
+    setText(doc, 'pres-btn-label', '⭐ PRESTIGE (Requires Lv.50)');
+    setText(doc, 'pres-level-req', 'Current Level: ' + progression.level + ' / 50');
+  }
+
+  setText(doc, 'pres-stats', 'Total Prestiges: ' + prestige.state.totalPrestiges + ' | Highest Level: ' + prestige.state.highestLevel);
+}
+
+function performPrestige(): void {
+  if (!prestige.canPrestige(progression.level)) {
+    if (prestige.state.level >= 10) {
+      showToast('Max prestige reached!');
+    } else {
+      showToast('Reach Level 50 first! (Lv.' + progression.level + ')');
+    }
+    return;
+  }
+
+  const star = prestige.prestige(progression.level);
+  if (!star) return;
+
+  // Reset progression (keep tickets, collection, achievements)
+  progression.level = 1;
+  progression.xp = 0;
+  progression.selectedSkin = 'default';
+  progression.unlockedSkins = new Set(['default']);
+  progression.save();
+
+  audio.achievementUnlock();
+  spawnConfetti(new Vector3(0, machineBaseY + 0.6, -1.8), 40);
+  shake.trigger(0.04, 0.6);
+  showToast('✨ PRESTIGE: ' + star.name + '!');
+
+  checkAchievement('first_prestige', true);
+  checkAchievement('prestige_5', prestige.state.level >= 5);
+  checkAchievement('prestige_max', prestige.state.level >= 10);
+
+  updatePrestigePanel();
+}
+
 // ─── Legendary Celebration VFX ───────────────────────────
 function spawnConfetti(pos: Vector3, count: number): void {
   const colors = ['#ff4444', '#ffdd00', '#00ff88', '#4488ff', '#ff00ff', '#00ffff', '#ffaa00'];
@@ -1743,8 +2030,8 @@ function gameLoop(dt: number, time: number): void {
       p.rotation.z *= 0.95;
     }
 
-    // X-Ray power-up: show rarity glow halo on prizes
-    if (powerups.has('x_ray') && data._prizeData) {
+    // X-Ray power-up OR Prize Scanner boost: show rarity glow halo on prizes
+    if ((powerups.has('x_ray') || shop.hasBoost('prize_scanner')) && data._prizeData) {
       if (!data._xrayRing) {
         const rarityColor = RARITY_COLORS[data._prizeData.rarity] || '#ffffff';
         const xring = new Mesh(

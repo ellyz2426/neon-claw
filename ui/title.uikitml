@@ -79,6 +79,20 @@
   .orange-text {
     color: #ff8800;
   }
+  .menu-btn-red {
+    background-color: rgba(255, 68, 68, 0.08);
+    border-color: #ff4444;
+  }
+  .red-text {
+    color: #ff4444;
+  }
+  .menu-btn-yellow {
+    background-color: rgba(255, 221, 0, 0.08);
+    border-color: #ffdd00;
+  }
+  .yellow-text {
+    color: #ffdd00;
+  }
 </style>
 <div class="title-panel">
   <span class="game-title">NEON CLAW</span>
@@ -91,6 +105,9 @@
   <div id="btn-profile" class="menu-btn menu-btn-green"><span class="menu-btn-text green-text">⚡ PROFILE</span></div>
   <div id="btn-skins" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">🎨 CLAW SKINS</span></div>
   <div id="btn-modifiers" class="menu-btn menu-btn-orange"><span class="menu-btn-text orange-text">⚔ MODIFIERS</span></div>
+  <div id="btn-shop" class="menu-btn menu-btn-yellow"><span class="menu-btn-text yellow-text">🛒 SHOP</span></div>
+  <div id="btn-wheel" class="menu-btn menu-btn-red"><span class="menu-btn-text red-text">🎰 LUCKY WHEEL</span></div>
+  <div id="btn-prestige" class="menu-btn menu-btn-gold"><span class="menu-btn-text gold-text">✨ PRESTIGE</span></div>
   <div id="btn-scores" class="menu-btn"><span class="menu-btn-text">SCORES</span></div>
   <div id="btn-achievements" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">ACHIEVEMENTS</span></div>
   <div id="btn-stats" class="menu-btn"><span class="menu-btn-text">STATS</span></div>
