@@ -1,0 +1,92 @@
+<panel>
+  <row backgroundColor="#000811ee" paddingTop={10} paddingBottom={10} paddingLeft={14} paddingRight={14} borderRadius={8} flexDirection="column" gap={5}>
+    <text fontWeight="bold" fontSize={14} color="#ffdd00">PRIZE SHOWCASE</text>
+    <text fontSize={8} color="#88aacc">Your Collection Gallery</text>
+    <row flexDirection="column" gap={3}>
+      <row flexDirection="row" gap={8}>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-0" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-0" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-0" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-1" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-1" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-1" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-2" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-2" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-2" fontSize={6} color="#00ffff"></text>
+        </row>
+      </row>
+      <row flexDirection="row" gap={8}>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-3" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-3" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-3" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-4" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-4" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-4" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-5" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-5" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-5" fontSize={6} color="#00ffff"></text>
+        </row>
+      </row>
+      <row flexDirection="row" gap={8}>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-6" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-6" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-6" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-7" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-7" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-7" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-8" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-8" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-8" fontSize={6} color="#00ffff"></text>
+        </row>
+      </row>
+      <row flexDirection="row" gap={8}>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-9" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-9" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-9" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-10" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-10" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-10" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-11" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-11" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-11" fontSize={6} color="#00ffff"></text>
+        </row>
+      </row>
+      <row flexDirection="row" gap={8}>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-12" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-12" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-12" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-name-13" fontSize={8} color="#ffffff">???</text>
+          <text id="sc-rarity-13" fontSize={6} color="#aaaaaa"></text>
+          <text id="sc-pts-13" fontSize={6} color="#00ffff"></text>
+        </row>
+        <row flexDirection="column" gap={2} width={100}>
+          <text id="sc-total" fontSize={8} color="#ffaa00" fontWeight="bold"></text>
+        </row>
+      </row>
+    </row>
+    <text id="btn-back-showcase" fontSize={9} color="#00ff88" fontWeight="bold">[BACK]</text>
+  </row>
+</panel>

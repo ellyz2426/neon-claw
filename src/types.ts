@@ -3,7 +3,7 @@
 // ─── Game States ─────────────────────────────────────────
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'grabbing' | 'dropping' |
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
-  'collection' | 'stats' | 'machines';
+  'collection' | 'stats' | 'machines' | 'showcase';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -143,6 +143,17 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'progressive_5', name: 'Survivor', desc: 'Reach round 5 in Progressive', unlocked: false },
     { id: 'no_miss', name: 'No Whiff', desc: 'Complete a full game with no misses', unlocked: false },
     { id: 'games_25', name: 'Regular', desc: 'Play 25 games', unlocked: false },
+    // Round 2 achievements
+    { id: 'first_powerup', name: 'Powered Up', desc: 'Collect your first power-up', unlocked: false },
+    { id: 'powerup_5', name: 'Power Hoarder', desc: 'Collect 5 power-ups total', unlocked: false },
+    { id: 'powerup_collector', name: 'Power Maniac', desc: 'Collect 15 power-ups total', unlocked: false },
+    { id: 'score_25k', name: 'Score Legend', desc: 'Score 25,000+ in a single game', unlocked: false },
+    { id: 'streak_10', name: 'Unstoppable', desc: '10 grabs in a row', unlocked: false },
+    { id: 'games_50', name: 'Dedicated', desc: 'Play 50 games', unlocked: false },
+    { id: 'marathon_master', name: 'Marathon Master', desc: '25+ grabs in Marathon mode', unlocked: false },
+    { id: 'precision_ace', name: 'Precision Ace', desc: 'Perfect 3/3 in Precision mode', unlocked: false },
+    { id: 'tickets_1000', name: 'Ticket Mogul', desc: 'Earn 1,000 tickets total', unlocked: false },
+    { id: 'legendary_5', name: 'Legendary Hunter', desc: 'Grab 5 legendary prizes total', unlocked: false },
   ];
 }
 

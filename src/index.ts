@@ -1,4 +1,4 @@
-// index.ts — Main entry point for Neon Claw VR
+// index.ts — Main entry point for Neon Claw VR (Round 2: Power-ups, Music, Tutorial, Polish)
 import {
   World, PanelUI, PanelDocument, Follower, FollowBehavior, ScreenSpace,
   Vector3, Color, Group, Mesh, SphereGeometry, MeshBasicMaterial, AdditiveBlending,
@@ -12,11 +12,15 @@ import { AudioManager } from './audio';
 import { createMachineBox, createClawGroup, spawnPrizes, createClawRail } from './machine';
 import { createEnvironment, updateEnvironment, EnvironmentObjects } from './environment';
 import { ParticleSystem, createClawShadow, updateClawShadow, ScreenShake } from './effects';
+import { PowerUpManager, POWERUP_DEFS, createPowerUpOrb, PowerUpOrb } from './powerups';
+import { SynthwaveMusic } from './music';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
 const audio = new AudioManager();
 const shake = new ScreenShake();
+const powerups = new PowerUpManager();
+const music = new SynthwaveMusic();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -27,7 +31,20 @@ let prizeMeshes: Group[] = [];
 let railGroup: Group;
 let clawShadow: Mesh;
 let sceneGroup: Group;
-let machineBaseY = 1.0;  // Machine table height
+let machineBaseY = 1.0;
+
+// Trail system
+const clawTrail: { pos: Vector3; age: number; mesh: Mesh }[] = [];
+const trailPool: Mesh[] = [];
+const MAX_TRAIL = 20;
+
+// Score popup system
+interface ScorePopup { mesh: Group; vel: Vector3; life: number; }
+const scorePopups: ScorePopup[] = [];
+
+// Tutorial state
+let tutorialShown = false;
+let tutorialDismissed = false;
 
 // UI entity references
 const panels: Record<string, any> = {};
@@ -35,6 +52,7 @@ let toastTimer = 0;
 let countdownTimer = 0;
 let countdownValue = 3;
 let gameStarted = false;
+let musicStarted = false;
 
 // ─── UI Helper ───────────────────────────────────────────
 function setText(doc: UIKitDocument | undefined, id: string, text: string): void {
@@ -77,8 +95,6 @@ function setupPanel(name: string, config: string, opts: {
       speed: 5,
       tolerance: 0.3,
     });
-  } else if (opts.screenSpace) {
-    // ScreenSpace for browser overlay
   } else if (opts.pos) {
     entity.object3D!.position.set(opts.pos[0], opts.pos[1], opts.pos[2]);
   }
@@ -107,22 +123,27 @@ function initPanels(): void {
   setupPanel('toast', '/ui/toast.json', { maxWidth: 0.3, maxHeight: 0.08, follower: true, followOffset: [0, 0.1, -0.5] });
   setupPanel('countdown', '/ui/countdown.json', { maxWidth: 0.2, maxHeight: 0.15, follower: true, followOffset: [0, 0, -0.5] });
   setupPanel('powerbar', '/ui/powerbar.json', { maxWidth: 0.25, maxHeight: 0.06, follower: true, followOffset: [-0.25, -0.15, -0.5] });
+  // Round 2 panels
+  setupPanel('tutorial', '/ui/tutorial.json', { maxWidth: 0.6, maxHeight: 0.4, pos: [0, menuY, menuZ] });
+  setupPanel('poweruphud', '/ui/powerups.json', { maxWidth: 0.35, maxHeight: 0.12, follower: true, followOffset: [-0.3, 0.08, -0.5] });
+  setupPanel('showcase', '/ui/showcase.json', { maxWidth: 1.2, maxHeight: 1.0, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
 function showState(state: GameState): void {
   gsm.state = state;
   const allPanels = ['title', 'modeselect', 'difficulty', 'machines', 'hud', 'pause',
-    'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'collection', 'stats', 'toast', 'countdown', 'powerbar'];
+    'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'collection', 'stats',
+    'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
     modeselect: ['modeselect'],
     difficulty: ['difficulty'],
     machines: ['machines'],
-    playing: ['hud', 'powerbar'],
-    grabbing: ['hud', 'powerbar'],
-    dropping: ['hud'],
+    playing: ['hud', 'powerbar', 'poweruphud'],
+    grabbing: ['hud', 'powerbar', 'poweruphud'],
+    dropping: ['hud', 'poweruphud'],
     result: ['hud'],
     paused: ['pause'],
     gameover: ['gameover'],
@@ -132,6 +153,7 @@ function showState(state: GameState): void {
     help: ['help'],
     collection: ['collection'],
     stats: ['stats'],
+    showcase: ['showcase'],
   };
 
   const visible = stateMap[state] || [];
@@ -148,6 +170,144 @@ function showToast(msg: string, dur: number = 2): void {
   toastTimer = dur;
 }
 
+// ─── Claw Trail System ───────────────────────────────────
+function initTrailPool(): void {
+  for (let i = 0; i < MAX_TRAIL; i++) {
+    const mesh = new Mesh(
+      new SphereGeometry(0.006, 4, 3),
+      new MeshBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0, blending: AdditiveBlending }),
+    );
+    mesh.visible = false;
+    world.scene.add(mesh);
+    trailPool.push(mesh);
+  }
+}
+
+function updateClawTrail(dt: number, time: number): void {
+  if (gsm.state !== 'playing' || gsm.clawPhase === 'idle') return;
+
+  // Spawn trail point
+  if (clawGroup && (gsm.clawPhase === 'positioning' || gsm.clawPhase === 'descending' || gsm.clawPhase === 'ascending')) {
+    const mesh = trailPool.pop();
+    if (mesh) {
+      const worldPos = new Vector3();
+      clawGroup.getWorldPosition(worldPos);
+      mesh.position.copy(worldPos);
+      mesh.visible = true;
+      (mesh.material as MeshBasicMaterial).opacity = 0.5;
+      const themeColor = new Color(gsm.theme.claw);
+      (mesh.material as MeshBasicMaterial).color.copy(themeColor);
+      clawTrail.push({ pos: worldPos.clone(), age: 0, mesh });
+    }
+  }
+
+  // Update existing trail
+  for (let i = clawTrail.length - 1; i >= 0; i--) {
+    const t = clawTrail[i];
+    t.age += dt;
+    if (t.age > 0.6) {
+      t.mesh.visible = false;
+      trailPool.push(t.mesh);
+      clawTrail.splice(i, 1);
+      continue;
+    }
+    const frac = 1 - t.age / 0.6;
+    (t.mesh.material as MeshBasicMaterial).opacity = frac * 0.5;
+    t.mesh.scale.setScalar(frac * 0.8 + 0.2);
+  }
+}
+
+// ─── Score Popup System ──────────────────────────────────
+function spawnScorePopup(text: string, color: string, pos: Vector3): void {
+  // Create a simple glowing sphere as score indicator (visual feedback)
+  const group = new Group();
+  const sphere = new Mesh(
+    new SphereGeometry(0.02, 6, 4),
+    new MeshBasicMaterial({ color: new Color(color), transparent: true, opacity: 0.8, blending: AdditiveBlending }),
+  );
+  group.add(sphere);
+
+  // Ring burst
+  for (let i = 0; i < 6; i++) {
+    const angle = (i / 6) * Math.PI * 2;
+    const dot = new Mesh(
+      new SphereGeometry(0.005, 4, 3),
+      new MeshBasicMaterial({ color: new Color(color), transparent: true, opacity: 0.6, blending: AdditiveBlending }),
+    );
+    dot.position.set(Math.cos(angle) * 0.03, 0, Math.sin(angle) * 0.03);
+    group.add(dot);
+  }
+
+  group.position.copy(pos);
+  world.scene.add(group);
+
+  scorePopups.push({
+    mesh: group,
+    vel: new Vector3(0, 0.5, 0),
+    life: 1.2,
+  });
+}
+
+function updateScorePopups(dt: number): void {
+  for (let i = scorePopups.length - 1; i >= 0; i--) {
+    const p = scorePopups[i];
+    p.life -= dt;
+    if (p.life <= 0) {
+      world.scene.remove(p.mesh);
+      scorePopups.splice(i, 1);
+      continue;
+    }
+    p.vel.y -= 0.3 * dt;
+    p.mesh.position.addScaledVector(p.vel, dt);
+    const frac = p.life / 1.2;
+    p.mesh.scale.setScalar(0.5 + frac * 0.5);
+    // Fade children
+    p.mesh.children.forEach(c => {
+      if ((c as Mesh).material) {
+        ((c as Mesh).material as MeshBasicMaterial).opacity = frac * 0.8;
+      }
+    });
+  }
+}
+
+// ─── Power-Up Orb Spawning ───────────────────────────────
+function spawnPowerUpOrb(): void {
+  const config = gsm.machine;
+  const def = POWERUP_DEFS[Math.floor(Math.random() * POWERUP_DEFS.length)];
+  const x = (Math.random() - 0.5) * config.pitWidth * 0.6;
+  const z = (Math.random() - 0.5) * config.pitDepth * 0.6;
+  const y = machineBaseY + 0.15;
+  const orb = createPowerUpOrb(def, x, y, z);
+  sceneGroup.add(orb.mesh);
+  powerups.orbs.push(orb);
+}
+
+function checkPowerUpCollection(): void {
+  if (!clawGroup) return;
+  const clawWorldPos = new Vector3();
+  clawGroup.getWorldPosition(clawWorldPos);
+
+  for (const orb of powerups.orbs) {
+    if (!orb.alive) continue;
+    const orbWorldPos = new Vector3();
+    orb.mesh.getWorldPosition(orbWorldPos);
+    const dist = clawWorldPos.distanceTo(orbWorldPos);
+    if (dist < 0.12) {
+      // Collect!
+      orb.alive = false;
+      orb.mesh.visible = false;
+      powerups.activate(orb.def);
+      audio.powerUpCollect();
+      showToast('POWER-UP: ' + orb.def.name);
+      particles.burst(orbWorldPos, orb.def.color, 12, 1.5);
+      shake.trigger(0.008, 0.15);
+      checkAchievement('first_powerup', true);
+      checkAchievement('powerup_5', powerups.totalCollected >= 5);
+      checkAchievement('powerup_collector', powerups.totalCollected >= 15);
+    }
+  }
+}
+
 // ─── Build/Rebuild Machine Scene ─────────────────────────
 function buildMachine(): void {
   if (sceneGroup) {
@@ -159,18 +319,15 @@ function buildMachine(): void {
   const config = gsm.machine;
   const theme = gsm.theme;
 
-  // Machine box
   machineBox = createMachineBox(config, theme);
   sceneGroup.add(machineBox);
 
-  // Prizes
   const rng = gsm.mode === 'daily' ? seededRandom(getDailySeed()) : undefined;
   const { group, prizes } = spawnPrizes(config, rng);
   prizeGroup = group;
   prizeMeshes = prizes;
   sceneGroup.add(prizeGroup);
 
-  // Claw
   clawGroup = createClawGroup(theme);
   clawGroup.position.y = config.pitHeight / 2 + 0.1;
   gsm.clawX = 0;
@@ -179,18 +336,18 @@ function buildMachine(): void {
   gsm.clawPhase = 'idle';
   sceneGroup.add(clawGroup);
 
-  // Claw rail
   railGroup = createClawRail(config, theme);
   sceneGroup.add(railGroup);
 
-  // Shadow on floor
   clawShadow = createClawShadow();
   sceneGroup.add(clawShadow);
 
-  // Highlight target prize if in target mode
   if (gsm.mode === 'target') {
     pickTargetPrize();
   }
+
+  // Clean up old power-up orbs
+  powerups.orbs = [];
 
   world.scene.add(sceneGroup);
 }
@@ -201,7 +358,6 @@ function pickTargetPrize(): void {
   const target = prizeMeshes[idx];
   const data = (target as any)._prizeData;
   gsm.targetPrizeId = data.id;
-  // Add highlight ring
   const ring = new Mesh(
     new SphereGeometry(0.05, 8, 6),
     new MeshBasicMaterial({ color: 0xffdd00, transparent: true, opacity: 0.4, blending: AdditiveBlending }),
@@ -212,7 +368,6 @@ function pickTargetPrize(): void {
 
 // ─── Wire UI Buttons ─────────────────────────────────────
 function wireButtons(): void {
-  // Wait for panels to compile, then wire
   setTimeout(() => {
     wirePanel('title', {
       'btn-play': () => { audio.buttonClick(); showState('modeselect'); },
@@ -253,12 +408,12 @@ function wireButtons(): void {
 
     wirePanel('pause', {
       'btn-resume': () => { audio.buttonClick(); showState('playing'); },
-      'btn-quit': () => { audio.buttonClick(); showState('title'); },
+      'btn-quit': () => { audio.buttonClick(); music.stop(); showState('title'); },
     });
 
     wirePanel('gameover', {
       'btn-rematch': () => { audio.buttonClick(); startGame(); },
-      'btn-title': () => { audio.buttonClick(); showState('title'); },
+      'btn-title': () => { audio.buttonClick(); music.stop(); showState('title'); },
     });
 
     wirePanel('leaderboard', {
@@ -276,8 +431,8 @@ function wireButtons(): void {
       'btn-master-down': () => { audio.setMasterVolume(Math.max(0, audio.getMasterVolume() - 0.1)); updateSettings(); audio.buttonClick(); },
       'btn-sfx-up': () => { audio.setSfxVolume(Math.min(1, audio.getSfxVolume() + 0.1)); updateSettings(); audio.buttonClick(); },
       'btn-sfx-down': () => { audio.setSfxVolume(Math.max(0, audio.getSfxVolume() - 0.1)); updateSettings(); audio.buttonClick(); },
-      'btn-music-up': () => { audio.setMusicVolume(Math.min(1, audio.getMusicVolume() + 0.1)); updateSettings(); audio.buttonClick(); },
-      'btn-music-down': () => { audio.setMusicVolume(Math.max(0, audio.getMusicVolume() - 0.1)); updateSettings(); audio.buttonClick(); },
+      'btn-music-up': () => { audio.setMusicVolume(Math.min(1, audio.getMusicVolume() + 0.1)); music.setVolume(audio.getMusicVolume()); updateSettings(); audio.buttonClick(); },
+      'btn-music-down': () => { audio.setMusicVolume(Math.max(0, audio.getMusicVolume() - 0.1)); music.setVolume(audio.getMusicVolume()); updateSettings(); audio.buttonClick(); },
       'btn-back-settings': () => { audio.buttonClick(); showState('title'); },
     });
 
@@ -291,6 +446,14 @@ function wireButtons(): void {
 
     wirePanel('stats', {
       'btn-back-stats': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('tutorial', {
+      'tut-dismiss': () => { audio.buttonClick(); tutorialDismissed = true; setVisible('tutorial', false); showState('title'); try { localStorage.setItem('neon-claw-tutorial', '1'); } catch {} },
+    });
+
+    wirePanel('showcase', {
+      'btn-back-showcase': () => { audio.buttonClick(); showState('title'); },
     });
   }, 1500);
 }
@@ -326,8 +489,8 @@ function startGame(): void {
   gsm.resetSession();
   gsm.machinesUsed.add(gsm.machine.id);
   gsm.themesUsed.add(gsm.theme.id);
+  powerups.reset();
 
-  // Configure mode
   switch (gsm.mode) {
     case 'classic': gsm.maxAttempts = gsm.difficulty === 'easy' ? 7 : gsm.difficulty === 'medium' ? 5 : 3; break;
     case 'timeattack': gsm.timeRemaining = gsm.difficulty === 'easy' ? 90 : gsm.difficulty === 'medium' ? 60 : 45; gsm.maxAttempts = 999; break;
@@ -344,7 +507,18 @@ function startGame(): void {
   audio.gameStart();
   gameStarted = true;
 
-  // Countdown
+  // Start synthwave music
+  if (!musicStarted) {
+    try {
+      const ctx = (audio as any).ctx;
+      const musicNode = (audio as any).musicGain;
+      if (ctx && musicNode) {
+        music.start(ctx, musicNode);
+        musicStarted = true;
+      }
+    } catch {}
+  }
+
   countdownValue = 3;
   countdownTimer = 3;
   setVisible('countdown', true);
@@ -372,14 +546,21 @@ function dropClaw(): void {
   gsm.clawTargetY = -gsm.machine.pitHeight / 2 + 0.08;
   gsm.grabStartTime = performance.now();
   audio.clawDrop();
+
+  // Slow-mo power-up: reduce drop speed (handled in physics)
 }
 
 function updateClawPhysics(dt: number): void {
   const config = gsm.machine;
-  const dropSpeed = config.dropSpeed * 0.6;
+  let dropSpeed = config.dropSpeed * 0.6;
   const liftSpeed = 0.4;
   const returnSpeed = 0.5;
   const topY = config.pitHeight / 2 + 0.1;
+
+  // Slow-mo power-up halves drop speed
+  if (powerups.has('slow_mo')) {
+    dropSpeed *= 0.45;
+  }
 
   switch (gsm.clawPhase) {
     case 'descending': {
@@ -394,22 +575,16 @@ function updateClawPhysics(dt: number): void {
       break;
     }
     case 'closing': {
-      // Brief close animation delay
-      setTimeout(() => {
-        gsm.clawPhase = 'ascending';
-        audio.clawAscend();
-      }, 400);
-      gsm.clawPhase = 'ascending'; // immediate for now
+      gsm.clawPhase = 'ascending';
+      audio.clawAscend();
       break;
     }
     case 'ascending': {
       gsm.clawY += liftSpeed * dt;
-      // Check if prize slips during ascent
       if (gsm.grabbedPrize) {
         const prize = (gsm.grabbedPrize as any)._prizeData;
         const grip = getGripStrength();
         if (Math.random() * dt > grip * 2) {
-          // Prize slips!
           dropPrize();
         }
       }
@@ -424,7 +599,6 @@ function updateClawPhysics(dt: number): void {
       break;
     }
     case 'returning': {
-      // Move to drop chute position
       const chuteX = config.pitWidth / 2 + 0.1;
       const chuteZ = config.pitDepth / 2 - 0.075;
       const dx = chuteX - gsm.clawX;
@@ -441,7 +615,6 @@ function updateClawPhysics(dt: number): void {
       break;
     }
     case 'releasing': {
-      // Brief release pause, then reset
       gsm.clawPhase = 'idle';
       gsm.clawGripping = false;
       gsm.clawX = 0;
@@ -451,14 +624,11 @@ function updateClawPhysics(dt: number): void {
     }
   }
 
-  // Update claw mesh position
   if (clawGroup) {
     clawGroup.position.set(gsm.clawX, gsm.clawY, gsm.clawZ);
-    // Animate prongs
     animateClawProngs(gsm.clawGripping);
   }
 
-  // Update rail
   if (railGroup) {
     const zRail = railGroup.getObjectByName('z_rail');
     const carriage = railGroup.getObjectByName('carriage');
@@ -490,21 +660,46 @@ function getGripStrength(): number {
   if (gsm.mode === 'progressive') {
     grip *= Math.max(0.3, 1 - gsm.progressiveRound * 0.08);
   }
+  // Strong Grip power-up
+  if (powerups.has('strong_grip')) {
+    grip = 1.0;
+  }
   return Math.min(1, grip);
 }
 
 function attemptGrab(): void {
-  // Check proximity to any prize
   const clawPos = new Vector3(gsm.clawX, gsm.clawY, gsm.clawZ);
   let closest: Group | null = null;
   let closestDist = Infinity;
 
+  // Magnet power-up extends grab range
+  const grabRange = powerups.has('magnet') ? 0.2 : 0.1;
+
   for (const p of prizeMeshes) {
-    if (!(p as any)._active === false) continue;
+    if ((p as any)._active === false) continue;
     const dist = clawPos.distanceTo(p.position);
-    if (dist < 0.1 && dist < closestDist) {
+    if (dist < grabRange && dist < closestDist) {
       closest = p;
       closestDist = dist;
+    }
+  }
+
+  // Magnet: pull closest prize toward claw if in extended range
+  if (!closest && powerups.has('magnet')) {
+    let nearestInRange: Group | null = null;
+    let nearestDist = 0.35;
+    for (const p of prizeMeshes) {
+      if ((p as any)._active === false) continue;
+      const dist = clawPos.distanceTo(p.position);
+      if (dist < nearestDist) {
+        nearestInRange = p;
+        nearestDist = dist;
+      }
+    }
+    if (nearestInRange) {
+      // Snap prize closer to claw
+      nearestInRange.position.lerp(clawPos, 0.6);
+      closest = nearestInRange;
     }
   }
 
@@ -516,9 +711,26 @@ function attemptGrab(): void {
     if (Math.random() < grabChance) {
       gsm.grabbedPrize = closest;
       (closest as any)._active = false;
-      // Attach to claw
       closest.position.set(0, -0.1, 0);
       clawGroup.add(closest);
+
+      // Wobble nearby prizes (visual polish)
+      wobbleNearbyPrizes(gsm.clawX, gsm.clawZ);
+    }
+  }
+}
+
+function wobbleNearbyPrizes(cx: number, cz: number): void {
+  for (const p of prizeMeshes) {
+    if ((p as any)._active === false) continue;
+    const dx = p.position.x - cx;
+    const dz = p.position.z - cz;
+    const dist = Math.sqrt(dx * dx + dz * dz);
+    if (dist < 0.2) {
+      // Apply a small wobble offset
+      const wobbleStrength = (0.2 - dist) * 0.5;
+      (p as any)._wobbleTimer = 0.5;
+      (p as any)._wobbleStrength = wobbleStrength;
     }
   }
 }
@@ -527,7 +739,6 @@ function dropPrize(): void {
   if (!gsm.grabbedPrize) return;
   const prize = gsm.grabbedPrize;
   clawGroup.remove(prize);
-  // Drop back into pit
   const worldPos = new Vector3();
   clawGroup.getWorldPosition(worldPos);
   prize.position.set(
@@ -550,16 +761,17 @@ function releasePrize(): void {
   clawGroup.remove(prize);
   prizeMeshes = prizeMeshes.filter(p => p !== prize);
 
-  // Score
   let points = prizeData.points;
   points *= gsm.combo;
   gsm.score += points;
   gsm.grabs++;
   gsm.streak++;
   gsm.totalGrabs++;
-  gsm.ticketsEarned += prizeData.tickets * gsm.combo;
 
-  // Combo
+  let ticketMult = gsm.combo;
+  if (powerups.has('double_tickets')) ticketMult *= 2;
+  gsm.ticketsEarned += prizeData.tickets * ticketMult;
+
   gsm.comboTimer = 5;
   if (gsm.streak > 1 && gsm.streak % 2 === 0) {
     gsm.combo = Math.min(5, gsm.combo + 1);
@@ -570,14 +782,11 @@ function releasePrize(): void {
 
   if (gsm.streak > gsm.bestStreak) gsm.bestStreak = gsm.streak;
 
-  // Collection
   gsm.collection.add(prizeData.id);
 
-  // Speed grab check
   const grabTime = (performance.now() - gsm.grabStartTime) / 1000;
   checkAchievement('speed_grab', grabTime < 3);
 
-  // Target mode
   if (gsm.mode === 'target' && prizeData.id === gsm.targetPrizeId) {
     gsm.targetHits++;
     showToast('TARGET HIT! +' + points);
@@ -588,9 +797,16 @@ function releasePrize(): void {
     showToast('+' + points + ' ' + prizeData.name);
   }
 
-  // Effects
-  const pos = new Vector3(gsm.machine.pitWidth / 2 + 0.1, 0, gsm.machine.pitDepth / 2 - 0.075);
-  particles.burst(pos.clone().add(new Vector3(0, machineBaseY, 0)), prizeData.baseColor, 15, 1.2);
+  // Score popup effect
+  const popPos = new Vector3(
+    gsm.machine.pitWidth / 2 + 0.1,
+    machineBaseY + 0.1,
+    gsm.machine.pitDepth / 2 - 0.075,
+  );
+  const rarityColor = RARITY_COLORS[prizeData.rarity] || '#ffffff';
+  spawnScorePopup('+' + points, rarityColor, popPos);
+
+  particles.burst(popPos.clone(), prizeData.baseColor, 15, 1.2);
   audio.prizeCollect();
   shake.trigger(0.01, 0.2);
 
@@ -646,7 +862,6 @@ function checkGameEnd(): void {
     case 'progressive':
       if (gsm.attempts >= gsm.maxAttempts) {
         if (gsm.grabs > 0) {
-          // Next round
           gsm.progressiveRound++;
           gsm.attempts = 0;
           buildMachine();
@@ -662,7 +877,7 @@ function checkGameEnd(): void {
       if (gsm.misses >= 3) ended = true;
       break;
     case 'practice':
-      break; // Never ends
+      break;
   }
 
   if (ended) {
@@ -677,7 +892,6 @@ function endGame(): void {
   if (gsm.score > gsm.bestScore) gsm.bestScore = gsm.score;
   if (gsm.bestStreak > gsm.bestStreak_career) gsm.bestStreak_career = gsm.bestStreak;
 
-  // Achievements
   checkAchievement('score_1k', gsm.score >= 1000);
   checkAchievement('score_5k', gsm.score >= 5000);
   checkAchievement('score_10k', gsm.score >= 10000);
@@ -691,8 +905,13 @@ function endGame(): void {
   checkAchievement('theme_explorer', gsm.themesUsed.size >= THEMES.length);
   checkAchievement('machine_all', gsm.machinesUsed.size >= MACHINES.length);
   checkAchievement('games_25', gsm.totalGames >= 25);
+  // Round 2 achievement checks
+  checkAchievement('score_25k', gsm.score >= 25000);
+  checkAchievement('streak_10', gsm.bestStreak >= 10);
+  checkAchievement('games_50', gsm.totalGames >= 50);
+  checkAchievement('marathon_master', gsm.mode === 'marathon' && gsm.grabs >= 25);
+  checkAchievement('precision_ace', gsm.mode === 'precision' && gsm.misses === 0 && gsm.grabs === 3);
 
-  // Leaderboard
   const accuracy = gsm.attempts > 0 ? Math.round((gsm.grabs / gsm.attempts) * 100) : 0;
   gsm.addToLeaderboard({
     score: gsm.score, mode: gsm.mode, difficulty: gsm.difficulty,
@@ -701,6 +920,8 @@ function endGame(): void {
   });
 
   gsm.save();
+  music.stop();
+  musicStarted = false;
   audio.gameOver();
   updateGameOver();
   showState('gameover');
@@ -729,6 +950,21 @@ function updateHUD(): void {
   setText(doc, 'hud-time', timeStr);
   const modeLabel = gsm.mode === 'progressive' ? 'R' + gsm.progressiveRound : '';
   setText(doc, 'hud-mode', modeLabel);
+}
+
+function updatePowerUpHUD(): void {
+  const doc = getDoc('poweruphud');
+  if (!doc) return;
+  for (let i = 0; i < 3; i++) {
+    if (i < powerups.active.length) {
+      const pu = powerups.active[i];
+      setText(doc, `pu-name-${i}`, pu.def.icon + ' ' + pu.def.name);
+      setText(doc, `pu-time-${i}`, Math.ceil(pu.remaining) + 's');
+    } else {
+      setText(doc, `pu-name-${i}`, '---');
+      setText(doc, `pu-time-${i}`, '');
+    }
+  }
 }
 
 function updateGameOver(): void {
@@ -818,8 +1054,20 @@ function updateStats(): void {
   setText(doc, 'stat-collection', gsm.collection.size + ' / ' + PRIZE_TYPES.length);
 }
 
+function updateShowcase(): void {
+  const doc = getDoc('showcase');
+  if (!doc) return;
+  for (let i = 0; i < PRIZE_TYPES.length; i++) {
+    const p = PRIZE_TYPES[i];
+    const owned = gsm.collection.has(p.id);
+    setText(doc, `sc-name-${i}`, owned ? p.name : '???');
+    setText(doc, `sc-rarity-${i}`, owned ? p.rarity.toUpperCase() : '');
+    setText(doc, `sc-pts-${i}`, owned ? p.points + ' pts | ' + p.tickets + ' tix' : '');
+  }
+  setText(doc, 'sc-total', gsm.collection.size + ' / ' + PRIZE_TYPES.length + ' Discovered');
+}
+
 function rebuildTheme(): void {
-  // Rebuild environment with new theme
   if (env) {
     world.scene.remove(env.group);
   }
@@ -833,9 +1081,8 @@ function rebuildTheme(): void {
 function handleInput(dt: number): void {
   if (gsm.state !== 'playing' || countdownTimer > 0) return;
 
-  const kb = world.input.keyboard;
+  const kb = (world.input as any).keyboard;
 
-  // Claw movement — WASD / Arrows
   let dx = 0, dz = 0;
   if (kb.getKeyPressed('KeyW') || kb.getKeyPressed('ArrowUp')) dz = -1;
   if (kb.getKeyPressed('KeyS') || kb.getKeyPressed('ArrowDown')) dz = 1;
@@ -848,12 +1095,10 @@ function handleInput(dt: number): void {
     gsm.clawPhase = 'idle';
   }
 
-  // Drop claw — Space
   if (kb.getKeyDown('Space')) {
     dropClaw();
   }
 
-  // Pause — Escape
   if (kb.getKeyDown('Escape')) {
     if (gsm.state === 'playing') {
       showState('paused');
@@ -864,7 +1109,6 @@ function handleInput(dt: number): void {
   try {
     const xr = (world.input as any).xr;
     if (xr) {
-      // Right thumbstick for claw positioning
       const rightPad = xr.getController?.('right');
       if (rightPad?.gamepad) {
         const axes = rightPad.gamepad.axes;
@@ -876,11 +1120,9 @@ function handleInput(dt: number): void {
           }
         }
       }
-      // Right trigger to drop
       if (rightPad?.gamepad?.buttons?.[0]?.pressed) {
         dropClaw();
       }
-      // B button to pause
       if (rightPad?.gamepad?.buttons?.[4]?.pressed) {
         showState('paused');
       }
@@ -949,7 +1191,7 @@ function gameLoop(dt: number, time: number): void {
     updateClawShadow(clawShadow, gsm.clawX, gsm.clawZ, floorY, gsm.state === 'playing' && gsm.clawPhase !== 'returning', time);
   }
 
-  // Animate glow ring on claw
+  // Glow ring pulse
   if (clawGroup) {
     const ring = clawGroup.getObjectByName('glow_ring');
     if (ring) {
@@ -958,7 +1200,7 @@ function gameLoop(dt: number, time: number): void {
     }
   }
 
-  // Animate chute ring
+  // Chute ring animation
   if (machineBox) {
     const chuteRing = machineBox.getObjectByName('chute_ring') as Mesh;
     if (chuteRing) {
@@ -968,14 +1210,41 @@ function gameLoop(dt: number, time: number): void {
     }
   }
 
-  // Prize animations (floating/rotating)
+  // Prize animations (floating/rotating + wobble)
   for (const p of prizeMeshes) {
     p.rotation.y += dt * 0.3;
-    // Subtle bob
     const data = p as any;
     if (!data._bobOffset) data._bobOffset = Math.random() * Math.PI * 2;
     const bobBase = -gsm.machine.pitHeight / 2 + 0.04;
     p.position.y = bobBase + Math.sin(time * 1.5 + data._bobOffset) * 0.003;
+
+    // Wobble effect from nearby grabs
+    if (data._wobbleTimer && data._wobbleTimer > 0) {
+      data._wobbleTimer -= dt;
+      const wobble = Math.sin(time * 25) * data._wobbleStrength * (data._wobbleTimer / 0.5);
+      p.rotation.x = wobble;
+      p.rotation.z = wobble * 0.7;
+    } else {
+      p.rotation.x *= 0.95;
+      p.rotation.z *= 0.95;
+    }
+
+    // X-Ray power-up: show rarity glow halo on prizes
+    if (powerups.has('x_ray') && data._prizeData) {
+      if (!data._xrayRing) {
+        const rarityColor = RARITY_COLORS[data._prizeData.rarity] || '#ffffff';
+        const xring = new Mesh(
+          new SphereGeometry(0.05, 6, 4),
+          new MeshBasicMaterial({ color: new Color(rarityColor), transparent: true, opacity: 0.25, blending: AdditiveBlending }),
+        );
+        xring.name = 'xray_ring';
+        p.add(xring);
+        data._xrayRing = xring;
+      }
+    } else if (data._xrayRing) {
+      p.remove(data._xrayRing);
+      data._xrayRing = null;
+    }
   }
 
   // Update environment
@@ -983,6 +1252,26 @@ function gameLoop(dt: number, time: number): void {
 
   // Particles
   particles.update(dt);
+
+  // Claw trail
+  updateClawTrail(dt, time);
+
+  // Score popups
+  updateScorePopups(dt);
+
+  // Power-ups update
+  if (gsm.state === 'playing') {
+    powerups.update(dt);
+    updatePowerUpHUD();
+
+    // Check power-up collection
+    checkPowerUpCollection();
+
+    // Spawn new power-up orbs periodically
+    if (powerups.shouldSpawn() && gsm.clawPhase === 'idle') {
+      spawnPowerUpOrb();
+    }
+  }
 
   // Power bar update
   if (gsm.state === 'playing') {
@@ -993,12 +1282,18 @@ function gameLoop(dt: number, time: number): void {
         ? barLen : Math.round(barLen * (gsm.clawY - gsm.clawTargetY) / (gsm.machine.pitHeight * 0.5 + 0.1));
       const bar = '#'.repeat(Math.max(0, Math.min(barLen, filled))) + '-'.repeat(Math.max(0, barLen - filled));
       setText(doc, 'power-bar', '[' + bar + ']');
-      setText(doc, 'power-label', gsm.clawPhase === 'descending' ? 'DROPPING' : gsm.clawPhase === 'ascending' ? 'LIFTING' : gsm.clawPhase === 'returning' ? 'RETURNING' : 'READY');
+      const phaseLabel = gsm.clawPhase === 'descending' ? 'DROPPING'
+        : gsm.clawPhase === 'ascending' ? 'LIFTING'
+        : gsm.clawPhase === 'returning' ? 'RETURNING'
+        : powerups.has('slow_mo') ? 'READY [SLOW]'
+        : powerups.has('strong_grip') ? 'READY [GRIP+]'
+        : 'READY';
+      setText(doc, 'power-label', phaseLabel);
     }
   }
 
   // Screen shake
-  const shakeOff = shake.update(dt);
+  shake.update(dt);
 }
 
 // ─── Init ────────────────────────────────────────────────
@@ -1007,13 +1302,12 @@ async function main(): Promise<void> {
 
   world = await World.create(container, {
     xr: { offer: 'once' as any },
-    input: { canvasPointerEvents: true },
     features: {
       grabbing: true,
       physics: false,
       spatialUI: true,
     },
-  });
+  } as any);
 
   // Fog
   world.scene.fog = new (await import('@iwsdk/core')).Fog(0x000811, 5, 25);
@@ -1027,6 +1321,9 @@ async function main(): Promise<void> {
   world.scene.add(particleGroup);
   particles = new ParticleSystem(particleGroup);
 
+  // Trail pool
+  initTrailPool();
+
   // Build initial machine
   buildMachine();
 
@@ -1036,10 +1333,21 @@ async function main(): Promise<void> {
   // Wire buttons after panels load
   wireButtons();
 
-  // Show title
-  setTimeout(() => showState('title'), 2000);
+  // Check tutorial
+  try {
+    tutorialShown = localStorage.getItem('neon-claw-tutorial') === '1';
+  } catch {}
 
-  // Game loop via system
+  // Show title (or tutorial for first-time)
+  setTimeout(() => {
+    if (!tutorialShown) {
+      setVisible('tutorial', true);
+    } else {
+      showState('title');
+    }
+  }, 2000);
+
+  // Game loop
   let lastTime = 0;
   const update = (timeMs: number) => {
     const time = timeMs * 0.001;

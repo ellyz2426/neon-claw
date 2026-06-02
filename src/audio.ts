@@ -224,6 +224,14 @@ export class AudioManager {
     this.playNoise(0.15, 0.06, 1500);
   }
 
+  powerUpCollect(): void {
+    if (!this.ctx) return;
+    [660, 880, 1100].forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 'sine', 0.15, 0.12), i * 60);
+    });
+    this.playNoise(0.1, 0.04, 4000);
+  }
+
   setMasterVolume(v: number): void { this.masterVol = v; if (this.masterGain) this.masterGain.gain.value = v; }
   setSfxVolume(v: number): void { this.sfxVol = v; if (this.sfxGain) this.sfxGain.gain.value = v; }
   setMusicVolume(v: number): void { this.musicVol = v; if (this.musicGain) this.musicGain.gain.value = v; }

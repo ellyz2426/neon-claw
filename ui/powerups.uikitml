@@ -1,0 +1,19 @@
+<panel>
+  <row backgroundColor="#000811cc" paddingTop={6} paddingBottom={6} paddingLeft={10} paddingRight={10} borderRadius={5} flexDirection="column" gap={3}>
+    <text fontWeight="bold" fontSize={9} color="#ff00ff">ACTIVE POWER-UPS</text>
+    <row flexDirection="row" gap={6}>
+      <row flexDirection="column" gap={2}>
+        <text id="pu-name-0" fontSize={7} color="#ffffff">---</text>
+        <text id="pu-time-0" fontSize={6} color="#aaaaaa"></text>
+      </row>
+      <row flexDirection="column" gap={2}>
+        <text id="pu-name-1" fontSize={7} color="#ffffff">---</text>
+        <text id="pu-time-1" fontSize={6} color="#aaaaaa"></text>
+      </row>
+      <row flexDirection="column" gap={2}>
+        <text id="pu-name-2" fontSize={7} color="#ffffff">---</text>
+        <text id="pu-time-2" fontSize={6} color="#aaaaaa"></text>
+      </row>
+    </row>
+  </row>
+</panel>

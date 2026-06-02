@@ -1,0 +1,6 @@
+<panel>
+  <row backgroundColor="#000811cc" paddingTop={6} paddingBottom={6} paddingLeft={10} paddingRight={10} borderRadius={5} flexDirection="column" gap={3}>
+    <text fontWeight="bold" fontSize={10} color="#ffdd00" id="popup-text">+500</text>
+    <text fontSize={7} color="#88aacc" id="popup-sub"></text>
+  </row>
+</panel>

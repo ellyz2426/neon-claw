@@ -1,0 +1,12 @@
+<panel>
+  <row backgroundColor="#000811cc" paddingTop={8} paddingBottom={8} paddingLeft={12} paddingRight={12} borderRadius={6} flexDirection="column" gap={4}>
+    <text fontWeight="bold" fontSize={11} color="#00ffff">WELCOME TO NEON CLAW</text>
+    <text fontSize={8} color="#aaddff">Position the claw over a prize, then drop!</text>
+    <text fontSize={7} color="#88aacc">BROWSER: WASD/Arrows = Move | Space = Drop</text>
+    <text fontSize={7} color="#88aacc">VR: Right Stick = Move | Trigger = Drop</text>
+    <text fontSize={7} color="#88aacc">Grab prizes to earn points and tickets</text>
+    <text fontSize={7} color="#88aacc">Build combos with consecutive grabs</text>
+    <text fontSize={7} color="#ffaa00">Collect power-up orbs for special abilities!</text>
+    <text id="tut-dismiss" fontSize={8} color="#00ff88" fontWeight="bold" paddingTop={4}>[TAP TO START]</text>
+  </row>
+</panel>
