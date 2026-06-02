@@ -1,0 +1,66 @@
+<style>
+  .cresult-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 2;
+    background-color: rgba(0, 0, 0, 0.92);
+    border-color: #00ff88;
+    border-width: 0.15;
+    border-radius: 1;
+    gap: 0.6;
+  }
+  .cresult-title {
+    font-size: 2.8;
+    color: #00ff88;
+    font-weight: bold;
+    text-align: center;
+  }
+  .cresult-fail {
+    font-size: 2.8;
+    color: #ff4444;
+    font-weight: bold;
+    text-align: center;
+  }
+  .cresult-stage {
+    font-size: 1.5;
+    color: #ffffff;
+    text-align: center;
+  }
+  .cresult-obj {
+    font-size: 1.2;
+    color: #aaaaaa;
+  }
+  .cresult-obj-met {
+    font-size: 1.2;
+    color: #00ff88;
+  }
+  .cresult-reward {
+    font-size: 1.5;
+    color: #ffdd00;
+    text-align: center;
+    font-weight: bold;
+  }
+  .cresult-btn {
+    font-size: 1.5;
+    color: #000000;
+    background-color: #00ff88;
+    padding: 0.5;
+    border-radius: 0.3;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+<div class="cresult-panel">
+  <span class="cresult-title" id="cr-title">STAGE COMPLETE!</span>
+  <span class="cresult-stage" id="cr-stage">Stage 1</span>
+
+  <span class="cresult-obj" id="cr-obj-0">—</span>
+  <span class="cresult-obj" id="cr-obj-1">—</span>
+  <span class="cresult-obj" id="cr-obj-2">—</span>
+
+  <span class="cresult-reward" id="cr-reward">+0 Tickets</span>
+  <span class="cresult-reward" id="cr-bonus"></span>
+
+  <span class="cresult-btn" id="btn-cr-continue" cursor="pointer">CONTINUE</span>
+</div>

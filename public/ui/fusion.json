@@ -1,0 +1,791 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "⚗️ FUSION LAB"
+        ],
+        "properties": {
+          "class": "fusion-title"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Combine 3 prizes → 1 higher rarity"
+        ],
+        "properties": {
+          "class": "fusion-subtitle"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Tickets: 0"
+        ],
+        "properties": {
+          "class": "fusion-stats",
+          "id": "fuse-tickets"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Fusions: 0"
+        ],
+        "properties": {
+          "class": "fusion-stats",
+          "id": "fuse-total"
+        },
+        "dataUid": "uid-5"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Common → Uncommon"
+            ],
+            "properties": {
+              "class": "recipe-label"
+            },
+            "dataUid": "uid-7"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "3 Common prizes + 5 tickets"
+            ],
+            "properties": {
+              "class": "recipe-info"
+            },
+            "dataUid": "uid-8"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Available: 0"
+            ],
+            "properties": {
+              "class": "recipe-count",
+              "id": "fuse-common-count"
+            },
+            "dataUid": "uid-9"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "FUSE"
+            ],
+            "properties": {
+              "class": "fuse-btn",
+              "id": "btn-fuse-common",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-10"
+          }
+        ],
+        "properties": {
+          "class": "recipe-row"
+        },
+        "dataUid": "uid-6"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Uncommon → Rare"
+            ],
+            "properties": {
+              "class": "recipe-label"
+            },
+            "dataUid": "uid-12"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "3 Uncommon prizes + 15 tickets"
+            ],
+            "properties": {
+              "class": "recipe-info"
+            },
+            "dataUid": "uid-13"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Available: 0"
+            ],
+            "properties": {
+              "class": "recipe-count",
+              "id": "fuse-uncommon-count"
+            },
+            "dataUid": "uid-14"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "FUSE"
+            ],
+            "properties": {
+              "class": "fuse-btn",
+              "id": "btn-fuse-uncommon",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-15"
+          }
+        ],
+        "properties": {
+          "class": "recipe-row"
+        },
+        "dataUid": "uid-11"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Rare → Epic"
+            ],
+            "properties": {
+              "class": "recipe-label"
+            },
+            "dataUid": "uid-17"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "3 Rare prizes + 40 tickets"
+            ],
+            "properties": {
+              "class": "recipe-info"
+            },
+            "dataUid": "uid-18"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Available: 0"
+            ],
+            "properties": {
+              "class": "recipe-count",
+              "id": "fuse-rare-count"
+            },
+            "dataUid": "uid-19"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "FUSE"
+            ],
+            "properties": {
+              "class": "fuse-btn",
+              "id": "btn-fuse-rare",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-20"
+          }
+        ],
+        "properties": {
+          "class": "recipe-row"
+        },
+        "dataUid": "uid-16"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Epic → Legendary"
+            ],
+            "properties": {
+              "class": "recipe-label"
+            },
+            "dataUid": "uid-22"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "3 Epic prizes + 100 tickets"
+            ],
+            "properties": {
+              "class": "recipe-info"
+            },
+            "dataUid": "uid-23"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Available: 0"
+            ],
+            "properties": {
+              "class": "recipe-count",
+              "id": "fuse-epic-count"
+            },
+            "dataUid": "uid-24"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "FUSE"
+            ],
+            "properties": {
+              "class": "fuse-btn",
+              "id": "btn-fuse-epic",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-25"
+          }
+        ],
+        "properties": {
+          "class": "recipe-row"
+        },
+        "dataUid": "uid-21"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "class": "fusion-result",
+          "id": "fuse-result"
+        },
+        "dataUid": "uid-26"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "← BACK"
+        ],
+        "properties": {
+          "class": "btn-back-f",
+          "id": "btn-back-fusion",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-27"
+      }
+    ],
+    "properties": {
+      "class": "fusion-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "fusion-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "2",
+        "backgroundColor": "rgba(0, 0, 0, 0.92)",
+        "borderColor": "#aa44ff",
+        "borderWidth": "0.15",
+        "borderRadius": 1,
+        "gap": "0.8"
+      }
+    },
+    "fusion-title": {
+      "content": {
+        "fontSize": "3",
+        "color": "#aa44ff",
+        "fontWeight": "bold",
+        "textAlign": "center"
+      }
+    },
+    "fusion-subtitle": {
+      "content": {
+        "fontSize": "1.3",
+        "color": "#888888",
+        "textAlign": "center"
+      }
+    },
+    "fusion-stats": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#ffdd00",
+        "textAlign": "center"
+      }
+    },
+    "recipe-row": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "padding": "0.8",
+        "backgroundColor": "rgba(170, 68, 255, 0.06)",
+        "borderColor": "rgba(170, 68, 255, 0.2)",
+        "borderWidth": "0.05",
+        "borderRadius": 0.4,
+        "gap": "0.2"
+      }
+    },
+    "recipe-label": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#ffffff",
+        "fontWeight": "bold"
+      }
+    },
+    "recipe-info": {
+      "content": {
+        "fontSize": "1.1",
+        "color": "#aaaaaa"
+      }
+    },
+    "recipe-count": {
+      "content": {
+        "fontSize": "1.1",
+        "color": "#00ff88"
+      }
+    },
+    "fuse-btn": {
+      "content": {
+        "fontSize": "1.4",
+        "color": "#000000",
+        "backgroundColor": "#aa44ff",
+        "padding": "0.4",
+        "borderRadius": 0.3,
+        "cursor": "pointer",
+        "textAlign": "center",
+        "fontWeight": "bold"
+      }
+    },
+    "btn-back-f": {
+      "content": {
+        "fontSize": "1.4",
+        "color": "#aa44ff",
+        "backgroundColor": "rgba(170, 68, 255, 0.1)",
+        "padding": "0.4",
+        "borderRadius": 0.3,
+        "borderColor": "#aa44ff",
+        "borderWidth": "0.05",
+        "cursor": "pointer",
+        "textAlign": "center"
+      }
+    },
+    "fusion-result": {
+      "content": {
+        "fontSize": "1.8",
+        "color": "#ffdd00",
+        "textAlign": "center",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "fusion-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 15
+      }
+    },
+    "fusion-title": {
+      "start": {
+        "line": 11,
+        "column": 2
+      },
+      "end": {
+        "line": 11,
+        "column": 15
+      }
+    },
+    "fusion-subtitle": {
+      "start": {
+        "line": 17,
+        "column": 2
+      },
+      "end": {
+        "line": 17,
+        "column": 18
+      }
+    },
+    "fusion-stats": {
+      "start": {
+        "line": 22,
+        "column": 2
+      },
+      "end": {
+        "line": 22,
+        "column": 15
+      }
+    },
+    "recipe-row": {
+      "start": {
+        "line": 27,
+        "column": 2
+      },
+      "end": {
+        "line": 27,
+        "column": 13
+      }
+    },
+    "recipe-label": {
+      "start": {
+        "line": 37,
+        "column": 2
+      },
+      "end": {
+        "line": 37,
+        "column": 15
+      }
+    },
+    "recipe-info": {
+      "start": {
+        "line": 42,
+        "column": 2
+      },
+      "end": {
+        "line": 42,
+        "column": 14
+      }
+    },
+    "recipe-count": {
+      "start": {
+        "line": 46,
+        "column": 2
+      },
+      "end": {
+        "line": 46,
+        "column": 15
+      }
+    },
+    "fuse-btn": {
+      "start": {
+        "line": 50,
+        "column": 2
+      },
+      "end": {
+        "line": 50,
+        "column": 11
+      }
+    },
+    "btn-back-f": {
+      "start": {
+        "line": 60,
+        "column": 2
+      },
+      "end": {
+        "line": 60,
+        "column": 13
+      }
+    },
+    "fusion-result": {
+      "start": {
+        "line": 71,
+        "column": 2
+      },
+      "end": {
+        "line": 71,
+        "column": 16
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 78,
+        "column": 0
+      },
+      "end": {
+        "line": 114,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 79,
+        "column": 2
+      },
+      "end": {
+        "line": 79,
+        "column": 49
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 80,
+        "column": 2
+      },
+      "end": {
+        "line": 80,
+        "column": 73
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 81,
+        "column": 2
+      },
+      "end": {
+        "line": 81,
+        "column": 64
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 82,
+        "column": 2
+      },
+      "end": {
+        "line": 82,
+        "column": 62
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 84,
+        "column": 2
+      },
+      "end": {
+        "line": 89,
+        "column": 8
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 85,
+        "column": 4
+      },
+      "end": {
+        "line": 85,
+        "column": 55
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 86,
+        "column": 4
+      },
+      "end": {
+        "line": 86,
+        "column": 64
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 87,
+        "column": 4
+      },
+      "end": {
+        "line": 87,
+        "column": 73
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 88,
+        "column": 4
+      },
+      "end": {
+        "line": 88,
+        "column": 76
+      }
+    },
+    "uid-11": {
+      "start": {
+        "line": 91,
+        "column": 2
+      },
+      "end": {
+        "line": 96,
+        "column": 8
+      }
+    },
+    "uid-12": {
+      "start": {
+        "line": 92,
+        "column": 4
+      },
+      "end": {
+        "line": 92,
+        "column": 53
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 93,
+        "column": 4
+      },
+      "end": {
+        "line": 93,
+        "column": 67
+      }
+    },
+    "uid-14": {
+      "start": {
+        "line": 94,
+        "column": 4
+      },
+      "end": {
+        "line": 94,
+        "column": 75
+      }
+    },
+    "uid-15": {
+      "start": {
+        "line": 95,
+        "column": 4
+      },
+      "end": {
+        "line": 95,
+        "column": 78
+      }
+    },
+    "uid-16": {
+      "start": {
+        "line": 98,
+        "column": 2
+      },
+      "end": {
+        "line": 103,
+        "column": 8
+      }
+    },
+    "uid-17": {
+      "start": {
+        "line": 99,
+        "column": 4
+      },
+      "end": {
+        "line": 99,
+        "column": 49
+      }
+    },
+    "uid-18": {
+      "start": {
+        "line": 100,
+        "column": 4
+      },
+      "end": {
+        "line": 100,
+        "column": 63
+      }
+    },
+    "uid-19": {
+      "start": {
+        "line": 101,
+        "column": 4
+      },
+      "end": {
+        "line": 101,
+        "column": 71
+      }
+    },
+    "uid-20": {
+      "start": {
+        "line": 102,
+        "column": 4
+      },
+      "end": {
+        "line": 102,
+        "column": 74
+      }
+    },
+    "uid-21": {
+      "start": {
+        "line": 105,
+        "column": 2
+      },
+      "end": {
+        "line": 110,
+        "column": 8
+      }
+    },
+    "uid-22": {
+      "start": {
+        "line": 106,
+        "column": 4
+      },
+      "end": {
+        "line": 106,
+        "column": 54
+      }
+    },
+    "uid-23": {
+      "start": {
+        "line": 107,
+        "column": 4
+      },
+      "end": {
+        "line": 107,
+        "column": 64
+      }
+    },
+    "uid-24": {
+      "start": {
+        "line": 108,
+        "column": 4
+      },
+      "end": {
+        "line": 108,
+        "column": 71
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 109,
+        "column": 4
+      },
+      "end": {
+        "line": 109,
+        "column": 74
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 112,
+        "column": 2
+      },
+      "end": {
+        "line": 112,
+        "column": 54
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 113,
+        "column": 2
+      },
+      "end": {
+        "line": 113,
+        "column": 78
+      }
+    }
+  }
+}

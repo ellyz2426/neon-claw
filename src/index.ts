@@ -1,4 +1,4 @@
-// index.ts — Main entry point for Neon Claw VR (Round 2: Power-ups, Music, Tutorial, Polish)
+// index.ts — Main entry point for Neon Claw VR (Round 3: Campaign, Fusion, New Machines, VFX)
 import {
   World, PanelUI, PanelDocument, Follower, FollowBehavior, ScreenSpace,
   Vector3, Color, Group, Mesh, SphereGeometry, MeshBasicMaterial, AdditiveBlending,
@@ -14,6 +14,8 @@ import { createEnvironment, updateEnvironment, EnvironmentObjects } from './envi
 import { ParticleSystem, createClawShadow, updateClawShadow, ScreenShake } from './effects';
 import { PowerUpManager, POWERUP_DEFS, createPowerUpOrb, PowerUpOrb } from './powerups';
 import { SynthwaveMusic } from './music';
+import { CampaignManager, SEASONS } from './campaign';
+import { FusionManager, FUSION_RECIPES } from './fusion';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -21,6 +23,8 @@ const audio = new AudioManager();
 const shake = new ScreenShake();
 const powerups = new PowerUpManager();
 const music = new SynthwaveMusic();
+const campaign = new CampaignManager();
+const fusion = new FusionManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -45,6 +49,12 @@ const scorePopups: ScorePopup[] = [];
 // Tutorial state
 let tutorialShown = false;
 let tutorialDismissed = false;
+
+// Campaign state
+let campaignSeasonView = 0;
+let inCampaignGame = false;
+let legendaryGrabCelebration = 0; // timer for legendary celebration VFX
+const confettiParticles: { mesh: Mesh; vel: Vector3; life: number; spin: number }[] = [];
 
 // UI entity references
 const panels: Record<string, any> = {};
@@ -127,6 +137,11 @@ function initPanels(): void {
   setupPanel('tutorial', '/ui/tutorial.json', { maxWidth: 0.6, maxHeight: 0.4, pos: [0, menuY, menuZ] });
   setupPanel('poweruphud', '/ui/powerups.json', { maxWidth: 0.35, maxHeight: 0.12, follower: true, followOffset: [-0.3, 0.08, -0.5] });
   setupPanel('showcase', '/ui/showcase.json', { maxWidth: 1.2, maxHeight: 1.0, pos: [0, menuY, menuZ] });
+  // Round 3 panels
+  setupPanel('campaign', '/ui/campaign.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
+  setupPanel('campaignstage', '/ui/campaignstage.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
+  setupPanel('fusion', '/ui/fusion.json', { maxWidth: 1.0, maxHeight: 1.0, pos: [0, menuY, menuZ] });
+  setupPanel('campaignresult', '/ui/campaignresult.json', { maxWidth: 0.8, maxHeight: 0.7, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -134,7 +149,8 @@ function showState(state: GameState): void {
   gsm.state = state;
   const allPanels = ['title', 'modeselect', 'difficulty', 'machines', 'hud', 'pause',
     'gameover', 'leaderboard', 'achievements', 'settings', 'help', 'collection', 'stats',
-    'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase'];
+    'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase',
+    'campaign', 'campaignstage', 'fusion', 'campaignresult'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -154,6 +170,10 @@ function showState(state: GameState): void {
     collection: ['collection'],
     stats: ['stats'],
     showcase: ['showcase'],
+    campaign: ['campaign'],
+    campaign_stage: ['campaignstage'],
+    fusion: ['fusion'],
+    campaign_result: ['campaignresult'],
   };
 
   const visible = stateMap[state] || [];
@@ -371,8 +391,10 @@ function wireButtons(): void {
   setTimeout(() => {
     wirePanel('title', {
       'btn-play': () => { audio.buttonClick(); showState('modeselect'); },
+      'btn-campaign': () => { audio.buttonClick(); updateCampaignPanel(); showState('campaign'); },
       'btn-machines': () => { audio.buttonClick(); updateMachinesPanel(); showState('machines'); },
       'btn-collection': () => { audio.buttonClick(); updateCollectionPanel(); showState('collection'); },
+      'btn-fusion': () => { audio.buttonClick(); updateFusionPanel(); showState('fusion'); },
       'btn-scores': () => { audio.buttonClick(); updateLeaderboard(); showState('leaderboard'); },
       'btn-achievements': () => { audio.buttonClick(); updateAchievements(); showState('achievements'); },
       'btn-stats': () => { audio.buttonClick(); updateStats(); showState('stats'); },
@@ -454,6 +476,34 @@ function wireButtons(): void {
 
     wirePanel('showcase', {
       'btn-back-showcase': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    // Round 3 panel wiring
+    wirePanel('campaign', {
+      'btn-season-0': () => { audio.buttonClick(); campaignSeasonView = 0; updateCampaignStagePanel(); showState('campaign_stage'); },
+      'btn-season-1': () => { if (campaign.isSeasonUnlocked(1)) { audio.buttonClick(); campaignSeasonView = 1; updateCampaignStagePanel(); showState('campaign_stage'); } else { showToast('Complete previous season first'); } },
+      'btn-season-2': () => { if (campaign.isSeasonUnlocked(2)) { audio.buttonClick(); campaignSeasonView = 2; updateCampaignStagePanel(); showState('campaign_stage'); } else { showToast('Complete previous season first'); } },
+      'btn-back-campaign': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('campaignstage', {
+      'btn-stage-0': () => startCampaignStage(campaignSeasonView, 0),
+      'btn-stage-1': () => startCampaignStage(campaignSeasonView, 1),
+      'btn-stage-2': () => startCampaignStage(campaignSeasonView, 2),
+      'btn-stage-3': () => startCampaignStage(campaignSeasonView, 3),
+      'btn-back-stages': () => { audio.buttonClick(); updateCampaignPanel(); showState('campaign'); },
+    });
+
+    wirePanel('fusion', {
+      'btn-fuse-common': () => performFusion(0),
+      'btn-fuse-uncommon': () => performFusion(1),
+      'btn-fuse-rare': () => performFusion(2),
+      'btn-fuse-epic': () => performFusion(3),
+      'btn-back-fusion': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('campaignresult', {
+      'btn-cr-continue': () => { audio.buttonClick(); updateCampaignStagePanel(); showState('campaign_stage'); },
     });
   }, 1500);
 }
@@ -783,8 +833,18 @@ function releasePrize(): void {
   if (gsm.streak > gsm.bestStreak) gsm.bestStreak = gsm.streak;
 
   gsm.collection.add(prizeData.id);
+  // Add to fusion inventory
+  fusion.addPrize(prizeData.id);
 
   const grabTime = (performance.now() - gsm.grabStartTime) / 1000;
+  checkAchievement('speed_grab', grabTime < 3);
+
+  // Campaign objective tracking
+  if (inCampaignGame) {
+    campaign.onGrab(prizeData.rarity, prizeData.id, grabTime);
+    campaign.onScoreUpdate(gsm.score);
+    campaign.onComboUpdate(gsm.combo);
+  }
   checkAchievement('speed_grab', grabTime < 3);
 
   if (gsm.mode === 'target' && prizeData.id === gsm.targetPrizeId) {
@@ -810,6 +870,17 @@ function releasePrize(): void {
   audio.prizeCollect();
   shake.trigger(0.01, 0.2);
 
+  // Legendary grab celebration
+  if (prizeData.rarity === 'legendary') {
+    legendaryGrabCelebration = 2.5;
+    spawnConfetti(popPos.clone(), 30);
+    shake.trigger(0.03, 0.5);
+    showToast('★ LEGENDARY GRAB! ★');
+  } else if (prizeData.rarity === 'epic') {
+    spawnConfetti(popPos.clone(), 15);
+    shake.trigger(0.02, 0.3);
+  }
+
   // Rarity achievements
   checkAchievement('rare_grab', prizeData.rarity === 'rare' || prizeData.rarity === 'epic' || prizeData.rarity === 'legendary');
   checkAchievement('epic_grab', prizeData.rarity === 'epic' || prizeData.rarity === 'legendary');
@@ -822,6 +893,11 @@ function releasePrize(): void {
   checkAchievement('streak_5', gsm.streak >= 5);
   checkAchievement('collection_10', gsm.collection.size >= 10);
   checkAchievement('collection_all', gsm.collection.size >= PRIZE_TYPES.length);
+  checkAchievement('collection_15', gsm.collection.size >= 15);
+  checkAchievement('collection_20', gsm.collection.size >= 20);
+  // New machine achievements
+  checkAchievement('tower_clear', gsm.machine.id === 'tower' && gsm.grabs >= 5);
+  checkAchievement('void_grab', gsm.machine.id === 'void');
 
   gsm.grabbedPrize = null;
   gsm.attempts++;
@@ -923,6 +999,16 @@ function endGame(): void {
   music.stop();
   musicStarted = false;
   audio.gameOver();
+
+  // Campaign game end
+  if (inCampaignGame) {
+    campaign.onGameEnd(gsm.misses);
+    inCampaignGame = false;
+    showCampaignResult();
+    showState('campaign_result');
+    return;
+  }
+
   updateGameOver();
   showState('gameover');
 }
@@ -1065,6 +1151,199 @@ function updateShowcase(): void {
     setText(doc, `sc-pts-${i}`, owned ? p.points + ' pts | ' + p.tickets + ' tix' : '');
   }
   setText(doc, 'sc-total', gsm.collection.size + ' / ' + PRIZE_TYPES.length + ' Discovered');
+}
+
+// ─── Campaign UI Updates ─────────────────────────────────
+function updateCampaignPanel(): void {
+  const doc = getDoc('campaign');
+  if (!doc) return;
+  setText(doc, 'camp-progress', campaign.getTotalStagesCompleted() + ' / ' + campaign.getTotalStages() + ' Stages Complete');
+  for (let i = 0; i < SEASONS.length; i++) {
+    const s = SEASONS[i];
+    setText(doc, `s${i}-name`, s.name);
+    setText(doc, `s${i}-desc`, s.description);
+    const completed = s.stages.filter(st => campaign.progress.completedStages.has(st.id)).length;
+    if (campaign.isSeasonUnlocked(i)) {
+      setText(doc, `s${i}-progress`, completed + ' / ' + s.stages.length + (completed === s.stages.length ? ' ★' : ''));
+    } else {
+      setText(doc, `s${i}-progress`, '🔒 LOCKED');
+    }
+  }
+}
+
+function updateCampaignStagePanel(): void {
+  const doc = getDoc('campaignstage');
+  if (!doc) return;
+  const season = SEASONS[campaignSeasonView];
+  setText(doc, 'cs-season', season.name);
+  setText(doc, 'cs-title', '⚔️ Stages');
+  for (let i = 0; i < season.stages.length; i++) {
+    const stage = season.stages[i];
+    const unlocked = campaign.isStageUnlocked(campaignSeasonView, i);
+    const completed = campaign.progress.completedStages.has(stage.id);
+    setText(doc, `st-name-${i}`, stage.name);
+    const machineInfo = MACHINES.find(m => m.id === stage.machineId);
+    setText(doc, `st-info-${i}`, (machineInfo?.name || stage.machineId) + ' | ' + stage.mode + ' | ' + stage.difficulty);
+    setText(doc, `st-reward-${i}`, '🎫 ' + stage.ticketReward + ' tickets' + (stage.bonusPrizeId ? ' + Bonus Prize!' : ''));
+    setText(doc, `st-status-${i}`, completed ? '✅ COMPLETE' : unlocked ? '▶ AVAILABLE' : '🔒 LOCKED');
+  }
+}
+
+function startCampaignStage(seasonIdx: number, stageIdx: number): void {
+  const stage = campaign.startStage(seasonIdx, stageIdx);
+  if (!stage) {
+    showToast('Stage locked — complete previous stages first');
+    return;
+  }
+  audio.buttonClick();
+  inCampaignGame = true;
+  // Set machine and theme for this stage
+  const machineIdx = MACHINES.findIndex(m => m.id === stage.machineId);
+  if (machineIdx >= 0) gsm.machineIndex = machineIdx;
+  const season = SEASONS[seasonIdx];
+  const themeIdx = THEMES.findIndex(t => t.id === season.themeId);
+  if (themeIdx >= 0) {
+    gsm.themeIndex = themeIdx;
+    rebuildTheme();
+  }
+  gsm.mode = stage.mode as GameMode;
+  gsm.difficulty = stage.difficulty as any;
+  startGame();
+}
+
+function showCampaignResult(): void {
+  const doc = getDoc('campaignresult');
+  if (!doc) return;
+  const status = campaign.getObjectiveStatus();
+  const allMet = campaign.checkAllObjectivesMet();
+
+  setText(doc, 'cr-title', allMet ? '✅ STAGE COMPLETE!' : '❌ STAGE FAILED');
+  setText(doc, 'cr-stage', campaign.activeStage?.name || '');
+
+  for (let i = 0; i < 3; i++) {
+    if (i < status.length) {
+      const s = status[i];
+      const icon = s.met ? '✅' : '❌';
+      setText(doc, `cr-obj-${i}`, icon + ' ' + s.description + ' (' + s.progress + '/' + s.target + ')');
+    } else {
+      setText(doc, `cr-obj-${i}`, '');
+    }
+  }
+
+  if (allMet) {
+    const reward = campaign.completeStage();
+    if (reward) {
+      gsm.totalTickets += reward.ticketReward;
+      setText(doc, 'cr-reward', '🎫 +' + reward.ticketReward + ' Tickets!');
+      if (reward.bonusPrizeId) {
+        const prize = PRIZE_TYPES.find(p => p.id === reward.bonusPrizeId);
+        gsm.collection.add(reward.bonusPrizeId);
+        fusion.addPrize(reward.bonusPrizeId);
+        setText(doc, 'cr-bonus', '🏆 Bonus: ' + (prize?.name || reward.bonusPrizeId));
+      } else {
+        setText(doc, 'cr-bonus', '');
+      }
+      if (reward.seasonCompleted) {
+        const seasonName = SEASONS[campaignSeasonView]?.name || 'Season';
+        showToast('🏆 ' + seasonName + ' COMPLETED!');
+        // Season achievements
+        checkAchievement('season_1', campaignSeasonView === 0);
+        checkAchievement('season_2', campaignSeasonView === 1);
+        checkAchievement('season_3', campaignSeasonView === 2);
+      }
+      checkAchievement('campaign_start', true);
+      checkAchievement('campaign_all', campaign.getTotalStagesCompleted() >= campaign.getTotalStages());
+      gsm.save();
+    }
+  } else {
+    setText(doc, 'cr-reward', 'Try again!');
+    setText(doc, 'cr-bonus', '');
+    // Reset the active stage so it can be retried
+    campaign.activeStage = null;
+    campaign.activeSeason = null;
+  }
+}
+
+// ─── Fusion UI Updates ───────────────────────────────────
+function updateFusionPanel(): void {
+  const doc = getDoc('fusion');
+  if (!doc) return;
+  setText(doc, 'fuse-tickets', '🎫 Tickets: ' + gsm.totalTickets);
+  setText(doc, 'fuse-total', 'Total Fusions: ' + fusion.inventory.totalFusions);
+  const rarities = ['common', 'uncommon', 'rare', 'epic'];
+  for (let i = 0; i < rarities.length; i++) {
+    const count = fusion.getRarityCount(rarities[i], PRIZE_TYPES);
+    setText(doc, `fuse-${rarities[i]}-count`, 'Available: ' + count);
+  }
+  setText(doc, 'fuse-result', '');
+}
+
+function performFusion(recipeIndex: number): void {
+  const recipe = FUSION_RECIPES[recipeIndex];
+  if (!recipe) return;
+  if (!fusion.canFuse(recipe, PRIZE_TYPES, gsm.totalTickets)) {
+    showToast('Not enough materials or tickets!');
+    return;
+  }
+  const result = fusion.performFusion(recipe, PRIZE_TYPES);
+  if (result) {
+    gsm.totalTickets -= result.ticketCost;
+    const produced = PRIZE_TYPES.find(p => p.id === result.produced);
+    gsm.collection.add(result.produced);
+    gsm.save();
+    audio.achievementUnlock();
+    particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), produced?.baseColor || '#aa44ff', 20, 2);
+    shake.trigger(0.015, 0.3);
+    const doc = getDoc('fusion');
+    setText(doc, 'fuse-result', '✨ Created: ' + (produced?.name || '???') + '!');
+    checkAchievement('first_fusion', true);
+    checkAchievement('fusion_5', fusion.inventory.totalFusions >= 5);
+    checkAchievement('collection_15', gsm.collection.size >= 15);
+    checkAchievement('collection_20', gsm.collection.size >= 20);
+    updateFusionPanel();
+  }
+}
+
+// ─── Legendary Celebration VFX ───────────────────────────
+function spawnConfetti(pos: Vector3, count: number): void {
+  const colors = ['#ff4444', '#ffdd00', '#00ff88', '#4488ff', '#ff00ff', '#00ffff', '#ffaa00'];
+  for (let i = 0; i < count; i++) {
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const mesh = new Mesh(
+      new SphereGeometry(0.008, 4, 3),
+      new MeshBasicMaterial({ color: new Color(color), transparent: true, opacity: 0.9, blending: AdditiveBlending }),
+    );
+    mesh.position.copy(pos);
+    mesh.scale.set(1 + Math.random(), 0.3, 1 + Math.random());
+    world.scene.add(mesh);
+    confettiParticles.push({
+      mesh,
+      vel: new Vector3(
+        (Math.random() - 0.5) * 2,
+        1.5 + Math.random() * 2,
+        (Math.random() - 0.5) * 2,
+      ),
+      life: 2 + Math.random(),
+      spin: (Math.random() - 0.5) * 10,
+    });
+  }
+}
+
+function updateConfetti(dt: number): void {
+  for (let i = confettiParticles.length - 1; i >= 0; i--) {
+    const c = confettiParticles[i];
+    c.life -= dt;
+    if (c.life <= 0) {
+      world.scene.remove(c.mesh);
+      confettiParticles.splice(i, 1);
+      continue;
+    }
+    c.vel.y -= 2.5 * dt; // gravity
+    c.mesh.position.addScaledVector(c.vel, dt);
+    c.mesh.rotation.z += c.spin * dt;
+    const frac = Math.min(1, c.life / 0.5);
+    (c.mesh.material as MeshBasicMaterial).opacity = frac * 0.9;
+  }
 }
 
 function rebuildTheme(): void {
@@ -1294,6 +1573,14 @@ function gameLoop(dt: number, time: number): void {
 
   // Screen shake
   shake.update(dt);
+
+  // Confetti particles
+  updateConfetti(dt);
+
+  // Legendary celebration timer
+  if (legendaryGrabCelebration > 0) {
+    legendaryGrabCelebration -= dt;
+  }
 }
 
 // ─── Init ────────────────────────────────────────────────

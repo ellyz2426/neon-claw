@@ -3,7 +3,7 @@
 // ─── Game States ─────────────────────────────────────────
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'grabbing' | 'dropping' |
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
-  'collection' | 'stats' | 'machines' | 'showcase';
+  'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -38,6 +38,13 @@ export const PRIZE_TYPES: PrizeType[] = [
   { id: 'cube_holo', name: 'Hologram Cube', shape: 'cube', rarity: 'epic', weight: 0.65, size: 1.2, baseColor: '#44ffdd', emissiveColor: '#114433', points: 1000, tickets: 10 },
   { id: 'diamond_legendary', name: 'Quantum Core', shape: 'diamond', rarity: 'legendary', weight: 0.85, size: 1.4, baseColor: '#ffffff', emissiveColor: '#ff8800', points: 2500, tickets: 25 },
   { id: 'star_legendary', name: 'Supernova', shape: 'star', rarity: 'legendary', weight: 0.9, size: 1.5, baseColor: '#ffaa00', emissiveColor: '#ff4400', points: 2500, tickets: 25 },
+  // Round 3 prizes
+  { id: 'capsule_frost', name: 'Frost Capsule', shape: 'capsule', rarity: 'uncommon', weight: 0.35, size: 1.0, baseColor: '#88ddff', emissiveColor: '#224466', points: 200, tickets: 2 },
+  { id: 'cube_shadow', name: 'Shadow Cube', shape: 'cube', rarity: 'rare', weight: 0.55, size: 1.1, baseColor: '#334455', emissiveColor: '#6622aa', points: 500, tickets: 5 },
+  { id: 'sphere_nova', name: 'Nova Sphere', shape: 'sphere', rarity: 'rare', weight: 0.5, size: 1.0, baseColor: '#ff6644', emissiveColor: '#cc3311', points: 500, tickets: 5 },
+  { id: 'diamond_aurora', name: 'Aurora Gem', shape: 'diamond', rarity: 'epic', weight: 0.7, size: 1.2, baseColor: '#44ffaa', emissiveColor: '#118844', points: 1000, tickets: 10 },
+  { id: 'star_cosmic', name: 'Cosmic Star', shape: 'star', rarity: 'epic', weight: 0.72, size: 1.25, baseColor: '#6688ff', emissiveColor: '#2244aa', points: 1000, tickets: 10 },
+  { id: 'cylinder_titan', name: 'Titan Core', shape: 'cylinder', rarity: 'legendary', weight: 0.88, size: 1.4, baseColor: '#ff4488', emissiveColor: '#aa1144', points: 2500, tickets: 25 },
 ];
 
 export const RARITY_COLORS: Record<string, string> = {
@@ -78,6 +85,16 @@ export const MACHINES: MachineConfig[] = [
     id: 'legendary', name: 'Quantum Chamber', pitWidth: 2.0, pitDepth: 2.0, pitHeight: 1.4,
     prizeCount: 30, clawStrength: 0.4, clawSpeed: 0.7, dropSpeed: 1.3,
     prizePool: ['star_rainbow', 'sphere_black', 'cube_holo', 'diamond_legendary', 'star_legendary'],
+  },
+  {
+    id: 'tower', name: 'Neon Tower', pitWidth: 1.0, pitDepth: 1.0, pitHeight: 1.8,
+    prizeCount: 15, clawStrength: 0.55, clawSpeed: 1.1, dropSpeed: 0.9,
+    prizePool: ['capsule_frost', 'cube_shadow', 'sphere_nova', 'diamond_aurora', 'star_cosmic'],
+  },
+  {
+    id: 'void', name: 'Void Arena', pitWidth: 2.2, pitDepth: 2.2, pitHeight: 1.0,
+    prizeCount: 35, clawStrength: 0.45, clawSpeed: 0.65, dropSpeed: 1.4,
+    prizePool: ['diamond_aurora', 'star_cosmic', 'cylinder_titan', 'diamond_legendary', 'star_legendary'],
   },
 ];
 
@@ -154,6 +171,18 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'precision_ace', name: 'Precision Ace', desc: 'Perfect 3/3 in Precision mode', unlocked: false },
     { id: 'tickets_1000', name: 'Ticket Mogul', desc: 'Earn 1,000 tickets total', unlocked: false },
     { id: 'legendary_5', name: 'Legendary Hunter', desc: 'Grab 5 legendary prizes total', unlocked: false },
+    // Round 3 achievements
+    { id: 'campaign_start', name: 'Adventurer', desc: 'Complete your first campaign stage', unlocked: false },
+    { id: 'season_1', name: 'Neon Graduate', desc: 'Complete Neon Origins season', unlocked: false },
+    { id: 'season_2', name: 'Crimson Victor', desc: 'Complete Crimson Gauntlet season', unlocked: false },
+    { id: 'season_3', name: 'Quantum Ascended', desc: 'Complete Quantum Ascent season', unlocked: false },
+    { id: 'campaign_all', name: 'Campaign Legend', desc: 'Complete all campaign stages', unlocked: false },
+    { id: 'first_fusion', name: 'Alchemist', desc: 'Perform your first prize fusion', unlocked: false },
+    { id: 'fusion_5', name: 'Fusion Master', desc: 'Perform 5 prize fusions', unlocked: false },
+    { id: 'collection_15', name: 'Curator', desc: 'Collect 15 different prize types', unlocked: false },
+    { id: 'collection_20', name: 'Grand Curator', desc: 'Collect all 20 prize types', unlocked: false },
+    { id: 'tower_clear', name: 'Tower Climber', desc: 'Clear Neon Tower machine', unlocked: false },
+    { id: 'void_grab', name: 'Void Walker', desc: 'Grab a prize from Void Arena', unlocked: false },
   ];
 }
 

@@ -1,0 +1,98 @@
+<style>
+  .campaign-panel {
+    display: flex;
+    flex-direction: column;
+    padding: 2;
+    background-color: rgba(0, 0, 0, 0.92);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 1;
+    gap: 1;
+  }
+  .campaign-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+    text-align: center;
+  }
+  .campaign-subtitle {
+    font-size: 1.4;
+    color: #888888;
+    text-align: center;
+  }
+  .season-row {
+    display: flex;
+    flex-direction: column;
+    padding: 1;
+    background-color: rgba(0, 255, 255, 0.06);
+    border-color: rgba(0, 255, 255, 0.2);
+    border-width: 0.05;
+    border-radius: 0.5;
+    gap: 0.3;
+  }
+  .season-name {
+    font-size: 2;
+    color: #ffffff;
+    font-weight: bold;
+  }
+  .season-desc {
+    font-size: 1.2;
+    color: #aaaaaa;
+  }
+  .season-progress {
+    font-size: 1.2;
+    color: #00ff88;
+  }
+  .season-locked {
+    font-size: 1.2;
+    color: #666666;
+  }
+  .season-btn {
+    font-size: 1.5;
+    color: #000000;
+    background-color: #00ffff;
+    padding: 0.5;
+    border-radius: 0.3;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+  }
+  .btn-back {
+    font-size: 1.5;
+    color: #00ffff;
+    background-color: rgba(0, 255, 255, 0.1);
+    padding: 0.5;
+    border-radius: 0.3;
+    border-color: #00ffff;
+    border-width: 0.05;
+    cursor: pointer;
+    text-align: center;
+  }
+</style>
+<div class="campaign-panel">
+  <span class="campaign-title">⚔️ CAMPAIGN</span>
+  <span class="campaign-subtitle" id="camp-progress">0 / 12 Stages Complete</span>
+
+  <div class="season-row">
+    <span class="season-name" id="s0-name">Season 1</span>
+    <span class="season-desc" id="s0-desc">—</span>
+    <span class="season-progress" id="s0-progress">0 / 4</span>
+    <span class="season-btn" id="btn-season-0" cursor="pointer">ENTER</span>
+  </div>
+
+  <div class="season-row">
+    <span class="season-name" id="s1-name">Season 2</span>
+    <span class="season-desc" id="s1-desc">—</span>
+    <span class="season-progress" id="s1-progress">LOCKED</span>
+    <span class="season-btn" id="btn-season-1" cursor="pointer">ENTER</span>
+  </div>
+
+  <div class="season-row">
+    <span class="season-name" id="s2-name">Season 3</span>
+    <span class="season-desc" id="s2-desc">—</span>
+    <span class="season-progress" id="s2-progress">LOCKED</span>
+    <span class="season-btn" id="btn-season-2" cursor="pointer">ENTER</span>
+  </div>
+
+  <span class="btn-back" id="btn-back-campaign" cursor="pointer">← BACK</span>
+</div>

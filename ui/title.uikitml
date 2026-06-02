@@ -28,11 +28,11 @@
     align-items: center;
     justify-content: center;
     width: 90%;
-    padding-top: 1;
-    padding-bottom: 1;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
     padding-left: 2;
     padding-right: 2;
-    margin-bottom: 0.8;
+    margin-bottom: 0.5;
     background-color: rgba(0, 255, 255, 0.08);
     border-color: #00ffff;
     border-width: 0.08;
@@ -40,7 +40,7 @@
     cursor: pointer;
   }
   .menu-btn-text {
-    font-size: 2.2;
+    font-size: 2;
     color: #00ffff;
     font-weight: bold;
   }
@@ -51,13 +51,29 @@
   .alt-text {
     color: #ff00ff;
   }
+  .menu-btn-gold {
+    background-color: rgba(255, 170, 0, 0.08);
+    border-color: #ffaa00;
+  }
+  .gold-text {
+    color: #ffaa00;
+  }
+  .menu-btn-purple {
+    background-color: rgba(170, 68, 255, 0.08);
+    border-color: #aa44ff;
+  }
+  .purple-text {
+    color: #aa44ff;
+  }
 </style>
 <div class="title-panel">
   <span class="game-title">NEON CLAW</span>
   <span class="subtitle">VR ARCADE</span>
-  <div id="btn-play" class="menu-btn"><span class="menu-btn-text">PLAY</span></div>
+  <div id="btn-play" class="menu-btn"><span class="menu-btn-text">▶ PLAY</span></div>
+  <div id="btn-campaign" class="menu-btn menu-btn-gold"><span class="menu-btn-text gold-text">⚔ CAMPAIGN</span></div>
   <div id="btn-machines" class="menu-btn"><span class="menu-btn-text">MACHINES</span></div>
   <div id="btn-collection" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">COLLECTION</span></div>
+  <div id="btn-fusion" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">⚗ FUSION LAB</span></div>
   <div id="btn-scores" class="menu-btn"><span class="menu-btn-text">SCORES</span></div>
   <div id="btn-achievements" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">ACHIEVEMENTS</span></div>
   <div id="btn-stats" class="menu-btn"><span class="menu-btn-text">STATS</span></div>
