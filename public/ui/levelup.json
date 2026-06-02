@@ -1,0 +1,123 @@
+{
+  "element": {
+    "sourceTag": "panel",
+    "type": "custom",
+    "children": [
+      {
+        "sourceTag": "text",
+        "type": "custom",
+        "children": [
+          "LEVEL UP!"
+        ],
+        "properties": {
+          "fontSize": "20",
+          "fontWeight": "bold",
+          "color": "#00ffff"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "text",
+        "type": "custom",
+        "children": [
+          "Level 2"
+        ],
+        "properties": {
+          "id": "levelup-text",
+          "fontSize": "32",
+          "fontWeight": "bold",
+          "color": "#ffff00"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "text",
+        "type": "custom",
+        "children": [
+          "+150 XP"
+        ],
+        "properties": {
+          "id": "levelup-xp",
+          "fontSize": "14",
+          "color": "#00ffff80"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "sourceTag": "text",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "id": "levelup-unlock",
+          "fontSize": "13",
+          "color": "#00ff88"
+        },
+        "dataUid": "uid-5"
+      }
+    ],
+    "properties": {
+      "width": "280",
+      "height": "160",
+      "backgroundColor": "#000a14e8",
+      "borderRadius": "14",
+      "padding": "14",
+      "flexDirection": "column",
+      "alignItems": "center",
+      "gap": "8"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {},
+  "ranges": {
+    "uid-1": {
+      "start": {
+        "line": 0,
+        "column": 0
+      },
+      "end": {
+        "line": 5,
+        "column": 8
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 74
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 2,
+        "column": 2
+      },
+      "end": {
+        "line": 2,
+        "column": 90
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 3,
+        "column": 2
+      },
+      "end": {
+        "line": 3,
+        "column": 71
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 4,
+        "column": 2
+      },
+      "end": {
+        "line": 4,
+        "column": 66
+      }
+    }
+  }
+}

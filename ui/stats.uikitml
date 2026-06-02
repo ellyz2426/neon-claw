@@ -1,0 +1,66 @@
+<style>
+  .stats-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #00ffff;
+    border-width: 0.12;
+    border-radius: 1.2;
+  }
+  .stats-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 1.5;
+  }
+  .stat-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 0.5;
+  }
+  .stat-label {
+    font-size: 1.4;
+    color: #889999;
+    width: 55%;
+  }
+  .stat-value {
+    font-size: 1.4;
+    color: #00ffff;
+    font-weight: bold;
+    width: 45%;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 2;
+    padding-right: 2;
+    margin-top: 1;
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.6; color: #ff00ff; }
+</style>
+<div class="stats-panel">
+  <span class="stats-title">CAREER STATS</span>
+  <div class="stat-row"><span class="stat-label">Games Played</span><span id="stat-games" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Total Grabs</span><span id="stat-grabs" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Total Misses</span><span id="stat-misses" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Grab Rate</span><span id="stat-rate" class="stat-value">0%</span></div>
+  <div class="stat-row"><span class="stat-label">Best Score</span><span id="stat-best" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Best Streak</span><span id="stat-streak" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Total Tickets</span><span id="stat-tickets" class="stat-value">0</span></div>
+  <div class="stat-row"><span class="stat-label">Collection</span><span id="stat-collection" class="stat-value">0 / 14</span></div>
+  <div id="btn-back-stats" class="back-btn"><span class="back-text">BACK</span></div>
+</div>

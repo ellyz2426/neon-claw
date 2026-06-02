@@ -1,0 +1,85 @@
+<style>
+  .help-panel {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #00ff88;
+    border-width: 0.12;
+    border-radius: 1.2;
+  }
+  .help-title {
+    font-size: 3;
+    color: #00ff88;
+    font-weight: bold;
+    margin-bottom: 1.5;
+  }
+  .help-section {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+    margin-top: 1;
+    margin-bottom: 0.5;
+  }
+  .help-text {
+    font-size: 1.2;
+    color: #aabbbb;
+    margin-bottom: 0.3;
+  }
+  .help-key {
+    font-size: 1.2;
+    color: #ffdd00;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 2;
+    padding-right: 2;
+    margin-top: 1;
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.6; color: #ff00ff; }
+</style>
+<div class="help-panel">
+  <span class="help-title">HOW TO PLAY</span>
+  <span class="help-section">BROWSER CONTROLS</span>
+  <span class="help-text"><span class="help-key">WASD / Arrows</span> - Move claw</span>
+  <span class="help-text"><span class="help-key">Space</span> - Drop claw</span>
+  <span class="help-text"><span class="help-key">Escape</span> - Pause</span>
+  <span class="help-section">VR CONTROLS</span>
+  <span class="help-text"><span class="help-key">Right Thumbstick</span> - Move claw</span>
+  <span class="help-text"><span class="help-key">Right Trigger</span> - Drop claw</span>
+  <span class="help-text"><span class="help-key">B Button</span> - Pause</span>
+  <span class="help-text"><span class="help-key">Laser Pointer</span> - Menu interaction</span>
+  <span class="help-section">GAMEPLAY</span>
+  <span class="help-text">Position the claw over a prize</span>
+  <span class="help-text">Drop it to grab! Claw strength varies</span>
+  <span class="help-text">Heavier/rarer prizes are harder to grab</span>
+  <span class="help-text">Consecutive grabs build combo multiplier</span>
+  <span class="help-section">GAME MODES</span>
+  <span class="help-text">Classic - Limited drops, maximize score</span>
+  <span class="help-text">Time Attack - Race against the clock</span>
+  <span class="help-text">Target - Grab specific highlighted prizes</span>
+  <span class="help-text">Progressive - Gets harder each round</span>
+  <span class="help-text">Daily - Same layout for everyone today</span>
+  <span class="help-text">Marathon - Play until 3 misses</span>
+  <span class="help-text">Precision - Only 3 drops, make them count</span>
+  <span class="help-text">Practice - No pressure, unlimited plays</span>
+  <span class="help-section">PRIZES</span>
+  <span class="help-text">Common (grey) - Easy to grab, 100 pts</span>
+  <span class="help-text">Uncommon (green) - Medium, 200-250 pts</span>
+  <span class="help-text">Rare (blue) - Harder, 500 pts</span>
+  <span class="help-text">Epic (purple) - Very hard, 1000 pts</span>
+  <span class="help-text">Legendary (gold) - Near impossible, 2500 pts</span>
+  <div id="btn-back-help" class="back-btn"><span class="back-text">BACK</span></div>
+</div>

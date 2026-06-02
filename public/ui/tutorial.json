@@ -1,0 +1,403 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "HOW TO PLAY"
+        ],
+        "properties": {
+          "class": "tut-title"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Welcome to Neon Skee!"
+        ],
+        "properties": {
+          "id": "tut-step-text",
+          "class": "tut-step"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Click and hold to charge, release to roll"
+        ],
+        "properties": {
+          "id": "tut-hint-text",
+          "class": "tut-hint"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Step 1 / 5"
+        ],
+        "properties": {
+          "id": "tut-progress",
+          "class": "tut-progress"
+        },
+        "dataUid": "uid-5"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "NEXT"
+                ],
+                "properties": {
+                  "class": "btn-text"
+                },
+                "dataUid": "uid-8"
+              }
+            ],
+            "properties": {
+              "id": "btn-tut-next",
+              "class": "btn"
+            },
+            "dataUid": "uid-7"
+          },
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "SKIP"
+                ],
+                "properties": {
+                  "class": "skip-text"
+                },
+                "dataUid": "uid-10"
+              }
+            ],
+            "properties": {
+              "id": "btn-tut-skip",
+              "class": "btn-skip"
+            },
+            "dataUid": "uid-9"
+          }
+        ],
+        "properties": {
+          "class": "btn-row"
+        },
+        "dataUid": "uid-6"
+      }
+    ],
+    "properties": {
+      "class": "tut-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "tut-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "paddingTop": "3",
+        "paddingBottom": "3",
+        "paddingLeft": "4",
+        "paddingRight": "4",
+        "backgroundColor": "rgba(0,0,0,0.92)",
+        "borderColor": "#00ff88",
+        "borderWidth": "0.15",
+        "borderRadius": 1.5,
+        "alignItems": "center",
+        "gap": "1.5"
+      }
+    },
+    "tut-title": {
+      "content": {
+        "fontSize": "2.5",
+        "color": "#00ff88",
+        "fontWeight": "bold"
+      }
+    },
+    "tut-step": {
+      "content": {
+        "fontSize": "1.6",
+        "color": "#cccccc"
+      }
+    },
+    "tut-hint": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#888888"
+      }
+    },
+    "tut-progress": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#00ff88"
+      }
+    },
+    "btn-row": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "row",
+        "gap": "1.5"
+      }
+    },
+    "btn": {
+      "content": {
+        "paddingTop": "1",
+        "paddingBottom": "1",
+        "paddingLeft": "2",
+        "paddingRight": "2",
+        "backgroundColor": "rgba(0,255,136,0.1)",
+        "borderColor": "#00ff88",
+        "borderWidth": "0.08",
+        "borderRadius": 0.5,
+        "cursor": "pointer"
+      }
+    },
+    "btn-text": {
+      "content": {
+        "fontSize": "1.4",
+        "color": "#00ff88"
+      }
+    },
+    "btn-skip": {
+      "content": {
+        "paddingTop": "0.5",
+        "paddingBottom": "0.5",
+        "paddingLeft": "1.5",
+        "paddingRight": "1.5",
+        "backgroundColor": "rgba(255,255,255,0.05)",
+        "borderColor": "#666666",
+        "borderWidth": "0.05",
+        "borderRadius": 0.4,
+        "cursor": "pointer"
+      }
+    },
+    "skip-text": {
+      "content": {
+        "fontSize": "1.1",
+        "color": "#888888"
+      }
+    }
+  },
+  "ranges": {
+    "tut-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 12
+      }
+    },
+    "tut-title": {
+      "start": {
+        "line": 2,
+        "column": 2
+      },
+      "end": {
+        "line": 2,
+        "column": 12
+      }
+    },
+    "tut-step": {
+      "start": {
+        "line": 3,
+        "column": 2
+      },
+      "end": {
+        "line": 3,
+        "column": 11
+      }
+    },
+    "tut-hint": {
+      "start": {
+        "line": 4,
+        "column": 2
+      },
+      "end": {
+        "line": 4,
+        "column": 11
+      }
+    },
+    "tut-progress": {
+      "start": {
+        "line": 5,
+        "column": 2
+      },
+      "end": {
+        "line": 5,
+        "column": 15
+      }
+    },
+    "btn-row": {
+      "start": {
+        "line": 6,
+        "column": 2
+      },
+      "end": {
+        "line": 6,
+        "column": 10
+      }
+    },
+    "btn": {
+      "start": {
+        "line": 7,
+        "column": 2
+      },
+      "end": {
+        "line": 7,
+        "column": 6
+      }
+    },
+    "btn-text": {
+      "start": {
+        "line": 8,
+        "column": 2
+      },
+      "end": {
+        "line": 8,
+        "column": 11
+      }
+    },
+    "btn-skip": {
+      "start": {
+        "line": 9,
+        "column": 2
+      },
+      "end": {
+        "line": 9,
+        "column": 11
+      }
+    },
+    "skip-text": {
+      "start": {
+        "line": 10,
+        "column": 2
+      },
+      "end": {
+        "line": 10,
+        "column": 12
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 12,
+        "column": 0
+      },
+      "end": {
+        "line": 21,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 13,
+        "column": 2
+      },
+      "end": {
+        "line": 13,
+        "column": 44
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 14,
+        "column": 2
+      },
+      "end": {
+        "line": 14,
+        "column": 72
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 15,
+        "column": 2
+      },
+      "end": {
+        "line": 15,
+        "column": 92
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 16,
+        "column": 2
+      },
+      "end": {
+        "line": 16,
+        "column": 64
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 17,
+        "column": 2
+      },
+      "end": {
+        "line": 20,
+        "column": 8
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 18,
+        "column": 4
+      },
+      "end": {
+        "line": 18,
+        "column": 79
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 18,
+        "column": 39
+      },
+      "end": {
+        "line": 18,
+        "column": 73
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 19,
+        "column": 4
+      },
+      "end": {
+        "line": 19,
+        "column": 85
+      }
+    },
+    "uid-10": {
+      "start": {
+        "line": 19,
+        "column": 44
+      },
+      "end": {
+        "line": 19,
+        "column": 79
+      }
+    }
+  }
+}

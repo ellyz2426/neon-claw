@@ -1,0 +1,67 @@
+<style>
+  .hud-panel {
+    display: flex;
+    flex-direction: row;
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0, 8, 17, 0.85);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.6;
+  }
+  .hud-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 1;
+    margin-right: 1;
+  }
+  .hud-label {
+    font-size: 0.9;
+    color: #889999;
+  }
+  .hud-value {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .hud-combo {
+    font-size: 1.5;
+    color: #ffdd00;
+    font-weight: bold;
+  }
+  .hud-time {
+    font-size: 1.5;
+    color: #ff8800;
+    font-weight: bold;
+  }
+  .hud-mode {
+    font-size: 1.2;
+    color: #ff00ff;
+  }
+</style>
+<div class="hud-panel">
+  <div class="hud-item">
+    <span class="hud-label">SCORE</span>
+    <span id="hud-score" class="hud-value">0</span>
+  </div>
+  <div class="hud-item">
+    <span class="hud-label">GRABS</span>
+    <span id="hud-grabs" class="hud-value">0</span>
+  </div>
+  <div class="hud-item">
+    <span class="hud-label">LEFT</span>
+    <span id="hud-attempts" class="hud-value">5</span>
+  </div>
+  <div class="hud-item">
+    <span id="hud-combo" class="hud-combo"></span>
+  </div>
+  <div class="hud-item">
+    <span id="hud-time" class="hud-time"></span>
+  </div>
+  <div class="hud-item">
+    <span id="hud-mode" class="hud-mode"></span>
+  </div>
+</div>

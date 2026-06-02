@@ -1,0 +1,125 @@
+<style>
+  .settings-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #00ffff;
+    border-width: 0.12;
+    border-radius: 1.2;
+  }
+  .settings-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 1.5;
+  }
+  .settings-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.8;
+  }
+  .settings-label {
+    font-size: 1.5;
+    color: #889999;
+    width: 35%;
+  }
+  .settings-value {
+    font-size: 1.5;
+    color: #00ffff;
+    font-weight: bold;
+    width: 30%;
+  }
+  .vol-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.4;
+    padding-bottom: 0.4;
+    padding-left: 1;
+    padding-right: 1;
+    margin-left: 0.3;
+    margin-right: 0.3;
+    background-color: rgba(0, 255, 255, 0.08);
+    border-color: #00aacc;
+    border-width: 0.06;
+    border-radius: 0.3;
+    cursor: pointer;
+  }
+  .vol-btn-text {
+    font-size: 1.5;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .theme-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.4;
+    padding-bottom: 0.4;
+    padding-left: 1.2;
+    padding-right: 1.2;
+    margin-left: 0.3;
+    margin-right: 0.3;
+    background-color: rgba(255, 0, 255, 0.08);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.3;
+    cursor: pointer;
+  }
+  .theme-nav-text {
+    font-size: 1.5;
+    color: #ff00ff;
+    font-weight: bold;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 2;
+    padding-right: 2;
+    margin-top: 1;
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.6; color: #ff00ff; }
+</style>
+<div class="settings-panel">
+  <span class="settings-title">SETTINGS</span>
+  <div class="settings-row">
+    <span class="settings-label">THEME</span>
+    <div id="btn-theme-prev" class="theme-nav"><span class="theme-nav-text">&lt;</span></div>
+    <span id="settings-theme" class="settings-value">Neon Holodeck</span>
+    <div id="btn-theme-next" class="theme-nav"><span class="theme-nav-text">&gt;</span></div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">MASTER</span>
+    <div id="btn-master-down" class="vol-btn"><span class="vol-btn-text">-</span></div>
+    <span id="settings-master" class="settings-value">70%</span>
+    <div id="btn-master-up" class="vol-btn"><span class="vol-btn-text">+</span></div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">SFX</span>
+    <div id="btn-sfx-down" class="vol-btn"><span class="vol-btn-text">-</span></div>
+    <span id="settings-sfx" class="settings-value">80%</span>
+    <div id="btn-sfx-up" class="vol-btn"><span class="vol-btn-text">+</span></div>
+  </div>
+  <div class="settings-row">
+    <span class="settings-label">MUSIC</span>
+    <div id="btn-music-down" class="vol-btn"><span class="vol-btn-text">-</span></div>
+    <span id="settings-music" class="settings-value">30%</span>
+    <div id="btn-music-up" class="vol-btn"><span class="vol-btn-text">+</span></div>
+  </div>
+  <div id="btn-back-settings" class="back-btn"><span class="back-text">BACK</span></div>
+</div>

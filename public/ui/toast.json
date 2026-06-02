@@ -1,0 +1,90 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "+100"
+        ],
+        "properties": {
+          "id": "toast-msg",
+          "class": "toast-msg"
+        },
+        "dataUid": "uid-2"
+      }
+    ],
+    "properties": {
+      "class": "toast-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "toast-panel": {
+      "content": {
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "paddingTop": "0.5",
+        "paddingBottom": "0.5",
+        "paddingLeft": "1.5",
+        "paddingRight": "1.5",
+        "backgroundColor": "rgba(0, 20, 40, 0.9)",
+        "borderColor": "#ffdd00",
+        "borderWidth": "0.08",
+        "borderRadius": 0.5
+      }
+    },
+    "toast-msg": {
+      "content": {
+        "fontSize": "1.5",
+        "color": "#ffdd00",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "toast-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 14
+      }
+    },
+    "toast-msg": {
+      "start": {
+        "line": 14,
+        "column": 2
+      },
+      "end": {
+        "line": 14,
+        "column": 12
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 20,
+        "column": 0
+      },
+      "end": {
+        "line": 22,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 21,
+        "column": 2
+      },
+      "end": {
+        "line": 21,
+        "column": 52
+      }
+    }
+  }
+}

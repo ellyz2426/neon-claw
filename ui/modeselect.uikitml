@@ -1,0 +1,116 @@
+<style>
+  .mode-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #00ffff;
+    border-width: 0.12;
+    border-radius: 1.2;
+  }
+  .mode-title {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 1.5;
+  }
+  .mode-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin-bottom: 0.6;
+  }
+  .mode-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 1;
+    padding-right: 1;
+    margin-left: 0.3;
+    margin-right: 0.3;
+    background-color: rgba(0, 255, 255, 0.06);
+    border-color: #00aacc;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .mode-name {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .mode-desc {
+    font-size: 1;
+    color: #889999;
+  }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.6;
+    padding-bottom: 0.6;
+    padding-left: 2;
+    padding-right: 2;
+    margin-top: 1;
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .back-text {
+    font-size: 1.6;
+    color: #ff00ff;
+  }
+</style>
+<div class="mode-panel">
+  <span class="mode-title">SELECT MODE</span>
+  <div class="mode-row">
+    <div id="btn-classic" class="mode-btn">
+      <span class="mode-name">CLASSIC</span>
+      <span class="mode-desc">Limited drops</span>
+    </div>
+    <div id="btn-timeattack" class="mode-btn">
+      <span class="mode-name">TIME ATTACK</span>
+      <span class="mode-desc">Race the clock</span>
+    </div>
+  </div>
+  <div class="mode-row">
+    <div id="btn-target" class="mode-btn">
+      <span class="mode-name">TARGET</span>
+      <span class="mode-desc">Grab specifics</span>
+    </div>
+    <div id="btn-progressive" class="mode-btn">
+      <span class="mode-name">PROGRESSIVE</span>
+      <span class="mode-desc">Harder each round</span>
+    </div>
+  </div>
+  <div class="mode-row">
+    <div id="btn-daily" class="mode-btn">
+      <span class="mode-name">DAILY</span>
+      <span class="mode-desc">Daily challenge</span>
+    </div>
+    <div id="btn-marathon" class="mode-btn">
+      <span class="mode-name">MARATHON</span>
+      <span class="mode-desc">3 misses out</span>
+    </div>
+  </div>
+  <div class="mode-row">
+    <div id="btn-precision" class="mode-btn">
+      <span class="mode-name">PRECISION</span>
+      <span class="mode-desc">3 drops only</span>
+    </div>
+    <div id="btn-practice" class="mode-btn">
+      <span class="mode-name">PRACTICE</span>
+      <span class="mode-desc">No pressure</span>
+    </div>
+  </div>
+  <div id="btn-back-mode" class="back-btn"><span class="back-text">BACK</span></div>
+</div>

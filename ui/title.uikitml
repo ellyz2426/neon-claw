@@ -1,0 +1,66 @@
+<style>
+  .title-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 3;
+    padding-bottom: 3;
+    padding-left: 4;
+    padding-right: 4;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 1.5;
+  }
+  .game-title {
+    font-size: 5;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 0.5;
+  }
+  .subtitle {
+    font-size: 1.8;
+    color: #ff00ff;
+    margin-bottom: 2;
+  }
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    padding-top: 1;
+    padding-bottom: 1;
+    padding-left: 2;
+    padding-right: 2;
+    margin-bottom: 0.8;
+    background-color: rgba(0, 255, 255, 0.08);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.5;
+    cursor: pointer;
+  }
+  .menu-btn-text {
+    font-size: 2.2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .menu-btn-alt {
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+  }
+  .alt-text {
+    color: #ff00ff;
+  }
+</style>
+<div class="title-panel">
+  <span class="game-title">NEON CLAW</span>
+  <span class="subtitle">VR ARCADE</span>
+  <div id="btn-play" class="menu-btn"><span class="menu-btn-text">PLAY</span></div>
+  <div id="btn-machines" class="menu-btn"><span class="menu-btn-text">MACHINES</span></div>
+  <div id="btn-collection" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">COLLECTION</span></div>
+  <div id="btn-scores" class="menu-btn"><span class="menu-btn-text">SCORES</span></div>
+  <div id="btn-achievements" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">ACHIEVEMENTS</span></div>
+  <div id="btn-stats" class="menu-btn"><span class="menu-btn-text">STATS</span></div>
+  <div id="btn-settings" class="menu-btn"><span class="menu-btn-text">SETTINGS</span></div>
+  <div id="btn-help" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">HELP</span></div>
+</div>

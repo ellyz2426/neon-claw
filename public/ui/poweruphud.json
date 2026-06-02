@@ -1,0 +1,162 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "id": "pu-icon",
+          "class": "pu-icon"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "id": "pu-name",
+          "class": "pu-name"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [],
+        "properties": {
+          "id": "pu-timer",
+          "class": "pu-timer"
+        },
+        "dataUid": "uid-4"
+      }
+    ],
+    "properties": {
+      "class": "pu-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "pu-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "row",
+        "paddingTop": "0.4",
+        "paddingBottom": "0.4",
+        "paddingLeft": "1",
+        "paddingRight": "1",
+        "backgroundColor": "rgba(0,0,0,0.6)",
+        "borderColor": "#ff00ff",
+        "borderWidth": "0.08",
+        "borderRadius": 0.5,
+        "gap": "0.8",
+        "alignItems": "center"
+      }
+    },
+    "pu-icon": {
+      "content": {
+        "fontSize": "1.8",
+        "color": "#ff00ff",
+        "fontWeight": "bold"
+      }
+    },
+    "pu-name": {
+      "content": {
+        "fontSize": "1",
+        "color": "#ff00ff"
+      }
+    },
+    "pu-timer": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#ffaa00",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "pu-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 11
+      }
+    },
+    "pu-icon": {
+      "start": {
+        "line": 2,
+        "column": 2
+      },
+      "end": {
+        "line": 2,
+        "column": 10
+      }
+    },
+    "pu-name": {
+      "start": {
+        "line": 3,
+        "column": 2
+      },
+      "end": {
+        "line": 3,
+        "column": 10
+      }
+    },
+    "pu-timer": {
+      "start": {
+        "line": 4,
+        "column": 2
+      },
+      "end": {
+        "line": 4,
+        "column": 11
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 6,
+        "column": 0
+      },
+      "end": {
+        "line": 10,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 7,
+        "column": 2
+      },
+      "end": {
+        "line": 7,
+        "column": 44
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 8,
+        "column": 2
+      },
+      "end": {
+        "line": 8,
+        "column": 44
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 9,
+        "column": 2
+      },
+      "end": {
+        "line": 9,
+        "column": 46
+      }
+    }
+  }
+}

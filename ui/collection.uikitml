@@ -1,0 +1,75 @@
+<style>
+  .col-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.5;
+    padding-bottom: 1.5;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(0, 8, 17, 0.92);
+    border-color: #ffdd00;
+    border-width: 0.12;
+    border-radius: 1.2;
+  }
+  .col-title {
+    font-size: 2.8;
+    color: #ffdd00;
+    font-weight: bold;
+    margin-bottom: 0.5;
+  }
+  .col-count {
+    font-size: 1.5;
+    color: #889999;
+    margin-bottom: 1;
+  }
+  .col-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-top: 0.2;
+    padding-bottom: 0.2;
+    padding-left: 0.5;
+    padding-right: 0.5;
+    margin-bottom: 0.15;
+    background-color: rgba(255, 221, 0, 0.03);
+    border-radius: 0.2;
+  }
+  .col-name { font-size: 1.2; color: #00ffff; width: 60%; font-weight: bold; }
+  .col-rarity { font-size: 1; color: #aa44ff; width: 40%; }
+  .back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-left: 2;
+    padding-right: 2;
+    margin-top: 0.8;
+    background-color: rgba(255, 0, 255, 0.06);
+    border-color: #ff00ff;
+    border-width: 0.06;
+    border-radius: 0.4;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.4; color: #ff00ff; }
+</style>
+<div class="col-panel">
+  <span class="col-title">COLLECTION</span>
+  <span id="col-count" class="col-count">0 / 14</span>
+  <div class="col-row"><span id="col-name-0" class="col-name">???</span><span id="col-rarity-0" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-1" class="col-name">???</span><span id="col-rarity-1" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-2" class="col-name">???</span><span id="col-rarity-2" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-3" class="col-name">???</span><span id="col-rarity-3" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-4" class="col-name">???</span><span id="col-rarity-4" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-5" class="col-name">???</span><span id="col-rarity-5" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-6" class="col-name">???</span><span id="col-rarity-6" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-7" class="col-name">???</span><span id="col-rarity-7" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-8" class="col-name">???</span><span id="col-rarity-8" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-9" class="col-name">???</span><span id="col-rarity-9" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-10" class="col-name">???</span><span id="col-rarity-10" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-11" class="col-name">???</span><span id="col-rarity-11" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-12" class="col-name">???</span><span id="col-rarity-12" class="col-rarity"></span></div>
+  <div class="col-row"><span id="col-name-13" class="col-name">???</span><span id="col-rarity-13" class="col-rarity"></span></div>
+  <div id="btn-back-col" class="back-btn"><span class="back-text">BACK</span></div>
+</div>
