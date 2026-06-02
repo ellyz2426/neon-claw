@@ -4,7 +4,8 @@
 export type GameState = 'title' | 'modeselect' | 'difficulty' | 'playing' | 'grabbing' | 'dropping' |
   'result' | 'gameover' | 'paused' | 'leaderboard' | 'achievements' | 'settings' | 'help' |
   'collection' | 'stats' | 'machines' | 'showcase' | 'campaign' | 'campaign_stage' | 'fusion' | 'campaign_result' |
-  'profile' | 'clawskins' | 'modifiers' | 'levelup' | 'shop' | 'wheel' | 'prestige';
+  'profile' | 'clawskins' | 'modifiers' | 'levelup' | 'shop' | 'wheel' | 'prestige' |
+  'frenzy' | 'frenzy_result' | 'machineskins' | 'detailedstats';
 
 export type GameMode = 'classic' | 'timeattack' | 'target' | 'progressive' | 'daily' | 'practice' | 'marathon' | 'precision';
 export type Difficulty = 'easy' | 'medium' | 'hard';
@@ -214,6 +215,18 @@ export function getDefaultAchievements(): Achievement[] {
     { id: 'first_prestige', name: 'Ascended', desc: 'Prestige for the first time', unlocked: false },
     { id: 'prestige_5', name: 'Diamond Ascension', desc: 'Reach Prestige 5', unlocked: false },
     { id: 'prestige_max', name: 'Cosmic Ascension', desc: 'Reach maximum Prestige', unlocked: false },
+    // Round 6 achievements — Frenzy, Machine Skins, Milestones
+    { id: 'first_frenzy', name: 'Frenzy Time!', desc: 'Trigger your first Claw Frenzy', unlocked: false },
+    { id: 'frenzy_5_grabs', name: 'Frenzy Fiend', desc: 'Grab 5+ prizes in a single Frenzy', unlocked: false },
+    { id: 'frenzy_master', name: 'Frenzy Master', desc: 'Complete 10 Claw Frenzies', unlocked: false },
+    { id: 'frenzy_legend', name: 'Frenzy Legend', desc: 'Grab 8+ prizes in a single Frenzy', unlocked: false },
+    { id: 'first_machine_skin', name: 'Decorator', desc: 'Unlock a machine skin', unlocked: false },
+    { id: 'all_machine_skins', name: 'Machine Collector', desc: 'Unlock all machine skins', unlocked: false },
+    { id: 'gold_machine', name: 'Gold Digger', desc: 'Equip the Gold Plated machine skin', unlocked: false },
+    { id: 'grabs_250', name: 'Claw Veteran', desc: 'Grab 250 prizes total', unlocked: false },
+    { id: 'grabs_500', name: 'Claw Legend', desc: 'Grab 500 prizes total', unlocked: false },
+    { id: 'tickets_5k', name: 'Ticket Magnate', desc: 'Earn 5,000 tickets total', unlocked: false },
+    { id: 'perfect_3', name: 'Triple Perfect', desc: 'Get 3 perfect (no miss) games', unlocked: false },
   ];
 }
 

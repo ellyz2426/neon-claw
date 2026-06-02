@@ -104,6 +104,7 @@
   <div id="btn-fusion" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">⚗ FUSION LAB</span></div>
   <div id="btn-profile" class="menu-btn menu-btn-green"><span class="menu-btn-text green-text">⚡ PROFILE</span></div>
   <div id="btn-skins" class="menu-btn menu-btn-purple"><span class="menu-btn-text purple-text">🎨 CLAW SKINS</span></div>
+  <div id="btn-machskins" class="menu-btn menu-btn-orange"><span class="menu-btn-text orange-text">🎰 MACHINE SKINS</span></div>
   <div id="btn-modifiers" class="menu-btn menu-btn-orange"><span class="menu-btn-text orange-text">⚔ MODIFIERS</span></div>
   <div id="btn-shop" class="menu-btn menu-btn-yellow"><span class="menu-btn-text yellow-text">🛒 SHOP</span></div>
   <div id="btn-wheel" class="menu-btn menu-btn-red"><span class="menu-btn-text red-text">🎰 LUCKY WHEEL</span></div>
@@ -111,6 +112,7 @@
   <div id="btn-scores" class="menu-btn"><span class="menu-btn-text">SCORES</span></div>
   <div id="btn-achievements" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">ACHIEVEMENTS</span></div>
   <div id="btn-stats" class="menu-btn"><span class="menu-btn-text">STATS</span></div>
+  <div id="btn-detailedstats" class="menu-btn menu-btn-green"><span class="menu-btn-text green-text">📊 DETAILED STATS</span></div>
   <div id="btn-settings" class="menu-btn"><span class="menu-btn-text">SETTINGS</span></div>
   <div id="btn-help" class="menu-btn menu-btn-alt"><span class="menu-btn-text alt-text">HELP</span></div>
 </div>

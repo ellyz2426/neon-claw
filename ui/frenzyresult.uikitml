@@ -1,0 +1,20 @@
+<panel>
+  <view flexDirection="column" alignItems="center" padding="16" backgroundColor="#1a0022cc" borderRadius="12" borderWidth="1" borderColor="#ff4444">
+    <text fontSize="20" fontWeight="bold" color="#ff4444">⚡ FRENZY COMPLETE! ⚡</text>
+    <view flexDirection="row" justifyContent="space-around" width="100%" marginTop="12">
+      <view flexDirection="column" alignItems="center">
+        <text fontSize="9" color="#888888">GRABS</text>
+        <text id="fr-grabs" fontSize="18" fontWeight="bold" color="#00ff88">0</text>
+      </view>
+      <view flexDirection="column" alignItems="center">
+        <text fontSize="9" color="#888888">TICKETS WON</text>
+        <text id="fr-tickets" fontSize="18" fontWeight="bold" color="#ffdd00">0</text>
+      </view>
+    </view>
+    <text id="fr-best" fontSize="10" color="#ff88ff" marginTop="8">Best: 0 grabs</text>
+    <text id="fr-total" fontSize="9" color="#888888" marginTop="2">Total frenzies: 0</text>
+    <view id="btn-fr-continue" marginTop="12" padding="10" paddingLeft="24" paddingRight="24" backgroundColor="#ff444488" borderRadius="8" borderWidth="1" borderColor="#ff4444">
+      <text fontSize="13" fontWeight="bold" color="#ffffff">CONTINUE</text>
+    </view>
+  </view>
+</panel>

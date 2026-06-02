@@ -1,0 +1,88 @@
+<panel>
+  <view flexDirection="column" alignItems="center" padding="14" backgroundColor="#0a0a1acc" borderRadius="12" borderWidth="1" borderColor="#00ffff88">
+    <text fontSize="18" fontWeight="bold" color="#00ffff">📊 Detailed Stats</text>
+    <view flexDirection="row" justifyContent="center" gap="8" marginTop="6">
+      <view id="btn-ds-modes" padding="6" paddingLeft="12" paddingRight="12" backgroundColor="#00ffff33" borderRadius="6">
+        <text fontSize="10" fontWeight="bold" color="#00ffff">By Mode</text>
+      </view>
+      <view id="btn-ds-history" padding="6" paddingLeft="12" paddingRight="12" backgroundColor="#ffffff22" borderRadius="6">
+        <text fontSize="10" color="#888888">History</text>
+      </view>
+      <view id="btn-ds-frenzy" padding="6" paddingLeft="12" paddingRight="12" backgroundColor="#ffffff22" borderRadius="6">
+        <text fontSize="10" color="#888888">Frenzy</text>
+      </view>
+    </view>
+    <view flexDirection="column" width="100%" marginTop="8" gap="4">
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-0-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Classic</text>
+        <text id="ds-row-0-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-0-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-0-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-1-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Time Attack</text>
+        <text id="ds-row-1-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-1-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-1-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-2-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Target</text>
+        <text id="ds-row-2-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-2-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-2-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-3-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Progressive</text>
+        <text id="ds-row-3-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-3-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-3-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-4-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Daily</text>
+        <text id="ds-row-4-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-4-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-4-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-5-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Marathon</text>
+        <text id="ds-row-5-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-5-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-5-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-6-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Precision</text>
+        <text id="ds-row-6-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-6-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-6-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+      <view flexDirection="row" padding="6" backgroundColor="#ffffff08" borderRadius="4">
+        <text id="ds-row-7-name" fontSize="10" fontWeight="bold" color="#ffffff" flex="1">Practice</text>
+        <text id="ds-row-7-games" fontSize="9" color="#888888" width="40">0 gms</text>
+        <text id="ds-row-7-best" fontSize="9" color="#ffdd00" width="50">Best: 0</text>
+        <text id="ds-row-7-acc" fontSize="9" color="#00ff88" width="36">0%</text>
+      </view>
+    </view>
+    <text id="ds-top-mode" fontSize="9" color="#ff88ff" marginTop="6">⭐ Best mode: Classic</text>
+    <view flexDirection="column" width="100%" marginTop="8" gap="3">
+      <text id="ds-hist-title" fontSize="10" fontWeight="bold" color="#888888">Recent Sessions</text>
+      <view flexDirection="row" padding="4" backgroundColor="#ffffff08" borderRadius="3">
+        <text id="ds-h0" fontSize="8" color="#cccccc" flex="1">—</text>
+      </view>
+      <view flexDirection="row" padding="4" backgroundColor="#ffffff08" borderRadius="3">
+        <text id="ds-h1" fontSize="8" color="#cccccc" flex="1">—</text>
+      </view>
+      <view flexDirection="row" padding="4" backgroundColor="#ffffff08" borderRadius="3">
+        <text id="ds-h2" fontSize="8" color="#cccccc" flex="1">—</text>
+      </view>
+      <view flexDirection="row" padding="4" backgroundColor="#ffffff08" borderRadius="3">
+        <text id="ds-h3" fontSize="8" color="#cccccc" flex="1">—</text>
+      </view>
+      <view flexDirection="row" padding="4" backgroundColor="#ffffff08" borderRadius="3">
+        <text id="ds-h4" fontSize="8" color="#cccccc" flex="1">—</text>
+      </view>
+    </view>
+    <view id="btn-ds-back" marginTop="10" padding="8" paddingLeft="20" paddingRight="20" backgroundColor="#ffffff22" borderRadius="6">
+      <text fontSize="11" color="#ffffff">Back</text>
+    </view>
+  </view>
+</panel>

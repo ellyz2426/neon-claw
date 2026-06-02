@@ -1,0 +1,21 @@
+<panel>
+  <view flexDirection="column" alignItems="center" padding="12" backgroundColor="#1a0022cc" borderRadius="12" borderWidth="1" borderColor="#ff4444">
+    <text id="frenzy-title" fontSize="22" fontWeight="bold" color="#ff4444">⚡ CLAW FRENZY! ⚡</text>
+    <text id="frenzy-subtitle" fontSize="11" color="#ffaa44" marginTop="4">Grab everything you can!</text>
+    <view flexDirection="row" justifyContent="space-around" width="100%" marginTop="8">
+      <view flexDirection="column" alignItems="center">
+        <text fontSize="9" color="#888888">TIME</text>
+        <text id="frenzy-time" fontSize="20" fontWeight="bold" color="#ff4444">12</text>
+      </view>
+      <view flexDirection="column" alignItems="center">
+        <text fontSize="9" color="#888888">GRABS</text>
+        <text id="frenzy-grabs" fontSize="20" fontWeight="bold" color="#00ff88">0</text>
+      </view>
+      <view flexDirection="column" alignItems="center">
+        <text fontSize="9" color="#888888">TICKETS</text>
+        <text id="frenzy-tickets" fontSize="20" fontWeight="bold" color="#ffdd00">0</text>
+      </view>
+    </view>
+    <text id="frenzy-boost" fontSize="9" color="#ff88ff" marginTop="4">3x TICKETS • 1.6x GRIP</text>
+  </view>
+</panel>

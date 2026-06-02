@@ -23,6 +23,9 @@ import {
 import { ShopManager, SHOP_ITEMS } from './shop';
 import { WheelManager, WHEEL_SEGMENTS, WHEEL_COST } from './wheel';
 import { PrestigeManager, PRESTIGE_STARS } from './prestige';
+import { FrenzyManager, FRENZY_CONFIG } from './frenzy';
+import { MachineSkinManager, MACHINE_SKINS } from './machineskins';
+import { ModeStatsManager } from './modestats';
 
 // ─── Globals ─────────────────────────────────────────────
 const gsm = new GameStateManager();
@@ -36,6 +39,9 @@ const progression = new ProgressionManager();
 const shop = new ShopManager();
 const wheel = new WheelManager();
 const prestige = new PrestigeManager();
+const frenzy = new FrenzyManager();
+const machineSkins = new MachineSkinManager();
+const modeStats = new ModeStatsManager();
 let world: World;
 let env: EnvironmentObjects;
 let particles: ParticleSystem;
@@ -66,6 +72,7 @@ let campaignSeasonView = 0;
 let inCampaignGame = false;
 let legendaryGrabCelebration = 0; // timer for legendary celebration VFX
 const confettiParticles: { mesh: Mesh; vel: Vector3; life: number; spin: number }[] = [];
+let frenzyPending = false; // true when a frenzy was triggered and will start after gameover
 
 // UI entity references
 const panels: Record<string, any> = {};
@@ -162,6 +169,11 @@ function initPanels(): void {
   setupPanel('shop', '/ui/shop.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
   setupPanel('wheel', '/ui/wheel.json', { maxWidth: 0.9, maxHeight: 1.1, pos: [0, menuY, menuZ] });
   setupPanel('prestige', '/ui/prestige.json', { maxWidth: 0.9, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  // Round 6 panels
+  setupPanel('frenzy', '/ui/frenzy.json', { maxWidth: 0.35, maxHeight: 0.2, follower: true, followOffset: [0, 0.12, -0.5] });
+  setupPanel('frenzyresult', '/ui/frenzyresult.json', { maxWidth: 0.7, maxHeight: 0.5, pos: [0, menuY, menuZ] });
+  setupPanel('machineskins', '/ui/machineskins.json', { maxWidth: 1.0, maxHeight: 1.2, pos: [0, menuY, menuZ] });
+  setupPanel('detailedstats', '/ui/detailedstats.json', { maxWidth: 1.1, maxHeight: 1.2, pos: [0, menuY, menuZ] });
 }
 
 // ─── Show/Hide State Panels ──────────────────────────────
@@ -172,7 +184,8 @@ function showState(state: GameState): void {
     'toast', 'countdown', 'powerbar', 'tutorial', 'poweruphud', 'showcase',
     'campaign', 'campaignstage', 'fusion', 'campaignresult',
     'profile', 'clawskins', 'modifiers', 'levelup',
-    'shop', 'wheel', 'prestige'];
+    'shop', 'wheel', 'prestige',
+    'frenzy', 'frenzyresult', 'machineskins', 'detailedstats'];
 
   const stateMap: Record<string, string[]> = {
     title: ['title'],
@@ -203,6 +216,10 @@ function showState(state: GameState): void {
     shop: ['shop'],
     wheel: ['wheel'],
     prestige: ['prestige'],
+    frenzy: ['frenzy', 'hud', 'powerbar'],
+    frenzy_result: ['frenzyresult'],
+    machineskins: ['machineskins'],
+    detailedstats: ['detailedstats'],
   };
 
   const visible = stateMap[state] || [];
@@ -233,7 +250,7 @@ function initTrailPool(): void {
 }
 
 function updateClawTrail(dt: number, time: number): void {
-  if (gsm.state !== 'playing' || gsm.clawPhase === 'idle') return;
+  if (gsm.state !== 'playing' && gsm.state !== ('frenzy' as any) || gsm.clawPhase === 'idle') return;
 
   // Spawn trail point
   if (clawGroup && (gsm.clawPhase === 'positioning' || gsm.clawPhase === 'descending' || gsm.clawPhase === 'ascending')) {
@@ -435,6 +452,8 @@ function wireButtons(): void {
       'btn-shop': () => { audio.buttonClick(); updateShopPanel(); showState('shop'); },
       'btn-wheel': () => { audio.buttonClick(); updateWheelPanel(); showState('wheel'); },
       'btn-prestige': () => { audio.buttonClick(); updatePrestigePanel(); showState('prestige'); },
+      'btn-machskins': () => { audio.buttonClick(); updateMachineSkinsPanel(); showState('machineskins'); },
+      'btn-detailedstats': () => { audio.buttonClick(); updateDetailedStatsPanel(); showState('detailedstats'); },
     });
 
     wirePanel('modeselect', {
@@ -593,6 +612,25 @@ function wireButtons(): void {
     wirePanel('prestige', {
       'btn-prestige': () => performPrestige(),
       'btn-back-prestige': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    // Round 6 panel wiring
+    wirePanel('frenzyresult', {
+      'btn-fr-continue': () => { audio.buttonClick(); updateGameOver(); showState('gameover'); },
+    });
+
+    wirePanel('machineskins', {
+      'btn-ms-0': () => handleMachineSkinClick(0),
+      'btn-ms-1': () => handleMachineSkinClick(1),
+      'btn-ms-2': () => handleMachineSkinClick(2),
+      'btn-ms-3': () => handleMachineSkinClick(3),
+      'btn-ms-4': () => handleMachineSkinClick(4),
+      'btn-ms-5': () => handleMachineSkinClick(5),
+      'btn-ms-back': () => { audio.buttonClick(); showState('title'); },
+    });
+
+    wirePanel('detailedstats', {
+      'btn-ds-back': () => { audio.buttonClick(); showState('title'); },
     });
   }, 1500);
 }
@@ -859,6 +897,10 @@ function getGripStrength(): number {
   if (shop.hasBoost('prize_scanner')) {
     grip *= 1.05;
   }
+  // Frenzy mode: boosted grip
+  if (frenzy.state.active) {
+    grip *= FRENZY_CONFIG.gripBoost;
+  }
   return Math.min(1, grip);
 }
 
@@ -956,6 +998,19 @@ function releasePrize(): void {
   clawGroup.remove(prize);
   prizeMeshes = prizeMeshes.filter(p => p !== prize);
 
+  // Round 6: Frenzy mode uses special grab handling
+  if (gsm.state === ('frenzy' as any) && frenzy.state.active) {
+    handleFrenzyGrab(prizeData);
+    gsm.grabbedPrize = null;
+    gsm.attempts++;
+    gsm.clawPhase = 'idle';
+    gsm.clawGripping = false;
+    gsm.clawX = 0;
+    gsm.clawZ = 0;
+    audio.prizeRelease();
+    return;
+  }
+
   let points = prizeData.points;
   points *= gsm.combo;
   gsm.score += points;
@@ -1044,6 +1099,8 @@ function releasePrize(): void {
   checkAchievement('ten_grabs', gsm.totalGrabs >= 10);
   checkAchievement('fifty_grabs', gsm.totalGrabs >= 50);
   checkAchievement('hundred_grabs', gsm.totalGrabs >= 100);
+  checkAchievement('grabs_250', gsm.totalGrabs >= 250);
+  checkAchievement('grabs_500', gsm.totalGrabs >= 500);
   checkAchievement('streak_3', gsm.streak >= 3);
   checkAchievement('streak_5', gsm.streak >= 5);
   checkAchievement('collection_10', gsm.collection.size >= 10);
@@ -1085,6 +1142,15 @@ function releasePrize(): void {
 }
 
 function completeMiss(): void {
+  // In frenzy mode, misses don't count — just reset claw
+  if (gsm.state === ('frenzy' as any) && frenzy.state.active) {
+    gsm.clawPhase = 'idle';
+    gsm.clawGripping = false;
+    gsm.clawX = 0;
+    gsm.clawZ = 0;
+    audio.clawMiss();
+    return;
+  }
   gsm.misses++;
   gsm.streak = 0;
   gsm.combo = 1;
@@ -1146,6 +1212,16 @@ function endGame(): void {
   if (gsm.score > gsm.bestScore) gsm.bestScore = gsm.score;
   if (gsm.bestStreak > gsm.bestStreak_career) gsm.bestStreak_career = gsm.bestStreak;
 
+  // Round 6: track per-mode stats
+  const machineName = gsm.machine.name;
+  modeStats.recordGame(gsm.mode, gsm.difficulty, machineName, gsm.score, gsm.grabs, gsm.misses, gsm.ticketsEarned, gsm.combo);
+
+  // Round 6: count perfect games for achievement
+  if (gsm.misses === 0 && gsm.grabs > 0) {
+    const classicPerfects = Object.values(modeStats.modeStats).reduce((sum, m) => sum + m.perfectGames, 0);
+    checkAchievement('perfect_3', classicPerfects >= 3);
+  }
+
   checkAchievement('score_1k', gsm.score >= 1000);
   checkAchievement('score_5k', gsm.score >= 5000);
   checkAchievement('score_10k', gsm.score >= 10000);
@@ -1169,6 +1245,7 @@ function endGame(): void {
   checkAchievement('modifier_3', progression.activeModifiers.size >= 3 && gsm.grabs > 0);
   checkAchievement('modifier_all', progression.activeModifiers.size >= 5 && gsm.grabs > 0);
   checkAchievement('tickets_2k', gsm.totalTickets >= 2000);
+  checkAchievement('tickets_5k', gsm.totalTickets >= 5000);
   checkAchievement('games_100', gsm.totalGames >= 100);
   checkAchievement('score_50k', gsm.score >= 50000);
   checkAchievement('total_score_100k', gsm.totalScore >= 100000);
@@ -1200,6 +1277,13 @@ function endGame(): void {
   if (progression.pendingLevelUp) {
     showLevelUpPanel();
     showState('levelup');
+    return;
+  }
+
+  // Round 6: Check for Claw Frenzy bonus round trigger
+  if (!inCampaignGame && gsm.mode !== 'practice' && frenzy.shouldTrigger(gsm.grabs)) {
+    frenzyPending = true;
+    startFrenzy();
     return;
   }
 
@@ -1826,6 +1910,188 @@ function performPrestige(): void {
   updatePrestigePanel();
 }
 
+// ─── Round 6: Claw Frenzy Bonus Round ────────────────────
+function startFrenzy(): void {
+  frenzy.start();
+  frenzyPending = false;
+  // Rebuild machine with boosted prizes (only rare+ during frenzy)
+  buildMachine();
+  audio.achievementUnlock();
+  spawnConfetti(new Vector3(0, machineBaseY + 0.6, -1.8), 20);
+  shake.trigger(0.02, 0.4);
+  showToast('⚡ CLAW FRENZY! ⚡');
+  checkAchievement('first_frenzy', true);
+
+  // Reset claw for frenzy
+  gsm.clawPhase = 'idle';
+  gsm.clawX = 0;
+  gsm.clawZ = 0;
+  gsm.clawY = gsm.machine.pitHeight / 2 + 0.1;
+  gsm.clawGripping = false;
+  gsm.grabbedPrize = null;
+  gameStarted = true;
+
+  // Start music for frenzy
+  if (!musicStarted) {
+    try {
+      const ctx = (audio as any).ctx;
+      const musicNode = (audio as any).musicGain;
+      if (ctx && musicNode) {
+        music.start(ctx, musicNode);
+        musicStarted = true;
+      }
+    } catch {}
+  }
+
+  showState('frenzy');
+  updateFrenzyHUD();
+}
+
+function updateFrenzyHUD(): void {
+  const doc = getDoc('frenzy');
+  if (!doc) return;
+  setText(doc, 'frenzy-time', String(Math.ceil(frenzy.state.timeRemaining)));
+  setText(doc, 'frenzy-grabs', String(frenzy.state.grabs));
+  setText(doc, 'frenzy-tickets', String(frenzy.state.ticketsEarned));
+}
+
+function handleFrenzyGrab(prizeData: any): void {
+  const tickets = frenzy.onGrab(prizeData.tickets);
+  gsm.totalTickets += tickets;
+  gsm.totalGrabs++;
+  gsm.grabs++;
+  gsm.score += prizeData.points * 2; // 2x score in frenzy
+
+  const popPos = new Vector3(
+    gsm.machine.pitWidth / 2 + 0.1,
+    machineBaseY + 0.1,
+    gsm.machine.pitDepth / 2 - 0.075,
+  );
+  const rarityColor = RARITY_COLORS[prizeData.rarity] || '#ffffff';
+  spawnScorePopup('+' + (prizeData.points * 2), rarityColor, popPos);
+  particles.burst(popPos.clone(), prizeData.baseColor, 15, 1.5);
+  audio.prizeCollect();
+  shake.trigger(0.015, 0.2);
+
+  gsm.collection.add(prizeData.id);
+  fusion.addPrize(prizeData.id);
+
+  // XP during frenzy
+  let xpAmount = (RARITY_XP[prizeData.rarity] || 10) * 2;
+  xpAmount = Math.floor(xpAmount * (1 + prestige.getXpBonus()));
+  progression.addXp(xpAmount);
+
+  updateFrenzyHUD();
+  updateHUD();
+}
+
+function endFrenzy(): void {
+  const result = frenzy.end();
+  music.stop();
+  musicStarted = false;
+  audio.gameOver();
+
+  checkAchievement('frenzy_5_grabs', result.grabs >= 5);
+  checkAchievement('frenzy_legend', result.grabs >= 8);
+  checkAchievement('frenzy_master', frenzy.state.totalFrenzies >= 10);
+
+  // Show frenzy result
+  const doc = getDoc('frenzyresult');
+  if (doc) {
+    setText(doc, 'fr-grabs', String(result.grabs));
+    setText(doc, 'fr-tickets', String(result.tickets));
+    setText(doc, 'fr-best', 'Best: ' + frenzy.state.bestFrenzyGrabs + ' grabs');
+    setText(doc, 'fr-total', 'Total frenzies: ' + frenzy.state.totalFrenzies);
+  }
+
+  gsm.save();
+  showState('frenzy_result');
+}
+
+// ─── Round 6: Machine Skins Functions ────────────────────
+function handleMachineSkinClick(index: number): void {
+  const skin = MACHINE_SKINS[index];
+  if (!skin) return;
+
+  if (machineSkins.isUnlocked(skin.id)) {
+    // Already unlocked — equip it
+    machineSkins.equip(skin.id);
+    audio.buttonClick();
+    showToast('Equipped: ' + skin.name);
+    buildMachine(); // Rebuild with new skin colors
+    updateMachineSkinsPanel();
+  } else {
+    // Try to purchase
+    const result = machineSkins.purchase(skin.id, gsm.totalTickets);
+    if (result.success) {
+      gsm.totalTickets -= result.cost;
+      gsm.save();
+      machineSkins.equip(skin.id);
+      audio.achievementUnlock();
+      particles.burst(new Vector3(0, machineBaseY + 0.5, -1.8), skin.glowColor, 20, 1.5);
+      shake.trigger(0.015, 0.3);
+      showToast('Unlocked: ' + skin.name + '!');
+      checkAchievement('first_machine_skin', true);
+      checkAchievement('all_machine_skins', machineSkins.unlockedSkins.size >= MACHINE_SKINS.length);
+      checkAchievement('gold_machine', skin.id === 'gold');
+      buildMachine();
+      updateMachineSkinsPanel();
+    } else {
+      showToast('Need ' + skin.cost + ' tickets!');
+    }
+  }
+}
+
+function updateMachineSkinsPanel(): void {
+  const doc = getDoc('machineskins');
+  if (!doc) return;
+  setText(doc, 'ms-tickets', '🎫 ' + gsm.totalTickets + ' tickets');
+  for (let i = 0; i < MACHINE_SKINS.length; i++) {
+    const skin = MACHINE_SKINS[i];
+    const unlocked = machineSkins.isUnlocked(skin.id);
+    const equipped = machineSkins.equippedSkin === skin.id;
+    setText(doc, `ms-icon-${i}`, skin.icon);
+    setText(doc, `ms-name-${i}`, skin.name);
+    setText(doc, `ms-desc-${i}`, skin.desc);
+    if (equipped) {
+      setText(doc, `ms-status-${i}`, 'EQUIPPED');
+    } else if (unlocked) {
+      setText(doc, `ms-status-${i}`, '▶ SELECT');
+    } else {
+      setText(doc, `ms-status-${i}`, skin.cost + ' 🎫');
+    }
+  }
+}
+
+// ─── Round 6: Detailed Stats Functions ───────────────────
+function updateDetailedStatsPanel(): void {
+  const doc = getDoc('detailedstats');
+  if (!doc) return;
+  const modes = ['classic', 'timeattack', 'target', 'progressive', 'daily', 'marathon', 'precision', 'practice'];
+  const modeNames = ['Classic', 'Time Attack', 'Target', 'Progressive', 'Daily', 'Marathon', 'Precision', 'Practice'];
+  for (let i = 0; i < modes.length; i++) {
+    const stat = modeStats.getModeStat(modes[i]);
+    const acc = modeStats.getModeAccuracy(modes[i]);
+    setText(doc, `ds-row-${i}-name`, modeNames[i]);
+    setText(doc, `ds-row-${i}-games`, stat.gamesPlayed + ' gms');
+    setText(doc, `ds-row-${i}-best`, 'Best: ' + stat.bestScore);
+    setText(doc, `ds-row-${i}-acc`, acc + '%');
+  }
+  const topMode = modeStats.getTopMode();
+  const topModeIdx = modes.indexOf(topMode);
+  setText(doc, 'ds-top-mode', '⭐ Best mode: ' + (modeNames[topModeIdx] || 'Classic'));
+
+  // Session history
+  for (let i = 0; i < 5; i++) {
+    const s = modeStats.sessionHistory[i];
+    if (s) {
+      setText(doc, `ds-h${i}`, s.mode.toUpperCase() + ' | ' + s.score + 'pts | ' + s.grabs + '/' + (s.grabs + s.misses) + ' (' + s.accuracy + '%) | ' + s.tickets + '🎫');
+    } else {
+      setText(doc, `ds-h${i}`, '—');
+    }
+  }
+}
+
 // ─── Legendary Celebration VFX ───────────────────────────
 function spawnConfetti(pos: Vector3, count: number): void {
   const colors = ['#ff4444', '#ffdd00', '#00ff88', '#4488ff', '#ff00ff', '#00ffff', '#ffaa00'];
@@ -1879,6 +2145,39 @@ function rebuildTheme(): void {
 }
 
 // ─── Input Handling ──────────────────────────────────────
+function handleFrenzyInput(dt: number): void {
+  if (!frenzy.state.active) return;
+
+  const kb = (world.input as any).keyboard;
+  let dx = 0, dz = 0;
+  if (kb.getKeyPressed('KeyW') || kb.getKeyPressed('ArrowUp')) dz = -1;
+  if (kb.getKeyPressed('KeyS') || kb.getKeyPressed('ArrowDown')) dz = 1;
+  if (kb.getKeyPressed('KeyA') || kb.getKeyPressed('ArrowLeft')) dx = -1;
+  if (kb.getKeyPressed('KeyD') || kb.getKeyPressed('ArrowRight')) dx = 1;
+
+  if (dx !== 0 || dz !== 0) moveClaw(dx, dz, dt);
+  else if (gsm.clawPhase === 'positioning') gsm.clawPhase = 'idle';
+
+  if (kb.getKeyDown('Space')) dropClaw();
+
+  // XR controller input
+  try {
+    const xr = (world.input as any).xr;
+    if (xr) {
+      const rightPad = xr.getController?.('right');
+      if (rightPad?.gamepad) {
+        const axes = rightPad.gamepad.axes;
+        if (axes && axes.length >= 4) {
+          const tx = axes[2] || 0;
+          const tz = axes[3] || 0;
+          if (Math.abs(tx) > 0.15 || Math.abs(tz) > 0.15) moveClaw(tx, tz, dt);
+        }
+      }
+      if (rightPad?.gamepad?.buttons?.[0]?.pressed) dropClaw();
+    }
+  } catch {}
+}
+
 function handleInput(dt: number): void {
   if (gsm.state !== 'playing' || countdownTimer > 0) return;
 
@@ -1954,8 +2253,13 @@ function gameLoop(dt: number, time: number): void {
   // Input
   handleInput(dt);
 
+  // Frenzy input (same as regular, but during frenzy state)
+  if (gsm.state === 'frenzy' as any) {
+    handleFrenzyInput(dt);
+  }
+
   // Claw physics
-  if (gsm.state === 'playing' || gsm.state === 'grabbing' || gsm.state === 'dropping') {
+  if (gsm.state === 'playing' || gsm.state === 'grabbing' || gsm.state === 'dropping' || gsm.state === ('frenzy' as any)) {
     updateClawPhysics(dt);
   }
 
@@ -1967,6 +2271,25 @@ function gameLoop(dt: number, time: number): void {
       checkGameEnd();
     }
     updateHUD();
+  }
+
+  // Frenzy timer update
+  if (gsm.state === ('frenzy' as any) && frenzy.state.active) {
+    const ended = frenzy.update(dt);
+    updateFrenzyHUD();
+
+    // Respawn prizes during frenzy
+    if (frenzy.shouldRespawnPrizes()) {
+      // Add more prizes to the pit
+      const activePrizes = prizeMeshes.filter(p => (p as any)._active !== false);
+      if (activePrizes.length < 8) {
+        buildMachine();
+      }
+    }
+
+    if (ended) {
+      endFrenzy();
+    }
   }
 
   // Combo decay
@@ -1989,7 +2312,7 @@ function gameLoop(dt: number, time: number): void {
   // Claw shadow
   if (clawShadow) {
     const floorY = -gsm.machine.pitHeight / 2 + 0.01;
-    updateClawShadow(clawShadow, gsm.clawX, gsm.clawZ, floorY, gsm.state === 'playing' && gsm.clawPhase !== 'returning', time);
+    updateClawShadow(clawShadow, gsm.clawX, gsm.clawZ, floorY, (gsm.state === 'playing' || gsm.state === ('frenzy' as any)) && gsm.clawPhase !== 'returning', time);
   }
 
   // Glow ring pulse
@@ -2061,7 +2384,7 @@ function gameLoop(dt: number, time: number): void {
   updateScorePopups(dt);
 
   // Power-ups update
-  if (gsm.state === 'playing') {
+  if (gsm.state === 'playing' || gsm.state === ('frenzy' as any)) {
     powerups.update(dt);
     updatePowerUpHUD();
 
@@ -2075,7 +2398,7 @@ function gameLoop(dt: number, time: number): void {
   }
 
   // Power bar update
-  if (gsm.state === 'playing') {
+  if (gsm.state === 'playing' || gsm.state === ('frenzy' as any)) {
     const doc = getDoc('powerbar');
     if (doc) {
       const barLen = 10;
